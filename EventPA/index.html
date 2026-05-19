@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,7 +35,6 @@
     flex-direction: column;
   }
 
-  /* CUSTOM CURSOR */
   .cursor {
     position: fixed;
     width: 12px; height: 12px;
@@ -57,7 +56,6 @@
     mix-blend-mode: screen;
   }
 
-  /* NOISE OVERLAY */
   body::before {
     content: '';
     position: fixed;
@@ -68,7 +66,6 @@
     opacity: 0.3;
   }
 
-  /* AMBIENT GLOW BLOBS */
   .blob {
     position: fixed;
     border-radius: 50%;
@@ -86,7 +83,6 @@
     66% { transform: translate(-20px,20px) scale(0.95); }
   }
 
-  /* NAV */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -118,7 +114,6 @@
   }
   .nav-links a:hover { color: var(--cyan); text-shadow: var(--glow-c); }
 
-  /* CONTAINER PRINCIPAL */
   .main-content {
     position: relative;
     z-index: 1;
@@ -165,7 +160,6 @@
     margin-bottom: 40px;
   }
 
-  /* SECCION DE DESCARGA (ENHANCED) */
   .download-wrapper {
     margin-bottom: 60px;
     text-align: center;
@@ -195,7 +189,6 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  /* Animacion de destello que pasa por el boton */
   .btn-download::before {
     content: '';
     position: absolute;
@@ -233,7 +226,6 @@
     transform: translateY(2px);
   }
 
-  /* CONTENEDOR DEL FORMULARIO */
   .form-container {
     width: 100%;
     background: var(--bg2);
@@ -259,7 +251,6 @@
     display: block;
   }
 
-  /* MOBILE BLOCK */
   #mobile-block {
     display: none;
     position: fixed;
@@ -307,9 +298,9 @@
 
   <div id="mobile-block">
     <div class="mb-icon">🖥️</div>
-    <h2>Solo en <span class="mb-accent">desktop</span></h2>
+    <h2><span class="mb-accent">Desktop</span> only</h2>
     <div class="mb-line"></div>
-    <p>Este apartado está optimizado para computadoras.<br><br>Visitalo desde una <span class="mb-accent">PC</span> para descargar la beta y dejar tu feedback.</p>
+    <p>This section is optimized for computers.<br><br>Visit from a <span class="mb-accent">PC</span> to download the beta and leave your feedback.</p>
   </div>
 
   <div class="blob blob-1"></div>
@@ -318,14 +309,14 @@
   <nav>
     <a href="index.html" class="nav-logo">Valens<span>_</span>429</a>
     <div class="nav-links">
-      <a href="index.html">← Volver al Inicio</a>
+      <a href="index.html">← Back to Home</a>
     </div>
   </nav>
 
   <main class="main-content">
     <div class="section-tag">[ BETA TESTING ]</div>
     <h1 class="section-heading">Playtest & <span class="accent">Feedback</span></h1>
-    <p class="section-sub">Descargá la última versión de la beta privada desde el enlace externo y reportá cualquier bug o sugerencia acá abajo.</p>
+    <p class="section-sub">Download the latest private beta build from the external link and report any bugs or suggestions down below.</p>
 
     <div class="download-wrapper">
       <a href="TU_LINK_DE_DESCARGA_AQUÍ" target="_blank" class="btn-download">
@@ -337,12 +328,11 @@
     </div>
 
     <div class="form-container">
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdhwGluoCAcflHxwqih4JQpfxPbj3dzqkQorabI2Gt3M2qKkQ/viewform?embedded=true" width="100%" height="1000" frameborder="0" marginheight="0" marginwidth="0">Cargando…</iframe>
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdhwGluoCAcflHxwqih4JQpfxPbj3dzqkQorabI2Gt3M2qKkQ/viewform?embedded=true" width="100%" height="1000" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
     </div>
   </main>
 
   <script>
-    // CONTROL DEL MOUSE CUSTOM
     const cursor = document.getElementById('cursor');
     const cursorRing = document.getElementById('cursorRing');
 
