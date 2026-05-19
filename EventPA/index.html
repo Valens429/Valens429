@@ -162,7 +162,75 @@
     text-align: center;
     line-height: 1.8;
     font-size: 0.95rem;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
+  }
+
+  /* SECCION DE DESCARGA (ENHANCED) */
+  .download-wrapper {
+    margin-bottom: 60px;
+    text-align: center;
+    width: 100%;
+    max-width: 450px;
+  }
+
+  .btn-download {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: linear-gradient(135deg, var(--purple) 0%, #7c3aed 100%);
+    color: #ffffff;
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 20px 40px;
+    border-radius: 4px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Animacion de destello que pasa por el boton */
+  .btn-download::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    transform: skewX(-25deg);
+    transition: none;
+  }
+
+  .btn-download:hover::before {
+    left: 150%;
+    transition: left 0.6s ease-in-out;
+  }
+
+  .btn-download:hover {
+    transform: translateY(-4px);
+    background: linear-gradient(135deg, #7c3aed 0%, var(--cyan) 100%);
+    box-shadow: 0 0 35px rgba(6, 182, 212, 0.6);
+    color: #080810;
+  }
+
+  .btn-download:active {
+    transform: translateY(-1px);
+  }
+
+  .btn-download svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    transition: transform 0.3s ease;
+  }
+
+  .btn-download:hover svg {
+    transform: translateY(2px);
   }
 
   /* CONTENEDOR DEL FORMULARIO */
@@ -241,7 +309,7 @@
     <div class="mb-icon">🖥️</div>
     <h2>Solo en <span class="mb-accent">desktop</span></h2>
     <div class="mb-line"></div>
-    <p>Este apartado está optimizado para computadoras.<br><br>Visitalo desde una <span class="mb-accent">PC</span> para dejar tu feedback de la beta.</p>
+    <p>Este apartado está optimizado para computadoras.<br><br>Visitalo desde una <span class="mb-accent">PC</span> para descargar la beta y dejar tu feedback.</p>
   </div>
 
   <div class="blob blob-1"></div>
@@ -257,7 +325,16 @@
   <main class="main-content">
     <div class="section-tag">[ BETA TESTING ]</div>
     <h1 class="section-heading">Playtest & <span class="accent">Feedback</span></h1>
-    <p class="section-sub">¿Encontraste algún bug roto? ¿Tenés una idea picante? Dejá tu reporte acá abajo para dejar el juego re picante antes del lanzamiento oficial.</p>
+    <p class="section-sub">Descargá la última versión de la beta privada desde el enlace externo y reportá cualquier bug o sugerencia acá abajo.</p>
+
+    <div class="download-wrapper">
+      <a href="TU_LINK_DE_DESCARGA_AQUÍ" target="_blank" class="btn-download">
+        <svg viewBox="0 0 24 24">
+          <path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/>
+        </svg>
+        Download Beta Build
+      </a>
+    </div>
 
     <div class="form-container">
       <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdhwGluoCAcflHxwqih4JQpfxPbj3dzqkQorabI2Gt3M2qKkQ/viewform?embedded=true" width="100%" height="1000" frameborder="0" marginheight="0" marginwidth="0">Cargando…</iframe>
@@ -265,7 +342,7 @@
   </main>
 
   <script>
-    // CONTROL DEL MOUSE CUSTOM (Igual al tuyo)
+    // CONTROL DEL MOUSE CUSTOM
     const cursor = document.getElementById('cursor');
     const cursorRing = document.getElementById('cursorRing');
 
