@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,7 +35,6 @@
     flex-direction: column;
   }
 
-  /* CUSTOM CURSOR */
   .cursor {
     position: fixed;
     width: 12px; height: 12px;
@@ -57,7 +56,6 @@
     mix-blend-mode: screen;
   }
 
-  /* NOISE OVERLAY */
   body::before {
     content: '';
     position: fixed;
@@ -68,7 +66,6 @@
     opacity: 0.3;
   }
 
-  /* AMBIENT GLOW BLOBS */
   .blob {
     position: fixed;
     border-radius: 50%;
@@ -86,7 +83,6 @@
     66% { transform: translate(-20px,20px) scale(0.95); }
   }
 
-  /* NAV */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -118,7 +114,6 @@
   }
   .nav-links a:hover { color: var(--cyan); text-shadow: var(--glow-c); }
 
-  /* CONTAINER PRINCIPAL */
   .main-content {
     position: relative;
     z-index: 1;
@@ -163,7 +158,6 @@
     background: linear-gradient(90deg, var(--purple), var(--cyan));
   }
 
-  /* IMAGEN CONTENEDOR */
   .sprite-display {
     width: 220px;
     height: 300px;
@@ -191,7 +185,6 @@
     50% { transform: translateY(-8px); }
   }
 
-  /* INFO Y PREMIO */
   .reward-info {
     display: flex;
     flex-direction: column;
@@ -236,7 +229,6 @@
     margin-bottom: 30px;
   }
 
-  /* CONTAINER BOTONES */
   .buttons-group {
     display: flex;
     flex-direction: column;
@@ -270,7 +262,6 @@
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   }
 
-  /* Botón WebP (Variante Violeta) */
   .btn-webp {
     background: linear-gradient(135deg, var(--purple) 0%, #7c3aed 100%);
     box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
@@ -283,7 +274,6 @@
     color: #080810;
   }
 
-  /* Botón PNG (Variante Cian de tu index) */
   .btn-png {
     background: transparent;
     border: 1px solid var(--cyan);
@@ -307,7 +297,6 @@
     fill: currentColor;
   }
 
-  /* MOBILE BLOCK */
   #mobile-block {
     display: none;
     position: fixed;
@@ -355,18 +344,18 @@
 
   <div id="mobile-block">
     <div class="mb-icon">🖥️</div>
-    <h2>Solo en <span class="mb-accent">desktop</span></h2>
+    <h2><span class="mb-accent">Desktop</span> only</h2>
     <div class="mb-line"></div>
-    <p>Este apartado está optimizado para computadoras.<br><br>Visitalo desde una <span class="mb-accent">PC</span> para reclamar tus sprites.</p>
+    <p>This section is optimized for computers.<br><br>Visit from a <span class="mb-accent">PC</span> to claim your sprites.</p>
   </div>
 
   <div class="blob blob-1"></div>
   <div class="blob blob-2"></div>
 
   <nav>
-    <a href="index.html" class="nav-logo">Valens<span>_</span>429</a>
+    <a href="https://valens429.site" class="nav-logo">Valens<span>_</span>429</a>
     <div class="nav-links">
-      <a href="index.html">← Volver al Inicio</a>
+      <a href="https://valens429.site">← Back to Home</a>
     </div>
   </nav>
 
@@ -380,20 +369,20 @@
 
       <div class="reward-info">
         <div class="section-tag">[ UNLOCKED REWARD ]</div>
-        <h1 class="reward-title">¡Misión <span class="accent">Cumplida</span>!</h1>
+        <h1 class="reward-title">Mission <span class="accent">Accomplished</span>!</h1>
         <p class="reward-desc">
-          Acá tenés tu recompensa por haber testeado la beta de la VN. El pack incluye todos los sprites completos procesados sin layers por el script de Python. Elegí el formato que más te sirva:
+          Here is your reward for playtesting the VN beta. The pack includes all full sprites processed without layers by the Python script. Choose the format that works best for you:
         </p>
 
         <div class="buttons-group">
           <a href="TU_LINK_DIRECTO_ZIP_WEBP" target="_blank" class="btn-download btn-webp">
             <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
-            Pack .WebP (Light)
+            .WebP Pack (Light)
           </a>
 
           <a href="TU_LINK_DIRECTO_ZIP_PNG" target="_blank" class="btn-download btn-png">
             <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
-            Pack .PNG (Full HQ)
+            .PNG Pack (Full HQ)
           </a>
         </div>
       </div>
@@ -403,7 +392,6 @@
   </main>
 
   <script>
-    // CONTROL DEL MOUSE CUSTOM
     const cursor = document.getElementById('cursor');
     const cursorRing = document.getElementById('cursorRing');
 
