@@ -236,13 +236,13 @@
   <div class="splash-logo">Valens<span>_</span>429</div>
   <div class="splash-label" id="splash-label">Seleccioná tu idioma / Select your language</div>
   <div class="splash-cards">
-    <div class="lang-card" onclick="setLang('es')">
+    <div class="lang-card" onclick="setLang('es')" data-track-label="🌐 Idioma — Español">
       <div class="lang-flag">🇦🇷</div>
       <div class="lang-line"></div>
       <div class="lang-name">Español</div>
       <div class="lang-sub">SELECCIONAR</div>
     </div>
-    <div class="lang-card" onclick="setLang('en')">
+    <div class="lang-card" onclick="setLang('en')" data-track-label="🌐 Idioma — English">
       <div class="lang-flag">🇺🇸</div>
       <div class="lang-line"></div>
       <div class="lang-name">English</div>
@@ -265,7 +265,7 @@
 
 <!-- EVENTO BANNER -->
 <div class="evento-banner">
-  <a href="https://Valens429.site/EventPA/" id="banner-link">
+  <a href="https://Valens429.site/EventPA/" id="banner-link" data-track-label="🎮 Banner — Purrfect Apawcalypse">
     <span class="ev-dot"></span>
     <span id="banner-text">ACTIVE EVENT! — Purrfect Apawcalypse Enhanced Beta</span>
     <span class="ev-arrow">→</span>
@@ -276,12 +276,12 @@
 <nav>
   <div class="nav-logo">Valens<span>_</span>429</div>
   <div class="nav-links">
-    <a href="#dev" data-i="nav-dev">Dev</a>
-    <a href="#twitch-section">Twitch</a>
-    <a href="#youtube-section">YouTube</a>
-    <a href="#editing-section" data-i="nav-edit">Edición</a>
-    <a href="#links-section">Links</a>
-    <button class="lang-toggle" id="lang-toggle-btn" onclick="showSplash()">🌐 ES / EN</button>
+    <a href="#dev" data-i="nav-dev" data-track-label="🔗 Nav — Dev">Dev</a>
+    <a href="#twitch-section" data-track-label="🔗 Nav — Twitch">Twitch</a>
+    <a href="#youtube-section" data-track-label="🔗 Nav — YouTube">YouTube</a>
+    <a href="#editing-section" data-i="nav-edit" data-track-label="🔗 Nav — Edición">Edición</a>
+    <a href="#links-section" data-track-label="🔗 Nav — Links">Links</a>
+    <button class="lang-toggle" id="lang-toggle-btn" onclick="showSplash()" data-track-label="🌐 Toggle idioma">🌐 ES / EN</button>
   </div>
 </nav>
 
@@ -293,8 +293,8 @@
       <h1 class="hero-name" data-i="hero-name">Soy<br><span class="grad">Valens</span></h1>
       <p class="hero-sub" data-i="hero-sub">Hago juegos, programo cosas, creo contenido.</p>
       <div class="hero-cta">
-        <a href="#dev" class="btn btn-primary" data-i="hero-btn1">Ver proyectos</a>
-        <a href="#links-section" class="btn btn-outline">Links →</a>
+        <a href="#dev" class="btn btn-primary" data-i="hero-btn1" data-track-label="🚀 Hero — Ver proyectos">Ver proyectos</a>
+        <a href="#links-section" class="btn btn-outline" data-track-label="🔗 Hero — Links">Links →</a>
       </div>
     </div>
     <div class="hero-visual">
@@ -315,19 +315,19 @@
     <h2 class="section-heading reveal reveal-delay-1">Game Dev &amp;<br><span class="accent" data-i="dev-h2">Programación</span></h2>
     <p class="reveal reveal-delay-2" style="color:var(--muted);max-width:580px;margin-top:20px;line-height:1.8;" data-i="dev-sub">Trabajo con distintos motores y lenguajes según el proyecto. Hacé click en cada motor para ver más detalles.</p>
     <div class="engines-grid reveal reveal-delay-3">
-      <div class="engine-card" onclick="toggleEngine('python')">
+      <div class="engine-card" onclick="toggleEngine('python')" data-track-label="🐍 Engine — Python">
         <div class="engine-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python"></div>
         <div class="engine-name">Python</div><div class="engine-lang">&amp; RenPy</div><div class="engine-arrow">↓</div>
       </div>
-      <div class="engine-card" onclick="toggleEngine('clickteam')">
+      <div class="engine-card" onclick="toggleEngine('clickteam')" data-track-label="🎮 Engine — Clickteam">
         <div class="engine-icon"><img src="Icons/Clickteam.png" alt="Clickteam"></div>
         <div class="engine-name">Clickteam</div><div class="engine-lang">FUSION 2.5</div><div class="engine-arrow">↓</div>
       </div>
-      <div class="engine-card" onclick="toggleEngine('gamemaker')">
+      <div class="engine-card" onclick="toggleEngine('gamemaker')" data-track-label="🎮 Engine — GameMaker">
         <div class="engine-icon"><img src="Icons/Gamemaker.png" alt="GameMaker"></div>
         <div class="engine-name">GameMaker</div><div class="engine-lang">GML</div><div class="engine-arrow">↓</div>
       </div>
-      <div class="engine-card" onclick="toggleEngine('unity')">
+      <div class="engine-card" onclick="toggleEngine('unity')" data-track-label="🎮 Engine — Unity">
         <div class="engine-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/unity/unity-original.svg" alt="Unity" style="filter:invert(1)"></div>
         <div class="engine-name">Unity</div><div class="engine-lang">C#</div><div class="engine-arrow">↓</div>
       </div>
@@ -358,10 +358,10 @@
         </div>
       </div>
       <div class="vods-grid reveal reveal-delay-2">
-        <div class="vod-card"><div class="vod-thumb">📺</div><div class="vod-info"><div class="vod-title" data-i="vod1-title">Probando por primera vez Hytale — ¡Recién salió!</div><div class="vod-meta"><span data-i="vod1-date">26/1/26</span> · Gameplay</div></div><div class="vod-duration">1:49:13</div></div>
-        <div class="vod-card"><div class="vod-thumb">🎮</div><div class="vod-info"><div class="vod-title" data-i="vod2-title">Purrfect Apawcalypse — Saga completa</div><div class="vod-meta"><span data-i="vod2-date">11/3/26</span> · Visual Novel</div></div><div class="vod-duration">8:51:09</div></div>
-        <div class="vod-card"><div class="vod-thumb">🔴</div><div class="vod-info"><div class="vod-title" data-i="vod3-title">Probando DANGANRONPA ¿es este el PEAK?</div><div class="vod-meta"><span data-i="vod3-date">26/3/26</span> · Visual Novel</div></div><div class="vod-duration">1:36:19</div></div>
-        <div class="vod-card"><div class="vod-thumb">💻</div><div class="vod-info"><div class="vod-title" data-i="vod4-title">Los furros me persiguen (Pero yo soy más rápido)</div><div class="vod-meta"><span data-i="vod4-date">26/11/25</span> · Visual Novel</div></div><div class="vod-duration">47:10</div></div>
+        <div class="vod-card" data-track-label="📺 VOD — Hytale"><div class="vod-thumb">📺</div><div class="vod-info"><div class="vod-title" data-i="vod1-title">Probando por primera vez Hytale — ¡Recién salió!</div><div class="vod-meta"><span data-i="vod1-date">26/1/26</span> · Gameplay</div></div><div class="vod-duration">1:49:13</div></div>
+        <div class="vod-card" data-track-label="📺 VOD — Purrfect Apawcalypse"><div class="vod-thumb">🎮</div><div class="vod-info"><div class="vod-title" data-i="vod2-title">Purrfect Apawcalypse — Saga completa</div><div class="vod-meta"><span data-i="vod2-date">11/3/26</span> · Visual Novel</div></div><div class="vod-duration">8:51:09</div></div>
+        <div class="vod-card" data-track-label="📺 VOD — Danganronpa"><div class="vod-thumb">🔴</div><div class="vod-info"><div class="vod-title" data-i="vod3-title">Probando DANGANRONPA ¿es este el PEAK?</div><div class="vod-meta"><span data-i="vod3-date">26/3/26</span> · Visual Novel</div></div><div class="vod-duration">1:36:19</div></div>
+        <div class="vod-card" data-track-label="📺 VOD — Los furros"><div class="vod-thumb">💻</div><div class="vod-info"><div class="vod-title" data-i="vod4-title">Los furros me persiguen (Pero yo soy más rápido)</div><div class="vod-meta"><span data-i="vod4-date">26/11/25</span> · Visual Novel</div></div><div class="vod-duration">47:10</div></div>
       </div>
     </div>
   </div>
@@ -375,12 +375,12 @@
     <div class="section-tag reveal" data-i="yt-tag">[ 03 — YOUTUBE ]</div>
     <h2 class="section-heading reveal reveal-delay-1"><span data-i="yt-h2a">Seguime en</span><br><span class="accent">Nyxr_ar</span></h2>
     <div class="yt-grid reveal reveal-delay-2">
-      <div class="yt-card"><div class="yt-thumb">🎮<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt1">No era tan inocente como parecía… 💀 | Purrfect Apawcalypse</div><div class="yt-meta"><span data-i="yt1-meta">+170 vistas · hace 4 semanas</span></div></div></div>
-      <div class="yt-card"><div class="yt-thumb">🐍<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt2">Jugué CHANGED y me arrepiento</div><div class="yt-meta"><span data-i="yt2-meta">+50 vistas · hace 1 mes</span></div></div></div>
-      <div class="yt-card"><div class="yt-thumb">⚙️<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt3">INTENTÉ VENCER AL CABALLERO EN STREAM Y PASÓ ESTO...</div><div class="yt-meta"><span data-i="yt3-meta">+580 vistas · hace 10 meses</span></div></div></div>
-      <div class="yt-card"><div class="yt-thumb">🕹️<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt4">MIRÁ LO QUE GANÉ EN KEYDROP 🤑🤑</div><div class="yt-meta"><span data-i="yt4-meta">+100 vistas · hace 1 año</span></div></div></div>
-      <div class="yt-card"><div class="yt-thumb">🔥<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt5">Así es vivir con una zorra (spoiler: es un desastre)</div><div class="yt-meta"><span data-i="yt5-meta">+130 vistas · hace 5 meses</span></div></div></div>
-      <div class="yt-card"><div class="yt-thumb">🎬<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt6">PROBÉ OneShot y me rompió el PC (y mi corazón)</div><div class="yt-meta"><span data-i="yt6-meta">+40 vistas · hace 2 meses</span></div></div></div>
+      <div class="yt-card" data-track-label="▶ YT — Purrfect Apawcalypse"><div class="yt-thumb">🎮<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt1">No era tan inocente como parecía… 💀 | Purrfect Apawcalypse</div><div class="yt-meta"><span data-i="yt1-meta">+170 vistas · hace 4 semanas</span></div></div></div>
+      <div class="yt-card" data-track-label="▶ YT — CHANGED"><div class="yt-thumb">🐍<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt2">Jugué CHANGED y me arrepiento</div><div class="yt-meta"><span data-i="yt2-meta">+50 vistas · hace 1 mes</span></div></div></div>
+      <div class="yt-card" data-track-label="▶ YT — Caballero stream"><div class="yt-thumb">⚙️<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt3">INTENTÉ VENCER AL CABALLERO EN STREAM Y PASÓ ESTO...</div><div class="yt-meta"><span data-i="yt3-meta">+580 vistas · hace 10 meses</span></div></div></div>
+      <div class="yt-card" data-track-label="▶ YT — Keydrop"><div class="yt-thumb">🕹️<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt4">MIRÁ LO QUE GANÉ EN KEYDROP 🤑🤑</div><div class="yt-meta"><span data-i="yt4-meta">+100 vistas · hace 1 año</span></div></div></div>
+      <div class="yt-card" data-track-label="▶ YT — Vivir con una zorra"><div class="yt-thumb">🔥<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt5">Así es vivir con una zorra (spoiler: es un desastre)</div><div class="yt-meta"><span data-i="yt5-meta">+130 vistas · hace 5 meses</span></div></div></div>
+      <div class="yt-card" data-track-label="▶ YT — OneShot"><div class="yt-thumb">🎬<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt6">PROBÉ OneShot y me rompió el PC (y mi corazón)</div><div class="yt-meta"><span data-i="yt6-meta">+40 vistas · hace 2 meses</span></div></div></div>
     </div>
   </div>
 </section>
@@ -394,7 +394,7 @@
     <h2 class="section-heading reveal reveal-delay-1"><span data-i="edit-h2a">Edición</span><br><span class="accent" data-i="edit-h2b">de video</span></h2>
     <p class="reveal reveal-delay-2" style="color:var(--muted);max-width:580px;margin-top:20px;line-height:1.8;" data-i="edit-sub">Dos herramientas, dos flujos de trabajo. Cada una para lo que mejor hace.</p>
     <div class="editing-tools">
-      <div class="tool-card reveal reveal-delay-2">
+      <div class="tool-card reveal reveal-delay-2" data-track-label="🎬 Tool — Filmora">
         <div class="tool-logo"><img src="Icons/Filmora.png" alt="Filmora"></div>
         <div class="tool-name">Wondershare Filmora</div>
         <div class="tool-type" data-i="filmora-type">EDICIÓN PRINCIPAL</div>
@@ -407,7 +407,7 @@
           <div class="tool-feature" data-i="filmora-f5">Screen recorder + editor en uno</div>
         </div>
       </div>
-      <div class="tool-card reveal reveal-delay-3">
+      <div class="tool-card reveal reveal-delay-3" data-track-label="🎬 Tool — Clipchamp">
         <div class="tool-logo"><img src="Icons/Clipchamp.png" alt="Clipchamp"></div>
         <div class="tool-name">Clipchamp</div>
         <div class="tool-type" data-i="clip-type">EDICIÓN RÁPIDA / CLIPS</div>
@@ -434,16 +434,16 @@
     <p class="reveal reveal-delay-2" style="color:var(--muted);max-width:580px;margin-top:20px;line-height:1.8;" data-i="links-sub">Todos mis espacios en internet, en un solo lugar.</p>
     <div class="apps-strip reveal reveal-delay-3">
       <div class="apps-logos">
-        <a href="https://www.youtube.com/@Valens429VODs" target="_blank" class="app-logo-item"><svg width="36" height="36" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.5 20.5 12 20.5 12 20.5s7.5 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg><span>YouTube</span></a>
-        <a href="https://www.twitch.tv/nyxr_ar" target="_blank" class="app-logo-item"><svg width="36" height="36" viewBox="0 0 24 24" fill="#9147ff"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg><span>Twitch</span></a>
-        <a href="https://bsky.app/profile/valens429.bsky.social" target="_blank" class="app-logo-item"><svg width="36" height="36" viewBox="0 0 24 24" fill="#0085ff"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.479 0-.689-.139-1.861-.902-2.206-.659-.299-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z"/></svg><span>Bluesky</span></a>
-        <a href="https://github.com/Valens429" target="_blank" class="app-logo-item"><svg width="36" height="36" viewBox="0 0 24 24" fill="#fff"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg><span>GitHub</span></a>
-        <a href="https://discord.gg/Tajpn7ddUV" target="_blank" class="app-logo-item"><img src="Icons/Discord.png" alt="Discord" width="36" height="36"><span>Discord</span></a>
-        <a href="https://drive.google.com/drive/folders/1s9XBix-wr949mTLPTmgenUe3eulBHFN8" target="_blank" class="app-logo-item"><img src="Icons/Drive.png" alt="Drive" width="36" height="36"><span data-i="assets-label">Assets</span></a>
-        <a href="https://gamejolt.com/@Valens429" target="_blank" class="app-logo-item"><img src="Icons/Gamejolt.png" alt="GameJolt" width="36" height="36"><span>GameJolt</span></a>
-        <a href="https://www.tiktok.com/@nyxrar" target="_blank" class="app-logo-item"><img src="Icons/Tiktok.png" alt="TikTok" width="36" height="36"><span>TikTok</span></a>
-        <a href="https://valens429.itch.io" target="_blank" class="app-logo-item"><img src="Icons/Itchio.png" alt="itch.io" width="36" height="36"><span>itch.io</span></a>
-        <a href="https://ko-fi.com/valens429" target="_blank" class="app-logo-item"><svg width="36" height="36" viewBox="0 0 24 24" fill="#ff5e5b"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 2.692.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"/></svg><span>Ko-fi</span></a>
+        <a href="https://www.youtube.com/@Valens429VODs" target="_blank" class="app-logo-item" data-track-label="🔗 Link — YouTube"><svg width="36" height="36" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.5 20.5 12 20.5 12 20.5s7.5 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg><span>YouTube</span></a>
+        <a href="https://www.twitch.tv/nyxr_ar" target="_blank" class="app-logo-item" data-track-label="🔗 Link — Twitch"><svg width="36" height="36" viewBox="0 0 24 24" fill="#9147ff"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg><span>Twitch</span></a>
+        <a href="https://bsky.app/profile/valens429.bsky.social" target="_blank" class="app-logo-item" data-track-label="🔗 Link — Bluesky"><svg width="36" height="36" viewBox="0 0 24 24" fill="#0085ff"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.479 0-.689-.139-1.861-.902-2.206-.659-.299-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z"/></svg><span>Bluesky</span></a>
+        <a href="https://github.com/Valens429" target="_blank" class="app-logo-item" data-track-label="🔗 Link — GitHub"><svg width="36" height="36" viewBox="0 0 24 24" fill="#fff"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg><span>GitHub</span></a>
+        <a href="https://discord.gg/Tajpn7ddUV" target="_blank" class="app-logo-item" data-track-label="🔗 Link — Discord"><img src="Icons/Discord.png" alt="Discord" width="36" height="36"><span>Discord</span></a>
+        <a href="https://drive.google.com/drive/folders/1s9XBix-wr949mTLPTmgenUe3eulBHFN8" target="_blank" class="app-logo-item" data-track-label="🔗 Link — Assets Drive"><img src="Icons/Drive.png" alt="Drive" width="36" height="36"><span data-i="assets-label">Assets</span></a>
+        <a href="https://gamejolt.com/@Valens429" target="_blank" class="app-logo-item" data-track-label="🔗 Link — GameJolt"><img src="Icons/Gamejolt.png" alt="GameJolt" width="36" height="36"><span>GameJolt</span></a>
+        <a href="https://www.tiktok.com/@nyxrar" target="_blank" class="app-logo-item" data-track-label="🔗 Link — TikTok"><img src="Icons/Tiktok.png" alt="TikTok" width="36" height="36"><span>TikTok</span></a>
+        <a href="https://valens429.itch.io" target="_blank" class="app-logo-item" data-track-label="🔗 Link — itch.io"><img src="Icons/Itchio.png" alt="itch.io" width="36" height="36"><span>itch.io</span></a>
+        <a href="https://ko-fi.com/valens429" target="_blank" class="app-logo-item" data-track-label="☕ Link — Ko-fi"><svg width="36" height="36" viewBox="0 0 24 24" fill="#ff5e5b"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 2.692.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"/></svg><span>Ko-fi</span></a>
       </div>
     </div>
   </div>
@@ -453,6 +453,43 @@
   <div class="footer-logo">Valens429</div>
   <div class="footer-copy" data-i="footer-copy">// Con cariño</div>
 </footer>
+
+<!-- =============================================
+     TRACKER DE STATS — No tocar
+============================================= -->
+<script>
+(function () {
+  const SUPABASE_URL = "https://hxfwzyfaenxpbgsvbnsn.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4Znd6eWZhZW54cGJnc3ZibnNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODg0OTIsImV4cCI6MjA5NTA2NDQ5Mn0.lIglDBigwP4XChdUs1kz2kgDCmJ5IRPgkN9iEzTQAG8";
+
+  async function track(label, url) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/clicks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({ label, url: url || window.location.pathname }),
+      });
+    } catch (_) {}
+  }
+
+  // Trackea clics en todos los elementos con data-track-label
+  document.addEventListener("click", function (e) {
+    const el = e.target.closest("[data-track-label]");
+    if (!el) return;
+    const label = el.getAttribute("data-track-label");
+    const url = el.href || el.dataset.trackUrl || window.location.pathname;
+    track(label, url);
+  });
+
+  // Vista de página
+  track("📄 Vista — " + (document.title || "index"), window.location.pathname);
+})();
+</script>
 
 <script>
 const t = {
@@ -611,11 +648,11 @@ function toggleEngine(id) {
   const detail = document.getElementById('detail-' + id);
   const allCards = document.querySelectorAll('.engine-card');
   const allDetails = document.querySelectorAll('.engine-detail');
-  const card = [...allCards].find(c => c.getAttribute('onclick') === `toggleEngine('${id}')`);
+  const card = [...allCards].find(c => c.getAttribute('onclick') && c.getAttribute('onclick').includes(id));
   const isOpen = detail.classList.contains('open');
   allDetails.forEach(d => d.classList.remove('open'));
   allCards.forEach(c => c.classList.remove('active'));
-  if (!isOpen) { detail.classList.add('open'); card.classList.add('active'); setTimeout(() => detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100); }
+  if (!isOpen) { detail.classList.add('open'); card && card.classList.add('active'); setTimeout(() => detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100); }
 }
 
 // SCROLL REVEAL
