@@ -7,31 +7,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #080810;
-    --bg2: #0d0d1a;
-    --purple: #a855f7;
-    --cyan: #06b6d4;
-    --purple-dim: #7c3aed44;
-    --cyan-dim: #06b6d422;
-    --text: #e2e8f0;
-    --muted: #64748b;
-    --border: #1e1e3a;
-    --glow-p: 0 0 40px #a855f755;
-    --glow-c: 0 0 40px #06b6d455;
+    --bg: #080810; --bg2: #0d0d1a; --purple: #a855f7; --cyan: #06b6d4;
+    --purple-dim: #7c3aed44; --cyan-dim: #06b6d422; --text: #e2e8f0;
+    --muted: #64748b; --border: #1e1e3a;
+    --glow-p: 0 0 40px #a855f755; --glow-c: 0 0 40px #06b6d455;
   }
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Outfit', sans-serif;
-    overflow-x: hidden;
-    cursor: none;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+  body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; overflow-x: hidden; cursor: none; min-height: 100vh; display: flex; flex-direction: column; }
 
   .cursor { position: fixed; width: 12px; height: 12px; background: var(--cyan); border-radius: 50%; pointer-events: none; z-index: 99999; transition: transform 0.1s ease; }
   .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--purple); border-radius: 50%; pointer-events: none; z-index: 99999; transition: all 0.15s ease; }
@@ -41,7 +24,7 @@
   .blob { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; opacity: 0.15; }
   .blob-1 { width: 600px; height: 600px; background: var(--purple); top: -200px; left: -200px; animation: blobFloat 12s ease-in-out infinite; }
   .blob-2 { width: 500px; height: 500px; background: var(--cyan); bottom: 20%; right: -150px; animation: blobFloat 15s ease-in-out infinite reverse; }
-  @keyframes blobFloat { 0%, 100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-30px) scale(1.05); } 66% { transform: translate(-20px,20px) scale(0.95); } }
+  @keyframes blobFloat { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-30px) scale(1.05)} 66%{transform:translate(-20px,20px) scale(0.95)} }
 
   nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 20px 60px; background: linear-gradient(180deg, var(--bg) 0%, transparent 100%); backdrop-filter: blur(10px); }
   .nav-logo { font-family: 'Space Mono', monospace; font-size: 1.2rem; color: var(--cyan); text-shadow: var(--glow-c); letter-spacing: 2px; text-decoration: none; }
@@ -49,18 +32,17 @@
   .nav-links a { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--muted); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; }
   .nav-links a:hover { color: var(--cyan); text-shadow: var(--glow-c); }
 
-  .main-content { position: relative; z-index: 1; padding: 140px 20px 80px 20px; max-width: 900px; width: 100%; margin: 0 auto; flex: 1; display: flex; flex-direction: column; align-items: center; }
+  .main-content { position: relative; z-index: 1; padding: 140px 20px 80px; max-width: 900px; width: 100%; margin: 0 auto; flex: 1; display: flex; flex-direction: column; align-items: center; }
   .section-tag { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--purple); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 16px; }
   .section-heading { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 800; line-height: 1.1; text-align: center; margin-bottom: 20px; }
   .section-heading .accent { background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .section-sub { color: var(--muted); max-width: 580px; text-align: center; line-height: 1.8; font-size: 0.95rem; margin-bottom: 40px; }
 
   .download-wrapper { margin-bottom: 60px; text-align: center; width: 100%; max-width: 450px; }
-  .btn-download { position: relative; display: flex; align-items: center; justify-content: center; gap: 12px; background: linear-gradient(135deg, var(--purple) 0%, #7c3aed 100%); color: #ffffff; font-family: 'Space Mono', monospace; font-size: 1rem; font-weight: 700; text-decoration: none; padding: 20px 40px; border-radius: 4px; letter-spacing: 2px; text-transform: uppercase; overflow: hidden; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); box-shadow: 0 0 20px rgba(168, 85, 247, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); }
-  .btn-download::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent); transform: skewX(-25deg); transition: none; }
+  .btn-download { position: relative; display: flex; align-items: center; justify-content: center; gap: 12px; background: linear-gradient(135deg, var(--purple) 0%, #7c3aed 100%); color: #fff; font-family: 'Space Mono', monospace; font-size: 1rem; font-weight: 700; text-decoration: none; padding: 20px 40px; border-radius: 4px; letter-spacing: 2px; text-transform: uppercase; overflow: hidden; transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1); box-shadow: 0 0 20px rgba(168,85,247,0.4); border: 1px solid rgba(255,255,255,0.1); cursor: none; }
+  .btn-download::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent); transform: skewX(-25deg); transition: none; }
   .btn-download:hover::before { left: 150%; transition: left 0.6s ease-in-out; }
-  .btn-download:hover { transform: translateY(-4px); background: linear-gradient(135deg, #7c3aed 0%, var(--cyan) 100%); box-shadow: 0 0 35px rgba(6, 182, 212, 0.6); color: #080810; }
-  .btn-download:active { transform: translateY(-1px); }
+  .btn-download:hover { transform: translateY(-4px); background: linear-gradient(135deg, #7c3aed 0%, var(--cyan) 100%); box-shadow: 0 0 35px rgba(6,182,212,0.6); color: #080810; }
   .btn-download svg { width: 20px; height: 20px; fill: currentColor; transition: transform 0.3s ease; }
   .btn-download:hover svg { transform: translateY(2px); }
 
@@ -69,52 +51,17 @@
   .form-container iframe { width: 100%; height: 1000px; border: none; display: block; }
 
   /* PASSWORD OVERLAY */
-  #pass-overlay {
-    position: fixed;
-    inset: 0;
-    background: var(--bg);
-    z-index: 99998;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 24px;
-  }
+  #pass-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 99998; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; }
   #pass-overlay .pass-tag { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--purple); letter-spacing: 4px; text-transform: uppercase; }
   #pass-overlay h2 { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; }
   #pass-overlay h2 span { background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   #pass-overlay p { color: var(--muted); font-size: 0.9rem; }
   #pass-input-wrap { display: flex; gap: 12px; }
-  #pass-input {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    color: var(--text);
-    font-family: 'Space Mono', monospace;
-    font-size: 1rem;
-    padding: 14px 20px;
-    outline: none;
-    width: 220px;
-    letter-spacing: 3px;
-    transition: border-color 0.3s;
-  }
+  #pass-input { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: 'Space Mono', monospace; font-size: 1rem; padding: 14px 20px; outline: none; width: 220px; letter-spacing: 3px; transition: border-color 0.3s; cursor: none; }
   #pass-input:focus { border-color: var(--purple); box-shadow: var(--glow-p); }
   #pass-input.error { border-color: #ef4444; animation: shake 0.3s ease; }
-  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
-  #pass-btn {
-    background: linear-gradient(135deg, var(--purple), #7c3aed);
-    border: none;
-    border-radius: 4px;
-    color: #fff;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    padding: 14px 24px;
-    cursor: none;
-    transition: all 0.3s;
-    text-transform: uppercase;
-  }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+  #pass-btn { background: linear-gradient(135deg, var(--purple), #7c3aed); border: none; border-radius: 4px; color: #fff; font-family: 'Space Mono', monospace; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; padding: 14px 24px; cursor: none; transition: all 0.3s; text-transform: uppercase; }
   #pass-btn:hover { background: linear-gradient(135deg, #7c3aed, var(--cyan)); color: #080810; box-shadow: var(--glow-c); }
   #pass-error { color: #ef4444; font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 2px; min-height: 1em; }
 
@@ -129,85 +76,132 @@
 </head>
 <body>
 
-  <div class="cursor" id="cursor"></div>
-  <div class="cursor-ring" id="cursorRing"></div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
 
-  <!-- PASSWORD OVERLAY -->
-  <div id="pass-overlay">
-    <div class="pass-tag">[ Private Access ]</div>
-    <h2>Beta <span>Access</span></h2>
-    <p>Enter your beta key to continue.</p>
-    <div id="pass-input-wrap">
-      <input type="password" id="pass-input" placeholder="••••••••" autocomplete="off" />
-      <button id="pass-btn" onclick="checkPass()">Enter</button>
-    </div>
-    <div id="pass-error"></div>
+<!-- PASSWORD OVERLAY -->
+<div id="pass-overlay">
+  <div class="pass-tag">[ Private Access ]</div>
+  <h2>Beta <span>Access</span></h2>
+  <p>Enter your beta key to continue.</p>
+  <div id="pass-input-wrap">
+    <input type="password" id="pass-input" placeholder="••••••••" autocomplete="off" />
+    <button id="pass-btn" onclick="checkPass()">Enter</button>
+  </div>
+  <div id="pass-error"></div>
+</div>
+
+<div id="mobile-block">
+  <div class="mb-icon">🖥️</div>
+  <h2><span class="mb-accent">Desktop</span> only</h2>
+  <div class="mb-line"></div>
+  <p>This section is optimized for computers.<br><br>Visit from a <span class="mb-accent">PC</span> to download the beta and leave your feedback.</p>
+</div>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<nav>
+  <a href="https://Valens429.site" class="nav-logo">Valens<span>_</span>429</a>
+  <div class="nav-links">
+    <a href="https://Valens429.site">← Back to Home</a>
+  </div>
+</nav>
+
+<main class="main-content">
+  <div class="section-tag">[ BETA TESTING ]</div>
+  <h1 class="section-heading">Playtest & <span class="accent">Feedback</span></h1>
+  <p class="section-sub">Download the latest private beta build from the external link and report any bugs or suggestions down below.</p>
+
+  <div class="download-wrapper">
+    <a href="TU_LINK_DE_DESCARGA_AQUÍ" target="_blank" class="btn-download" id="btn-beta">
+      <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
+      Download Beta Build
+    </a>
   </div>
 
-  <div id="mobile-block">
-    <div class="mb-icon">🖥️</div>
-    <h2><span class="mb-accent">Desktop</span> only</h2>
-    <div class="mb-line"></div>
-    <p>This section is optimized for computers.<br><br>Visit from a <span class="mb-accent">PC</span> to download the beta and leave your feedback.</p>
+  <div class="form-container">
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdhwGluoCAcflHxwqih4JQpfxPbj3dzqkQorabI2Gt3M2qKkQ/viewform?embedded=true" width="100%" height="1000" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
   </div>
+</main>
 
-  <div class="blob blob-1"></div>
-  <div class="blob blob-2"></div>
+<!-- TRACKER -->
+<script>
+(function () {
+  const SUPABASE_URL = "https://hxfwzyfaenxpbgsvbnsn.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4Znd6eWZhZW54cGJnc3ZibnNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODg0OTIsImV4cCI6MjA5NTA2NDQ5Mn0.lIglDBigwP4XChdUs1kz2kgDCmJ5IRPgkN9iEzTQAG8";
 
-  <nav>
-    <a href="https://Valens429.site" class="nav-logo">Valens<span>_</span>429</a>
-    <div class="nav-links">
-      <a href="https://Valens429.site">← Back to Home</a>
-    </div>
-  </nav>
+  async function track(label, url) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/clicks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({ label, url: url || window.location.pathname }),
+      });
+    } catch (_) {}
+  }
 
-  <main class="main-content">
-    <div class="section-tag">[ BETA TESTING ]</div>
-    <h1 class="section-heading">Playtest & <span class="accent">Feedback</span></h1>
-    <p class="section-sub">Download the latest private beta build from the external link and report any bugs or suggestions down below.</p>
+  // Vista de página — se trackea solo si ya pasó la contraseña
+  // (se llama desde checkPass al éxito)
+  window._trackBetaView = function () {
+    track("🎮 Evento — Vista: Beta Feedback", window.location.pathname);
+  };
 
-    <div class="download-wrapper">
-      <a href="TU_LINK_DE_DESCARGA_AQUÍ" target="_blank" class="btn-download">
-        <svg viewBox="0 0 24 24">
-          <path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/>
-        </svg>
-        Download Beta Build
-      </a>
-    </div>
+  // Descarga beta
+  document.getElementById('btn-beta').addEventListener('click', () => {
+    track("🎮 Evento — Descarga Beta", window.location.pathname);
+  });
 
-    <div class="form-container">
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdhwGluoCAcflHxwqih4JQpfxPbj3dzqkQorabI2Gt3M2qKkQ/viewform?embedded=true" width="100%" height="1000" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
-    </div>
-  </main>
+  // Exponer track para checkPass
+  window._trackEvento = track;
+})();
+</script>
 
-  <script>
-    const cursor = document.getElementById('cursor');
-    const cursorRing = document.getElementById('cursorRing');
-    document.addEventListener('mousemove', (e) => {
-      cursor.style.transform = `translate3d(${e.clientX - 6}px, ${e.clientY - 6}px, 0)`;
-      cursorRing.style.transform = `translate3d(${e.clientX - 18}px, ${e.clientY - 18}px, 0)`;
-    });
-    document.addEventListener('mousedown', () => { cursor.style.transform += ' scale(0.8)'; cursorRing.style.transform += ' scale(1.3)'; });
-    document.addEventListener('mouseup', () => { cursor.style.transform = cursor.style.transform.replace(' scale(0.8)', ''); cursorRing.style.transform = cursorRing.style.transform.replace(' scale(1.3)', ''); });
+<!-- LÓGICA CONTRASEÑA + CURSOR -->
+<script>
+  const cursor = document.getElementById('cursor');
+  const cursorRing = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', (e) => {
+    cursor.style.transform = `translate3d(${e.clientX - 6}px, ${e.clientY - 6}px, 0)`;
+    cursorRing.style.transform = `translate3d(${e.clientX - 18}px, ${e.clientY - 18}px, 0)`;
+  });
+  document.addEventListener('mousedown', () => { cursor.style.transform += ' scale(0.8)'; cursorRing.style.transform += ' scale(1.3)'; });
+  document.addEventListener('mouseup', () => { cursor.style.transform = cursor.style.transform.replace(' scale(0.8)', ''); cursorRing.style.transform = cursorRing.style.transform.replace(' scale(1.3)', ''); });
 
-    // Enter key support
-    document.getElementById('pass-input').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') checkPass();
-    });
+  document.getElementById('pass-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') checkPass();
+  });
 
-    function checkPass() {
-      const input = document.getElementById('pass-input');
-      const error = document.getElementById('pass-error');
-      if (input.value.toLowerCase() === '90%hub') {
-        document.getElementById('pass-overlay').style.display = 'none';
-      } else {
-        input.classList.add('error');
-        error.textContent = 'Wrong key. Try again.';
-        input.value = '';
-        setTimeout(() => input.classList.remove('error'), 400);
+  function checkPass() {
+    const input = document.getElementById('pass-input');
+    const error = document.getElementById('pass-error');
+    if (input.value.toLowerCase() === '90%hub') {
+      // Trackear acceso correcto
+      if (window._trackEvento) {
+        window._trackEvento("🎮 Evento — Contraseña Correcta", window.location.pathname);
       }
+      // Trackear vista de página (ahora que accedió)
+      if (window._trackBetaView) {
+        window._trackBetaView();
+      }
+      document.getElementById('pass-overlay').style.display = 'none';
+    } else {
+      // Trackear intento fallido
+      if (window._trackEvento) {
+        window._trackEvento("🎮 Evento — Contraseña Incorrecta", window.location.pathname);
+      }
+      input.classList.add('error');
+      error.textContent = 'Wrong key. Try again.';
+      input.value = '';
+      setTimeout(() => input.classList.remove('error'), 400);
     }
-  </script>
+  }
+</script>
 
 </body>
 </html>
