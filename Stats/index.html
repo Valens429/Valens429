@@ -346,56 +346,88 @@
   ══════════════════════════════ -->
   <div class="tab-panel" id="tab-evento">
 
-    <!-- KPIs del evento -->
-    <div class="kpis" id="ev-kpis" style="margin-bottom:2px;">
+    <!-- ── BLOQUE CAPTURA — KPIs limpios ── -->
+    <div style="font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--purple);letter-spacing:4px;text-transform:uppercase;margin-bottom:1rem;">// RESUMEN — PARA CAPTURA</div>
+
+    <!-- Fila 1: Descargas -->
+    <div style="font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:2px;padding-left:4px;">DESCARGAS</div>
+    <div class="kpis" style="margin-bottom:2px;">
       <div class="kpi">
-        <div class="kpi-tag">Visitas Claim</div>
+        <div class="kpi-tag">Beta Build</div>
+        <div class="kpi-val" id="ev-kpi-dl-beta">—</div>
+        <div class="kpi-sub">descargas de la beta</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-tag">Premio WebP</div>
+        <div class="kpi-val" id="ev-kpi-dl-webp">—</div>
+        <div class="kpi-sub">pack ligero</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-tag">Premio PNG</div>
+        <div class="kpi-val" id="ev-kpi-dl-png">—</div>
+        <div class="kpi-sub">pack full HQ</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-tag">Premio Total</div>
+        <div class="kpi-val" id="ev-kpi-dl-premio">—</div>
+        <div class="kpi-sub">webp + png</div>
+      </div>
+    </div>
+
+    <!-- Fila 2: Visitas -->
+    <div style="font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:2px;padding-left:4px;margin-top:10px;">VISITAS</div>
+    <div class="kpis" style="margin-bottom:2px;">
+      <div class="kpi">
+        <div class="kpi-tag">Claim Reward</div>
         <div class="kpi-val" id="ev-kpi-claim">—</div>
-        <div class="kpi-sub">claim reward page</div>
+        <div class="kpi-sub">accesos a claim page</div>
       </div>
       <div class="kpi">
-        <div class="kpi-tag">Visitas Feedback</div>
+        <div class="kpi-tag">Beta Feedback</div>
         <div class="kpi-val" id="ev-kpi-feedback">—</div>
-        <div class="kpi-sub">beta feedback page</div>
+        <div class="kpi-sub">accesos post-contraseña</div>
       </div>
       <div class="kpi">
-        <div class="kpi-tag">Descargas totales</div>
-        <div class="kpi-val" id="ev-kpi-dl">—</div>
-        <div class="kpi-sub">webp + png + beta</div>
+        <div class="kpi-tag">Pass Correcta</div>
+        <div class="kpi-val" id="ev-kpi-pass-ok">—</div>
+        <div class="kpi-sub">accesos válidos</div>
       </div>
       <div class="kpi">
-        <div class="kpi-tag">Accesos correctos</div>
-        <div class="kpi-val" id="ev-kpi-pass">—</div>
-        <div class="kpi-sub">contraseña válida</div>
+        <div class="kpi-tag">Pass Incorrecta</div>
+        <div class="kpi-val" id="ev-kpi-pass-fail">—</div>
+        <div class="kpi-sub">intentos fallidos</div>
       </div>
     </div>
 
     <div class="diagonal-bar"></div>
 
+    <!-- ── BLOQUE CRUDO ── -->
+    <div style="font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--purple);letter-spacing:4px;text-transform:uppercase;margin-bottom:1rem;">// DATOS EN CRUDO</div>
+
     <div class="main-grid" style="margin-bottom:2px;">
 
-      <!-- Descargas desglosadas -->
+      <!-- Contraseñas -->
       <div class="card">
         <div class="card-header">
-          <div class="card-title">Descargas por tipo</div>
-          <div class="card-count" id="ev-dl-count"></div>
-        </div>
-        <div class="bar-list" id="ev-dl-bars"><div class="empty">Sin datos aún</div></div>
-      </div>
-
-      <!-- Accesos a feedback -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Accesos — Beta Feedback</div>
+          <div class="card-title">Contraseñas — detalle</div>
           <div class="card-count" id="ev-pass-count"></div>
         </div>
         <div class="bar-list" id="ev-pass-bars"><div class="empty">Sin datos aún</div></div>
       </div>
 
-      <!-- Actividad evento completa -->
+      <!-- Descargas por tipo -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Descargas — por tipo</div>
+          <div class="card-count" id="ev-dl-count"></div>
+        </div>
+        <div class="bar-list" id="ev-dl-bars"><div class="empty">Sin datos aún</div></div>
+      </div>
+
+      <!-- Tabla cruda completa -->
       <div class="card card-full">
         <div class="card-header">
-          <div class="card-title">Actividad reciente — Evento</div>
+          <div class="card-title">Actividad completa — Evento</div>
           <div class="card-count" id="ev-recent-count"></div>
         </div>
         <div class="table-wrap">
@@ -404,7 +436,7 @@
               <tr>
                 <th>#</th>
                 <th>Acción</th>
-                <th>Detalle</th>
+                <th>Tipo</th>
                 <th>URL</th>
                 <th>Fecha y hora</th>
               </tr>
@@ -733,59 +765,67 @@
   function renderEvento(data) {
     const ev = data.filter(r => r.label.startsWith('🎮 Evento'));
 
-    // KPIs
+    // ── KPIs Descargas ──
+    const dlBeta  = ev.filter(r => r.label.includes('Descarga Beta')).length;
+    const dlWebP  = ev.filter(r => r.label.includes('Descarga WebP')).length;
+    const dlPNG   = ev.filter(r => r.label.includes('Descarga PNG')).length;
+    const dlPremio = dlWebP + dlPNG;
+
+    document.getElementById('ev-kpi-dl-beta').textContent   = dlBeta;
+    document.getElementById('ev-kpi-dl-webp').textContent   = dlWebP;
+    document.getElementById('ev-kpi-dl-png').textContent    = dlPNG;
+    document.getElementById('ev-kpi-dl-premio').textContent = dlPremio;
+
+    // ── KPIs Visitas ──
     const claim    = ev.filter(r => r.label.includes('Vista: Claim')).length;
     const feedback = ev.filter(r => r.label.includes('Vista: Beta')).length;
-    const descargas = ev.filter(r => r.label.includes('Descarga')).length;
     const passOk   = ev.filter(r => r.label.includes('Contraseña Correcta')).length;
+    const passFail = ev.filter(r => r.label.includes('Contraseña Incorrecta')).length;
 
-    document.getElementById('ev-kpi-claim').textContent    = claim;
-    document.getElementById('ev-kpi-feedback').textContent = feedback;
-    document.getElementById('ev-kpi-dl').textContent       = descargas;
-    document.getElementById('ev-kpi-pass').textContent     = passOk;
+    document.getElementById('ev-kpi-claim').textContent     = claim;
+    document.getElementById('ev-kpi-feedback').textContent  = feedback;
+    document.getElementById('ev-kpi-pass-ok').textContent   = passOk;
+    document.getElementById('ev-kpi-pass-fail').textContent = passFail;
 
-    // Descargas desglosadas
+    // ── Crudo: Contraseñas ──
+    const passData = ev.filter(r => r.label.includes('Contraseña'));
+    const passEntries = contar(passData, r => {
+      if (r.label.includes('Correcta'))   return '✅ Correcta';
+      if (r.label.includes('Incorrecta')) return '❌ Incorrecta';
+      return r.label;
+    });
+    document.getElementById('ev-pass-count').textContent = passData.length + ' intentos';
+    renderBarras('ev-pass-bars', passEntries, false);
+
+    // ── Crudo: Descargas por tipo ──
     const dlData = ev.filter(r => r.label.includes('Descarga'));
     const dlEntries = contar(dlData, r => {
-      if (r.label.includes('WebP'))  return '📦 WebP Pack (ligero)';
-      if (r.label.includes('PNG'))   return '🖼 PNG Pack (HQ)';
+      if (r.label.includes('WebP'))  return '📦 WebP Pack';
+      if (r.label.includes('PNG'))   return '🖼 PNG Pack HQ';
       if (r.label.includes('Beta'))  return '🎮 Beta Build';
       return r.label;
     });
-    document.getElementById('ev-dl-count').textContent = descargas + ' descargas';
+    document.getElementById('ev-dl-count').textContent = dlData.length + ' descargas';
     renderBarras('ev-dl-bars', dlEntries, false);
 
-    // Contraseña
-    const passData = ev.filter(r => r.label.includes('Contraseña'));
-    const passEntries = contar(passData, r => {
-      if (r.label.includes('Correcta'))   return '✅ Contraseña Correcta';
-      if (r.label.includes('Incorrecta')) return '❌ Contraseña Incorrecta';
-      return r.label;
-    });
-    const passTotal = passData.length;
-    document.getElementById('ev-pass-count').textContent = passTotal + ' intentos';
-    renderBarras('ev-pass-bars', passEntries, false);
-
-    // Tabla reciente del evento
+    // ── Tabla cruda completa ──
     document.getElementById('ev-recent-count').textContent = ev.length + ' registros';
     const tbody = document.getElementById('ev-tbody');
     if (!ev.length) {
       tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;font-family:\'Space Mono\',monospace;font-size:.7rem;color:var(--muted)">Sin actividad del evento aún</td></tr>';
       return;
     }
-
-    tbody.innerHTML = ev.slice(0, 60).map((r, i) => {
-      let detalle = '—';
-      let tipoClass = 'link';
-      if (r.label.includes('Vista'))       { detalle = '👁 Vista de página'; tipoClass = 'page'; }
-      else if (r.label.includes('Descarga')) { detalle = '⬇ Descarga'; tipoClass = 'engine'; }
-      else if (r.label.includes('Correcta'))  { detalle = '✅ Acceso OK'; tipoClass = 'twitch'; }
-      else if (r.label.includes('Incorrecta')){ detalle = '❌ Intento fallido'; tipoClass = 'yt'; }
-
+    tbody.innerHTML = ev.slice(0, 100).map((r, i) => {
+      let tipoClass = 'link', tipoLabel = 'OTRO';
+      if (r.label.includes('Vista'))               { tipoClass = 'page';   tipoLabel = 'VISTA'; }
+      else if (r.label.includes('Descarga Beta'))  { tipoClass = 'engine'; tipoLabel = 'DL BETA'; }
+      else if (r.label.includes('Descarga'))       { tipoClass = 'engine'; tipoLabel = 'DL PREMIO'; }
+      else if (r.label.includes('Correcta'))       { tipoClass = 'twitch'; tipoLabel = 'PASS ✅'; }
+      else if (r.label.includes('Incorrecta'))     { tipoClass = 'yt';     tipoLabel = 'PASS ❌'; }
       return `<tr>
         <td class="num">${i+1}</td>
         <td>${r.label.replace('🎮 Evento — ', '')}</td>
-        <td><span class="tag-pill ${tipoClass}">${detalle}</span></td>
+        <td><span class="tag-pill ${tipoClass}">${tipoLabel}</span></td>
         <td class="mono">${r.url || '—'}</td>
         <td class="mono">${new Date(r.created_at).toLocaleString('es-AR')}</td>
       </tr>`;
