@@ -25,7 +25,6 @@
     @keyframes blobFloat { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(20px,-20px) scale(1.05)} }
     .grid-bg { position: fixed; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.25; pointer-events: none; z-index: 0; mask-image: radial-gradient(ellipse at 50% 0%, black 30%, transparent 80%); }
     .wrapper { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 2rem 2.5rem 4rem; }
-
     header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); animation: fadeUp 0.7s ease both; }
     .header-left { display: flex; flex-direction: column; gap: 0.4rem; }
     .header-eyebrow { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--cyan); letter-spacing: 4px; text-transform: uppercase; }
@@ -44,7 +43,6 @@
     .btn-refresh:hover { background: var(--purple-dim); box-shadow: var(--glow-p); }
     .btn-back { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; color: var(--muted); text-decoration: none; border: 1px solid var(--border); padding: 6px 14px; transition: all 0.3s; }
     .btn-back:hover { color: var(--cyan); border-color: var(--cyan); }
-
     .tabs-nav { display: flex; gap: 2px; margin-bottom: 2rem; animation: fadeUp 0.7s ease 0.05s both; flex-wrap: wrap; }
     .tab-btn { font-family: 'Space Mono', monospace; font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase; padding: 12px 28px; background: var(--bg2); border: 1px solid var(--border); color: var(--muted); cursor: none; transition: all 0.25s; position: relative; overflow: hidden; }
     .tab-btn::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--purple), var(--cyan)); transform: scaleX(0); transition: transform 0.3s; }
@@ -53,12 +51,10 @@
     .tab-btn.active::after { transform: scaleX(1); }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; animation: fadeUp 0.4s ease both; }
-
     .filters { display: flex; gap: 8px; margin-bottom: 2rem; flex-wrap: wrap; }
     .filter-btn { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; padding: 6px 14px; border: 1px solid var(--border); color: var(--muted); background: none; cursor: none; transition: all 0.2s; text-transform: uppercase; }
     .filter-btn:hover { border-color: var(--cyan); color: var(--cyan); }
     .filter-btn.active { border-color: var(--purple); color: var(--purple); background: var(--purple-dim); }
-
     .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-bottom: 2px; }
     .kpi { background: var(--bg2); border: 1px solid var(--border); padding: 2rem 1.8rem; position: relative; overflow: hidden; transition: border-color 0.3s; }
     .kpi:hover { border-color: var(--purple); }
@@ -67,14 +63,12 @@
     .kpi-tag { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 0.8rem; }
     .kpi-val { font-family: 'Syne', sans-serif; font-size: 2.8rem; font-weight: 800; line-height: 1; letter-spacing: -0.03em; background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .kpi-sub { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--muted); margin-top: 0.5rem; }
-
     .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 2px; }
     .card { background: var(--bg2); border: 1px solid var(--border); padding: 1.8rem; }
     .card-full { grid-column: 1 / -1; }
     .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
     .card-title { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 3px; }
     .card-count { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--purple); }
-
     .bar-list { display: flex; flex-direction: column; gap: 1rem; }
     .bar-item { display: grid; grid-template-columns: 180px 1fr 40px; align-items: center; gap: 0.8rem; }
     .bar-label { font-size: 0.82rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -82,7 +76,6 @@
     .bar-fill { height: 100%; background: linear-gradient(90deg, var(--purple), var(--cyan)); transform-origin: left; transform: scaleX(0); transition: transform 1s cubic-bezier(0.22,1,0.36,1); }
     .bar-fill.animate { transform: scaleX(1); }
     .bar-count { font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--cyan); text-align: right; }
-
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
     thead th { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; text-align: left; padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--border); white-space: nowrap; }
@@ -98,12 +91,9 @@
     .tag-pill.yt { border-color: #ff3333; color: #ff3333; }
     .tag-pill.twitch { border-color: #9147ff; color: #9147ff; }
     .tag-pill.mail { border-color: var(--cyan); color: var(--cyan); }
-
     .diagonal-bar { position: relative; height: 60px; overflow: hidden; margin-bottom: 2px; }
     .diagonal-bar::after { content: ''; position: absolute; left: -10%; width: 120%; height: 1px; background: linear-gradient(90deg, transparent, var(--purple), var(--cyan), transparent); top: 50%; transform: rotate(-1deg); box-shadow: 0 0 20px var(--purple); }
-
     .empty { text-align: center; color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.72rem; padding: 2.5rem 0; }
-
     .detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-bottom: 2px; }
     .section-card { background: var(--bg2); border: 1px solid var(--border); padding: 1.6rem; transition: border-color 0.3s, box-shadow 0.3s; }
     .section-card:hover { border-color: var(--purple); box-shadow: var(--glow-p); }
@@ -136,14 +126,12 @@
     .section-card[data-sec="edit"] { --sec-color: #ec4899; }
     .section-card[data-sec="lang"] { --sec-color: #a3e635; }
     .section-card[data-sec="vistas"] { --sec-color: var(--cyan); }
-
     .detail-summary { background: var(--bg2); border: 1px solid var(--border); padding: 1.8rem; margin-bottom: 2px; }
     .detail-summary-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; margin-top: 1.2rem; }
     .dsg-item { background: var(--bg); padding: 1.2rem 1rem; text-align: center; border: 1px solid var(--border); }
     .dsg-icon { font-size: 1.4rem; margin-bottom: 6px; }
     .dsg-val { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .dsg-label { font-family: 'Space Mono', monospace; font-size: 0.55rem; color: var(--muted); letter-spacing: 2px; margin-top: 4px; }
-
     @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
@@ -180,7 +168,6 @@
     <button class="tab-btn" onclick="setTab('mails', this)">[ DropMail ]</button>
   </div>
 
-  <!-- TAB GENERAL -->
   <div class="tab-panel active" id="tab-general">
     <div class="filters">
       <button class="filter-btn active" onclick="setFiltro('todo', this)">TODO</button>
@@ -207,7 +194,6 @@
     </div>
   </div>
 
-  <!-- TAB DETALLE -->
   <div class="tab-panel" id="tab-detalle">
     <div class="detail-summary" style="animation: fadeUp 0.4s ease both;">
       <div class="card-header" style="margin-bottom:0"><div class="card-title">Resumen por sección</div><div class="card-count" id="detail-total-label"></div></div>
@@ -217,7 +203,6 @@
     <div class="detail-grid" id="detail-grid"></div>
   </div>
 
-  <!-- TAB EVENTO -->
   <div class="tab-panel" id="tab-evento">
     <div style="font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--purple);letter-spacing:4px;text-transform:uppercase;margin-bottom:1rem;">// RESUMEN</div>
     <div style="font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:2px;padding-left:4px;">DESCARGAS</div>
@@ -246,7 +231,6 @@
     </div>
   </div>
 
-  <!-- TAB MAILS -->
   <div class="tab-panel" id="tab-mails">
     <div style="font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--purple);letter-spacing:4px;text-transform:uppercase;margin-bottom:1rem;">// DROPMAIL — RESUMEN</div>
     <div class="kpis" style="margin-bottom:2px;">
@@ -257,26 +241,14 @@
     </div>
     <div class="diagonal-bar"></div>
     <div class="main-grid" style="margin-bottom:2px;">
-      <div class="card">
-        <div class="card-header"><div class="card-title">Top addresses creadas</div><div class="card-count" id="mail-addr-count"></div></div>
-        <div class="bar-list" id="mail-addr-bars"><div class="empty">Sin datos aún</div></div>
-      </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title">Mails recibidos por address</div><div class="card-count" id="mail-recv-count"></div></div>
-        <div class="bar-list" id="mail-recv-bars"><div class="empty">Sin datos aún</div></div>
-      </div>
+      <div class="card"><div class="card-header"><div class="card-title">Top addresses creadas</div><div class="card-count" id="mail-addr-count"></div></div><div class="bar-list" id="mail-addr-bars"><div class="empty">Sin datos aún</div></div></div>
+      <div class="card"><div class="card-header"><div class="card-title">Mails recibidos por address</div><div class="card-count" id="mail-recv-count"></div></div><div class="bar-list" id="mail-recv-bars"><div class="empty">Sin datos aún</div></div></div>
       <div class="card card-full">
         <div class="card-header"><div class="card-title">Actividad reciente — Dropmail</div><div class="card-count" id="mail-recent-count"></div></div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>#</th><th>Acción</th><th>Tipo</th><th>Address</th><th>Fecha y hora</th></tr></thead>
-            <tbody id="mail-tbody"><tr><td colspan="5" style="text-align:center;padding:2rem;font-family:'Space Mono',monospace;font-size:.7rem;color:var(--muted)">Cargando...</td></tr></tbody>
-          </table>
-        </div>
+        <div class="table-wrap"><table><thead><tr><th>#</th><th>Acción</th><th>Tipo</th><th>Address</th><th>Fecha y hora</th></tr></thead><tbody id="mail-tbody"><tr><td colspan="5" style="text-align:center;padding:2rem;font-family:'Space Mono',monospace;font-size:.7rem;color:var(--muted)">Cargando...</td></tr></tbody></table></div>
       </div>
     </div>
   </div>
-
 </div>
 
 <script>
@@ -486,15 +458,10 @@
     const mailData = data.filter(r => r.label.startsWith('📧 Dropmail'));
     const creadas  = mailData.filter(r => r.label.includes('Address creada'));
     const recibidos = mailData.filter(r => r.label.includes('Mail recibido'));
-
     document.getElementById('mail-kpi-addr').textContent = creadas.length;
     document.getElementById('mail-kpi-recv').textContent = recibidos.length;
-
-    // Promedio mails por address
     const avg = creadas.length ? (recibidos.length / creadas.length).toFixed(1) : '—';
     document.getElementById('mail-kpi-avg').textContent = avg;
-
-    // Address más activa — extraer email del label "Mail recibido (...): email"
     const recvByAddr = {};
     recibidos.forEach(r => {
       const m = r.label.match(/:\s*(.+@valens429\.site)/);
@@ -502,18 +469,12 @@
     });
     const topAddr = Object.entries(recvByAddr).sort((a,b)=>b[1]-a[1])[0];
     document.getElementById('mail-kpi-top').textContent = topAddr ? topAddr[0].split('@')[0] : '—';
-
-    // Barras addresses creadas
     const addrEntries = contar(creadas, r => { const m = r.label.match(/:\s*(.+)/); return m ? m[1].trim() : null; });
     document.getElementById('mail-addr-count').textContent = addrEntries.length + ' addresses';
     renderBarras('mail-addr-bars', addrEntries);
-
-    // Barras mails recibidos por address
     const recvEntries = Object.entries(recvByAddr).sort((a,b)=>b[1]-a[1]);
     document.getElementById('mail-recv-count').textContent = recibidos.length + ' mails';
     renderBarras('mail-recv-bars', recvEntries);
-
-    // Tabla
     document.getElementById('mail-recent-count').textContent = mailData.length + ' registros';
     const tbody = document.getElementById('mail-tbody');
     if (!mailData.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;font-family:\'Space Mono\',monospace;font-size:.7rem;color:var(--muted)">Sin actividad de dropmail aún</td></tr>'; return; }
@@ -535,7 +496,6 @@
     renderMails(data);
   }
 
-  // CURSOR
   const cursor = document.getElementById('cursor');
   const ring   = document.getElementById('cursorRing');
   let mx=0,my=0,rx=0,ry=0;
