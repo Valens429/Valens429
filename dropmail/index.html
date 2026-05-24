@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dropmail · valens429.site</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --surface2: #1a1a24;
+      --border: rgba(255,255,255,0.07);
+      --border2: rgba(255,255,255,0.14);
+      --accent: #7fff6e;
+      --accent2: #00e5ff;
+      --text: #f0f0f0;
+      --muted: #666680;
+      --danger: #ff4d4d;
+      --mono: 'Space Mono', monospace;
+      --display: 'Syne', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--mono); overflow-x: hidden; }
+
+    /* noise overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.5;
+    }
+
+    .app { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* header */
+    header {
+      padding: 20px 32px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      backdrop-filter: blur(10px);
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(10,10,15,0.85);
+    }
+    .logo { font-family: var(--display); font-weight: 800; font-size: 20px; letter-spacing: -0.5px; }
+    .logo span { color: var(--accent); }
+    .logo-domain { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+    .live-label { font-size: 11px; color: var(--muted); }
+
+    /* main layout */
+    main { flex: 1; display: grid; grid-template-columns: 300px 1fr; max-height: calc(100vh - 65px); }
+
+    /* sidebar */
+    .sidebar {
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      background: var(--surface);
+    }
+    .gen-panel { padding: 20px; border-bottom: 1px solid var(--border); }
+    .gen-panel h2 { font-family: var(--display); font-size: 13px; font-weight: 700; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px; }
+    .input-row { display: flex; align-items: center; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-bottom: 8px; transition: border-color 0.2s; }
+    .input-row:focus-within { border-color: var(--accent); }
+    .input-row input { background: none; border: none; outline: none; color: var(--text); font-family: var(--mono); font-size: 12px; padding: 10px 12px; flex: 1; min-width: 0; }
+    .input-row input::placeholder { color: var(--muted); }
+    .at { color: var(--muted); font-size: 12px; }
+    .domain-tag { padding: 10px 12px 10px 0; font-size: 11px; color: var(--accent); white-space: nowrap; }
+    .btn-row { display: flex; gap: 8px; }
+    .btn { font-family: var(--mono); font-size: 11px; padding: 9px 14px; border-radius: 6px; border: 1px solid var(--border2); background: none; color: var(--text); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s; flex: 1; justify-content: center; }
+    .btn:hover { background: var(--surface2); border-color: var(--accent); color: var(--accent); }
+    .btn-primary { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }
+    .btn-primary:hover { background: #9fff8f; color: #000; border-color: #9fff8f; }
+
+    .addr-list { flex: 1; overflow-y: auto; padding: 8px; }
+    .addr-list::-webkit-scrollbar { width: 4px; }
+    .addr-list::-webkit-scrollbar-track { background: transparent; }
+    .addr-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+    .addr-empty { padding: 32px 16px; text-align: center; font-size: 12px; color: var(--muted); }
+
+    .addr-card {
+      padding: 12px 14px; border-radius: 8px; border: 1px solid transparent;
+      cursor: pointer; transition: all 0.15s; margin-bottom: 4px;
+    }
+    .addr-card:hover { background: var(--surface2); border-color: var(--border); }
+    .addr-card.active { background: var(--surface2); border-color: var(--accent); }
+    .addr-email { font-size: 11px; color: var(--accent2); word-break: break-all; margin-bottom: 6px; }
+    .addr-footer { display: flex; align-items: center; justify-content: space-between; }
+    .addr-badge { font-size: 10px; background: rgba(127,255,110,0.15); color: var(--accent); border: 1px solid rgba(127,255,110,0.3); padding: 2px 8px; border-radius: 999px; }
+    .addr-actions { display: flex; gap: 4px; }
+    .icon-btn { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 14px; padding: 4px; border-radius: 4px; transition: all 0.15s; line-height: 1; }
+    .icon-btn:hover { color: var(--text); background: var(--border); }
+    .icon-btn.danger:hover { color: var(--danger); }
+
+    /* content */
+    .content { display: flex; flex-direction: column; overflow: hidden; }
+    .content-empty {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 16px; color: var(--muted);
+    }
+    .content-empty-icon { font-size: 48px; opacity: 0.3; }
+    .content-empty h3 { font-family: var(--display); font-size: 20px; font-weight: 700; color: var(--text); opacity: 0.4; }
+    .content-empty p { font-size: 12px; max-width: 240px; text-align: center; line-height: 1.6; }
+
+    .inbox-header {
+      padding: 16px 24px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--surface);
+    }
+    .inbox-addr { font-size: 13px; color: var(--accent2); }
+    .inbox-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .inbox-actions { display: flex; gap: 8px; }
+
+    .mail-list { flex: 1; overflow-y: auto; }
+    .mail-list::-webkit-scrollbar { width: 4px; }
+    .mail-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+    .mail-item {
+      padding: 16px 24px; border-bottom: 1px solid var(--border);
+      cursor: pointer; transition: background 0.1s; display: flex; gap: 14px; align-items: flex-start;
+    }
+    .mail-item:hover { background: var(--surface); }
+    .mail-item.active { background: var(--surface2); }
+    .unread-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-top: 6px; flex-shrink: 0; }
+    .read-dot { width: 6px; height: 6px; border-radius: 50%; border: 1px solid var(--border2); margin-top: 6px; flex-shrink: 0; }
+    .mail-info { flex: 1; min-width: 0; }
+    .mail-from { font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+    .mail-subject { font-size: 13px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mail-subject.fw { font-weight: 700; }
+    .mail-preview { font-size: 11px; color: var(--muted); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mail-time { font-size: 10px; color: var(--muted); flex-shrink: 0; }
+
+    .mail-reader {
+      border-top: 1px solid var(--border); padding: 24px; max-height: 280px;
+      overflow-y: auto; background: var(--surface);
+      animation: slideUp 0.2s ease;
+    }
+    @keyframes slideUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+    .reader-subject { font-family: var(--display); font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .reader-meta { font-size: 11px; color: var(--muted); margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+    .reader-body { font-size: 13px; line-height: 1.8; color: rgba(240,240,240,0.8); white-space: pre-wrap; }
+
+    .no-mail { padding: 48px 24px; text-align: center; color: var(--muted); font-size: 12px; }
+
+    /* toast */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 100;
+      background: var(--surface2); border: 1px solid var(--accent);
+      color: var(--accent); font-family: var(--mono); font-size: 12px;
+      padding: 10px 18px; border-radius: 6px;
+      transform: translateY(20px); opacity: 0; transition: all 0.25s;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* responsive */
+    @media (max-width: 640px) {
+      main { grid-template-columns: 1fr; }
+      .sidebar { max-height: 300px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div>
+      <div class="logo">drop<span>mail</span></div>
+      <div class="logo-domain">valens429.site</div>
+    </div>
+    <div class="header-right">
+      <div class="live-dot"></div>
+      <div class="live-label">live</div>
+    </div>
+  </header>
+
+  <main>
+    <div class="sidebar">
+      <div class="gen-panel">
+        <h2>Nueva address</h2>
+        <div class="input-row">
+          <input type="text" id="prefix" placeholder="alias" maxlength="30" onkeydown="if(event.key==='Enter')generateAddr()" />
+          <span class="at">@</span>
+          <div class="domain-tag">valens429.site</div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="generateAddr()">+ Generar</button>
+          <button class="btn" onclick="generateRandom()">⟳ Random</button>
+        </div>
+      </div>
+      <div class="addr-list" id="addr-list">
+        <div class="addr-empty">Ninguna address todavía.<br/>Generá una arriba.</div>
+      </div>
+    </div>
+
+    <div class="content" id="content">
+      <div class="content-empty">
+        <div class="content-empty-icon">⬡</div>
+        <h3>dropmail</h3>
+        <p>Generá una address temporal y usala en cualquier servicio. Los mails aparecen acá.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const WORKER_URL = 'https://dropmail-worker.valens429.workers.dev'; // ← reemplazá esto
+const DOMAIN = 'valens429.site';
+const adjs = ['void','flux','echo','nova','zero','ghost','sonic','pixel','storm','neon','dark','hyper'];
+const nouns = ['cat','fox','wolf','crow','viper','lynx','hawk','tide','spark','moth','byte','node'];
+
+let addresses = [];
+let selectedAddr = null;
+let selectedMail = null;
+let pollInterval = null;
+
+function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function randomAlias() { return `${rand(adjs)}.${rand(nouns)}${Math.floor(Math.random()*99)}`; }
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function copy(text) {
+  navigator.clipboard.writeText(text).catch(()=>{});
+  toast('Copiado: ' + text);
+}
+
+async function fetchMails(email) {
+  try {
+    const res = await fetch(`${WORKER_URL}/mails?address=${encodeURIComponent(email)}`);
+    if (!res.ok) return [];
+    return await res.json();
+  } catch { return []; }
+}
+
+async function generateAddr(alias) {
+  const prefix = alias || document.getElementById('prefix').value.trim() || randomAlias();
+  const email = `${prefix}@${DOMAIN}`;
+
+  if (addresses.find(a => a.email === email)) {
+    toast('Esa address ya existe');
+    return;
+  }
+
+  const addr = { email, created: Date.now(), mails: [] };
+  addresses.unshift(addr);
+  document.getElementById('prefix').value = '';
+
+  try {
+    await fetch(`${WORKER_URL}/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ address: email })
+    });
+  } catch {}
+
+  renderSidebar();
+  selectAddr(addr);
+  toast(`Address creada: ${email}`);
+}
+
+function generateRandom() { generateAddr(randomAlias()); }
+
+function selectAddr(addr) {
+  selectedAddr = addr;
+  selectedMail = null;
+  renderSidebar();
+  renderContent();
+  startPolling();
+}
+
+function startPolling() {
+  if (pollInterval) clearInterval(pollInterval);
+  if (!selectedAddr) return;
+  pollInterval = setInterval(async () => {
+    if (!selectedAddr) return;
+    const mails = await fetchMails(selectedAddr.email);
+    const prev = selectedAddr.mails.length;
+    selectedAddr.mails = mails;
+    if (mails.length > prev) toast('Nuevo mail recibido');
+    renderContent();
+    renderSidebar();
+  }, 5000);
+}
+
+function deleteAddr(email, e) {
+  e && e.stopPropagation();
+  addresses = addresses.filter(a => a.email !== email);
+  if (selectedAddr && selectedAddr.email === email) {
+    selectedAddr = null;
+    selectedMail = null;
+    clearInterval(pollInterval);
+    document.getElementById('content').innerHTML = `
+      <div class="content-empty">
+        <div class="content-empty-icon">⬡</div>
+        <h3>dropmail</h3>
+        <p>Generá una address temporal y usala en cualquier servicio.</p>
+      </div>`;
+  }
+  renderSidebar();
+}
+
+function renderSidebar() {
+  const list = document.getElementById('addr-list');
+  if (!addresses.length) {
+    list.innerHTML = '<div class="addr-empty">Ninguna address todavía.<br/>Generá una arriba.</div>';
+    return;
+  }
+  list.innerHTML = addresses.map(a => {
+    const unread = a.mails.filter(m => !m.read).length;
+    const active = selectedAddr && selectedAddr.email === a.email;
+    return `<div class="addr-card${active ? ' active' : ''}" onclick="selectAddr(addresses.find(x=>x.email==='${a.email}'))">
+      <div class="addr-email">${a.email}</div>
+      <div class="addr-footer">
+        ${unread ? `<span class="addr-badge">${unread} nuevo${unread>1?'s':''}</span>` : `<span style="font-size:10px;color:var(--muted)">${a.mails.length} mail${a.mails.length!==1?'s':''}</span>`}
+        <div class="addr-actions">
+          <button class="icon-btn" onclick="copy('${a.email}');event.stopPropagation()" title="Copiar">⎘</button>
+          <button class="icon-btn danger" onclick="deleteAddr('${a.email}',event)" title="Eliminar">✕</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selectMail(idx) {
+  selectedAddr.mails[idx].read = true;
+  selectedMail = selectedAddr.mails[idx];
+  renderContent();
+  renderSidebar();
+}
+
+function renderContent() {
+  if (!selectedAddr) return;
+  const content = document.getElementById('content');
+  const mails = selectedAddr.mails;
+
+  const mailListHTML = !mails.length
+    ? `<div class="no-mail">Sin mails todavía.<br/>Usá esta address en cualquier servicio.</div>`
+    : mails.map((m, i) => `
+      <div class="mail-item${selectedMail === m ? ' active' : ''}" onclick="selectMail(${i})">
+        <div class="${m.read ? 'read-dot' : 'unread-dot'}"></div>
+        <div class="mail-info">
+          <div class="mail-from">${escHtml(m.from)}</div>
+          <div class="mail-subject${m.read ? '' : ' fw'}">${escHtml(m.subject)}</div>
+          <div class="mail-preview">${escHtml(m.preview || '')}</div>
+        </div>
+        <div class="mail-time">${escHtml(m.time || '')}</div>
+      </div>`).join('');
+
+  const readerHTML = selectedMail ? `
+    <div class="mail-reader">
+      <div class="reader-subject">${escHtml(selectedMail.subject)}</div>
+      <div class="reader-meta">
+        <span>De: ${escHtml(selectedMail.from)}</span>
+        <span>${escHtml(selectedMail.time || '')}</span>
+      </div>
+      <div class="reader-body">${escHtml(selectedMail.body || selectedMail.preview || '')}</div>
+    </div>` : '';
+
+  content.innerHTML = `
+    <div class="inbox-header">
+      <div>
+        <div class="inbox-addr">${selectedAddr.email}</div>
+        <div class="inbox-meta">${mails.length} mail${mails.length!==1?'s':''} · actualiza cada 5s</div>
+      </div>
+      <div class="inbox-actions">
+        <button class="btn" onclick="copy('${selectedAddr.email}')">⎘ Copiar</button>
+      </div>
+    </div>
+    <div class="mail-list">${mailListHTML}</div>
+    ${readerHTML}`;
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
