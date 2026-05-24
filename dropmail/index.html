@@ -24,7 +24,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--mono); overflow-x: hidden; }
 
-    /* noise overlay */
     body::before {
       content: '';
       position: fixed; inset: 0;
@@ -34,7 +33,6 @@
 
     .app { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; }
 
-    /* header */
     header {
       padding: 20px 32px;
       border-bottom: 1px solid var(--border);
@@ -51,10 +49,8 @@
     @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
     .live-label { font-size: 11px; color: var(--muted); }
 
-    /* main layout */
     main { flex: 1; display: grid; grid-template-columns: 300px 1fr; max-height: calc(100vh - 65px); }
 
-    /* sidebar */
     .sidebar {
       border-right: 1px solid var(--border);
       display: flex; flex-direction: column;
@@ -94,7 +90,6 @@
     .icon-btn:hover { color: var(--text); background: var(--border); }
     .icon-btn.danger:hover { color: var(--danger); }
 
-    /* content */
     .content { display: flex; flex-direction: column; overflow: hidden; }
     .content-empty {
       flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -143,7 +138,6 @@
 
     .no-mail { padding: 48px 24px; text-align: center; color: var(--muted); font-size: 12px; }
 
-    /* toast */
     .toast {
       position: fixed; bottom: 24px; right: 24px; z-index: 100;
       background: var(--surface2); border: 1px solid var(--accent);
@@ -154,7 +148,6 @@
     }
     .toast.show { transform: translateY(0); opacity: 1; }
 
-    /* responsive */
     @media (max-width: 640px) {
       main { grid-template-columns: 1fr; }
       .sidebar { max-height: 300px; }
@@ -166,7 +159,7 @@
   <header>
     <div>
       <div class="logo">drop<span>mail</span></div>
-      <div class="logo-domain">valens429.site</div>
+      <div class="logo-domain">mail.valens429.site</div>
     </div>
     <div class="header-right">
       <div class="live-dot"></div>
@@ -181,7 +174,7 @@
         <div class="input-row">
           <input type="text" id="prefix" placeholder="alias" maxlength="30" onkeydown="if(event.key==='Enter')generateAddr()" />
           <span class="at">@</span>
-          <div class="domain-tag">valens429.site</div>
+          <div class="domain-tag">mail.valens429.site</div>
         </div>
         <div class="btn-row">
           <button class="btn btn-primary" onclick="generateAddr()">+ Generar</button>
@@ -206,8 +199,8 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const WORKER_URL = 'https://dropmail-worker.valens429.workers.dev'; // ← reemplazá esto
-const DOMAIN = 'valens429.site';
+const WORKER_URL = 'https://dropmail-worker.valens429.workers.dev';
+const DOMAIN = 'mail.valens429.site';
 const adjs = ['void','flux','echo','nova','zero','ghost','sonic','pixel','storm','neon','dark','hyper'];
 const nouns = ['cat','fox','wolf','crow','viper','lynx','hawk','tide','spark','moth','byte','node'];
 
