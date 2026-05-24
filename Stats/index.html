@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Valens429 — Stats</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #080810; --bg2: #0d0d1a; --purple: #a855f7; --cyan: #06b6d4;
+      --purple-dim: #7c3aed44; --cyan-dim: #06b6d422; --text: #e2e8f0;
+      --muted: #64748b; --border: #1e1e3a;
+      --glow-p: 0 0 40px #a855f755; --glow-c: 0 0 40px #06b6d455;
+      --danger: #f43f5e; --success: #10b981;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; min-height: 100vh; overflow-x: hidden; cursor: none; }
+    .cursor { position: fixed; width: 12px; height: 12px; background: var(--cyan); border-radius: 50%; pointer-events: none; z-index: 99999; transition: transform 0.1s ease; }
+    .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--purple); border-radius: 50%; pointer-events: none; z-index: 99998; transition: all 0.15s ease; }
+    body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9000; opacity: 0.3; }
+    .blob { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; opacity: 0.1; }
+    .blob-1 { width: 500px; height: 500px; background: var(--purple); top: -200px; left: -200px; animation: blobFloat 12s ease-in-out infinite; }
+    .blob-2 { width: 400px; height: 400px; background: var(--cyan); bottom: 10%; right: -100px; animation: blobFloat 15s ease-in-out infinite reverse; }
+    @keyframes blobFloat { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(20px,-20px) scale(1.05)} }
+    .grid-bg { position: fixed; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.25; pointer-events: none; z-index: 0; mask-image: radial-gradient(ellipse at 50% 0%, black 30%, transparent 80%); }
+    .wrapper { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 2rem 2.5rem 4rem; }
+
+    header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); animation: fadeUp 0.7s ease both; }
+    .header-left { display: flex; flex-direction: column; gap: 0.4rem; }
+    .header-eyebrow { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--cyan); letter-spacing: 4px; text-transform: uppercase; }
+    .header-title { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800; line-height: 1; letter-spacing: -0.02em; }
+    .header-title .grad { background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.7rem; }
+    .status-pill { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; padding: 6px 14px; border: 1px solid var(--border); color: var(--muted); display: flex; align-items: center; gap: 8px; transition: all 0.4s; }
+    .status-pill.ok { color: var(--success); border-color: var(--success); }
+    .status-pill.err { color: var(--danger); border-color: var(--danger); }
+    .status-pill.loading { color: var(--cyan); border-color: var(--cyan); }
+    .pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
+    .status-pill.ok .pill-dot { background: var(--success); animation: blink 1.5s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .last-update { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--muted); }
+    .btn-refresh { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 2px; background: none; border: 1px solid var(--purple); color: var(--purple); padding: 8px 18px; cursor: none; transition: all 0.3s; text-transform: uppercase; }
+    .btn-refresh:hover { background: var(--purple-dim); box-shadow: var(--glow-p); }
+    .btn-back { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; color: var(--muted); text-decoration: none; border: 1px solid var(--border); padding: 6px 14px; transition: all 0.3s; }
+    .btn-back:hover { color: var(--cyan); border-color: var(--cyan); }
+
+    .tabs-nav { display: flex; gap: 2px; margin-bottom: 2rem; animation: fadeUp 0.7s ease 0.05s both; flex-wrap: wrap; }
+    .tab-btn { font-family: 'Space Mono', monospace; font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase; padding: 12px 28px; background: var(--bg2); border: 1px solid var(--border); color: var(--muted); cursor: none; transition: all 0.25s; position: relative; overflow: hidden; }
+    .tab-btn::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--purple), var(--cyan)); transform: scaleX(0); transition: transform 0.3s; }
+    .tab-btn:hover { color: var(--text); border-color: var(--purple); }
+    .tab-btn.active { color: var(--cyan); border-color: var(--cyan); background: var(--cyan-dim); }
+    .tab-btn.active::after { transform: scaleX(1); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeUp 0.4s ease both; }
+
+    .filters { display: flex; gap: 8px; margin-bottom: 2rem; flex-wrap: wrap; }
+    .filter-btn { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; padding: 6px 14px; border: 1px solid var(--border); color: var(--muted); background: none; cursor: none; transition: all 0.2s; text-transform: uppercase; }
+    .filter-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+    .filter-btn.active { border-color: var(--purple); color: var(--purple); background: var(--purple-dim); }
+
+    .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-bottom: 2px; }
+    .kpi { background: var(--bg2); border: 1px solid var(--border); padding: 2rem 1.8rem; position: relative; overflow: hidden; transition: border-color 0.3s; }
+    .kpi:hover { border-color: var(--purple); }
+    .kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--purple), var(--cyan)); opacity: 0; transition: opacity 0.3s; }
+    .kpi:hover::before { opacity: 1; }
+    .kpi-tag { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 0.8rem; }
+    .kpi-val { font-family: 'Syne', sans-serif; font-size: 2.8rem; font-weight: 800; line-height: 1; letter-spacing: -0.03em; background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .kpi-sub { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--muted); margin-top: 0.5rem; }
+
+    .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-bottom: 2px; }
+    .card { background: var(--bg2); border: 1px solid var(--border); padding: 1.8rem; }
+    .card-full { grid-column: 1 / -1; }
+    .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+    .card-title { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 3px; }
+    .card-count { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--purple); }
+
+    .bar-list { display: flex; flex-direction: column; gap: 1rem; }
+    .bar-item { display: grid; grid-template-columns: 180px 1fr 40px; align-items: center; gap: 0.8rem; }
+    .bar-label { font-size: 0.82rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bar-track { height: 4px; background: var(--border); position: relative; }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, var(--purple), var(--cyan)); transform-origin: left; transform: scaleX(0); transition: transform 1s cubic-bezier(0.22,1,0.36,1); }
+    .bar-fill.animate { transform: scaleX(1); }
+    .bar-count { font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--cyan); text-align: right; }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+    thead th { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; text-align: left; padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+    tbody tr:hover { background: rgba(168,85,247,0.04); }
+    tbody td { padding: 0.65rem 0.8rem; }
+    td.mono { font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--muted); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    td.num { font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--muted); }
+    .tag-pill { display: inline-block; font-family: 'Space Mono', monospace; font-size: 0.55rem; padding: 2px 8px; border: 1px solid var(--border); color: var(--muted); letter-spacing: 1px; }
+    .tag-pill.page { border-color: var(--cyan); color: var(--cyan); }
+    .tag-pill.link { border-color: var(--purple); color: var(--purple); }
+    .tag-pill.engine { border-color: #f59e0b; color: #f59e0b; }
+    .tag-pill.yt { border-color: #ff3333; color: #ff3333; }
+    .tag-pill.twitch { border-color: #9147ff; color: #9147ff; }
+    .tag-pill.mail { border-color: var(--cyan); color: var(--cyan); }
+
+    .diagonal-bar { position: relative; height: 60px; overflow: hidden; margin-bottom: 2px; }
+    .diagonal-bar::after { content: ''; position: absolute; left: -10%; width: 120%; height: 1px; background: linear-gradient(90deg, transparent, var(--purple), var(--cyan), transparent); top: 50%; transform: rotate(-1deg); box-shadow: 0 0 20px var(--purple); }
+
+    .empty { text-align: center; color: var(--muted); font-family: 'Space Mono', monospace; font-size: 0.72rem; padding: 2.5rem 0; }
+
+    .detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-bottom: 2px; }
+    .section-card { background: var(--bg2); border: 1px solid var(--border); padding: 1.6rem; transition: border-color 0.3s, box-shadow 0.3s; }
+    .section-card:hover { border-color: var(--purple); box-shadow: var(--glow-p); }
+    .section-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+    .section-icon { font-size: 1.4rem; }
+    .section-card-info { flex: 1; }
+    .section-card-name { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; }
+    .section-card-sub { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 2px; margin-top: 2px; }
+    .section-card-total { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .section-bar-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .section-bar-item { display: flex; flex-direction: column; gap: 4px; }
+    .section-bar-top { display: flex; justify-content: space-between; align-items: center; }
+    .section-bar-label { font-size: 0.78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+    .section-bar-count { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--cyan); }
+    .section-bar-track { height: 3px; background: var(--border); }
+    .section-bar-fill { height: 100%; background: linear-gradient(90deg, var(--purple), var(--cyan)); transform-origin: left; transform: scaleX(0); transition: transform 1s cubic-bezier(0.22,1,0.36,1); }
+    .section-bar-fill.animate { transform: scaleX(1); }
+    .section-empty { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); text-align: center; padding: 1.5rem 0; }
+    .section-card[data-sec] .section-bar-fill { background: var(--sec-color, linear-gradient(90deg, var(--purple), var(--cyan))); }
+    .section-card[data-sec] .section-bar-count { color: var(--sec-color, var(--cyan)); }
+    .section-card[data-sec] .section-card-total { background: none; -webkit-text-fill-color: var(--sec-color, var(--purple)); }
+    .section-card[data-sec]:hover { border-color: var(--sec-color, var(--purple)); }
+    .section-card[data-sec="nav"] { --sec-color: var(--cyan); }
+    .section-card[data-sec="yt"] { --sec-color: #ff3333; }
+    .section-card[data-sec="twitch"] { --sec-color: #9147ff; }
+    .section-card[data-sec="engines"] { --sec-color: #f59e0b; }
+    .section-card[data-sec="links"] { --sec-color: var(--purple); }
+    .section-card[data-sec="banner"] { --sec-color: #06b6d4; }
+    .section-card[data-sec="hero"] { --sec-color: #10b981; }
+    .section-card[data-sec="edit"] { --sec-color: #ec4899; }
+    .section-card[data-sec="lang"] { --sec-color: #a3e635; }
+    .section-card[data-sec="vistas"] { --sec-color: var(--cyan); }
+
+    .detail-summary { background: var(--bg2); border: 1px solid var(--border); padding: 1.8rem; margin-bottom: 2px; }
+    .detail-summary-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; margin-top: 1.2rem; }
+    .dsg-item { background: var(--bg); padding: 1.2rem 1rem; text-align: center; border: 1px solid var(--border); }
+    .dsg-icon { font-size: 1.4rem; margin-bottom: 6px; }
+    .dsg-val { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .dsg-label { font-family: 'Space Mono', monospace; font-size: 0.55rem; color: var(--muted); letter-spacing: 2px; margin-top: 4px; }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--purple); }
+  </style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="grid-bg"></div>
+
+<div class="wrapper">
+  <header>
+    <div class="header-left">
+      <div class="header-eyebrow">// Dashboard de Analytics</div>
+      <h1 class="header-title">Valens<span class="grad">Stats</span></h1>
+    </div>
+    <div class="header-right">
+      <div id="status-pill" class="status-pill loading"><div class="pill-dot"></div><span id="status-text">Conectando...</span></div>
+      <div class="last-update" id="last-update">—</div>
+      <div style="display:flex;gap:8px">
+        <a href="https://valens429.site" class="btn-back">← Portfolio</a>
+        <button class="btn-refresh" onclick="cargarDatos()">↻ Refresh</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="tabs-nav">
+    <button class="tab-btn active" onclick="setTab('general', this)">[ Vista General ]</button>
+    <button class="tab-btn" onclick="setTab('detalle', this)">[ Vista Detallada ]</button>
+    <button class="tab-btn" onclick="setTab('evento', this)">[ Evento PAE ]</button>
+    <button class="tab-btn" onclick="setTab('mails', this)">[ DropMail ]</button>
+  </div>
+
+  <!-- TAB GENERAL -->
+  <div class="tab-panel active" id="tab-general">
+    <div class="filters">
+      <button class="filter-btn active" onclick="setFiltro('todo', this)">TODO</button>
+      <button class="filter-btn" onclick="setFiltro('hoy', this)">HOY</button>
+      <button class="filter-btn" onclick="setFiltro('semana', this)">ESTA SEMANA</button>
+      <button class="filter-btn" onclick="setFiltro('mes', this)">ESTE MES</button>
+    </div>
+    <div class="kpis" style="animation: fadeUp 0.7s ease 0.15s both;">
+      <div class="kpi"><div class="kpi-tag">Total eventos</div><div class="kpi-val" id="kpi-total">—</div><div class="kpi-sub">clics + vistas</div></div>
+      <div class="kpi"><div class="kpi-tag">Vistas de página</div><div class="kpi-val" id="kpi-views">—</div><div class="kpi-sub">📄 registradas</div></div>
+      <div class="kpi"><div class="kpi-tag">Clics en elementos</div><div class="kpi-val" id="kpi-clicks">—</div><div class="kpi-sub">links · botones · engines</div></div>
+      <div class="kpi"><div class="kpi-tag">Elementos únicos</div><div class="kpi-val" id="kpi-unique">—</div><div class="kpi-sub">labels distintos</div></div>
+    </div>
+    <div class="diagonal-bar"></div>
+    <div class="main-grid" style="animation: fadeUp 0.7s ease 0.2s both;">
+      <div class="card"><div class="card-header"><div class="card-title">Top — Botones &amp; Links</div><div class="card-count" id="top-links-count"></div></div><div class="bar-list" id="top-links"><div class="empty">Sin datos aún</div></div></div>
+      <div class="card"><div class="card-header"><div class="card-title">Top — Páginas visitadas</div><div class="card-count" id="top-pages-count"></div></div><div class="bar-list" id="top-pages"><div class="empty">Sin datos aún</div></div></div>
+      <div class="card"><div class="card-header"><div class="card-title">Por sección</div></div><div class="bar-list" id="by-section"><div class="empty">Sin datos aún</div></div></div>
+      <div class="card"><div class="card-header"><div class="card-title">Idioma seleccionado</div></div><div class="bar-list" id="by-lang"><div class="empty">Sin datos aún</div></div></div>
+      <div class="card card-full">
+        <div class="card-header"><div class="card-title">Actividad reciente</div><div class="card-count" id="recent-count"></div></div>
+        <div class="table-wrap"><table><thead><tr><th>#</th><th>Etiqueta</th><th>Tipo</th><th>URL / Página</th><th>Fecha y hora</th></tr></thead><tbody id="recent-tbody"><tr><td colspan="5" style="text-align:center;padding:2rem;font-family:'Space Mono',monospace;font-size:.7rem;color:var(--muted)">Cargando...</td></tr></tbody></table></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB DETALLE -->
+  <div class="tab-panel" id="tab-detalle">
+    <div class="detail-summary" style="animation: fadeUp 0.4s ease both;">
+      <div class="card-header" style="margin-bottom:0"><div class="card-title">Resumen por sección</div><div class="card-count" id="detail-total-label"></div></div>
+      <div class="detail-summary-grid" id="detail-summary-grid"></div>
+    </div>
+    <div class="diagonal-bar"></div>
+    <div class="detail-grid" id="detail-grid"></div>
+  </div>
+
+  <!-- TAB EVENTO -->
+  <div class="tab-panel" id="tab-evento">
+    <div style="font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--purple);letter-spacing:4px;text-transform:uppercase;margin-bottom:1rem;">// RESUMEN</div>
+    <div style="font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:2px;padding-left:4px;">DESCARGAS</div>
+    <div class="kpis" style="margin-bottom:2px;">
+      <div class="kpi"><div class="kpi-tag">Beta Build</div><div class="kpi-val" id="ev-kpi-dl-beta">—</div><div class="kpi-sub">descargas de la beta</div></div>
+      <div class="kpi"><div class="kpi-tag">Premio WebP</div><div class="kpi-val" id="ev-kpi-dl-webp">—</div><div class="kpi-sub">pack ligero</div></div>
+      <div class="kpi"><div class="kpi-tag">Premio PNG</div><div class="kpi-val" id="ev-kpi-dl-png">—</div><div class="kpi-sub">pack full HQ</div></div>
+      <div class="kpi"><div class="kpi-tag">Premio Total</div><div class="kpi-val" id="ev-kpi-dl-premio">—</div><div class="kpi-sub">webp + png</div></div>
+    </div>
+    <div style="font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:2px;padding-left:4px;margin-top:10px;">VISITAS</div>
+    <div class="kpis" style="margin-bottom:2px;">
+      <div class="kpi"><div class="kpi-tag">Claim Reward</div><div class="kpi-val" id="ev-kpi-claim">—</div><div class="kpi-sub">accesos a claim page</div></div>
+      <div class="kpi"><div class="kpi-tag">Beta Feedback</div><div class="kpi-val" id="ev-kpi-feedback">—</div><div class="kpi-sub">accesos post-contraseña</div></div>
+      <div class="kpi"><div class="kpi-tag">Pass Correcta</div><div class="kpi-val" id="ev-kpi-pass-ok">—</div><div class="kpi-sub">accesos válidos</div></div>
+      <div class="kpi"><div class="kpi-tag">Pass Incorrecta</div><div class="kpi-val" id="ev-kpi-pass-fail">—</div><div class="kpi-sub">intentos fallidos</div></div>
+    </div>
+    <div class="diagonal-bar"></div>
+    <div style="font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--purple);letter-spacing:4px;text-transform:uppercase;margin-bottom:1rem;">// DATOS EN CRUDO</div>
+    <div class="main-grid" style="margin-bottom:2px;">
+      <div class="card"><div class="card-header"><div class="card-title">Contraseñas — detalle</div><div class="card-count" id="ev-pass-count"></div></div><div class="bar-list" id="ev-pass-bars"><div class="empty">Sin datos aún</div></div></div>
+      <div class="card"><div class="card-header"><div class="card-title">Descargas — por tipo</div><div class="card-count" id="ev-dl-count"></div></div><div class="bar-list" id="ev-dl-bars"><div class="empty">Sin datos aún</div></div></div>
+      <div class="card card-full">
+        <div class="card-header"><div class="card-title">Actividad completa — Evento</div><div class="card-count" id="ev-recent-count"></div></div>
+        <div class="table-wrap"><table><thead><tr><th>#</th><th>Acción</th><th>Tipo</th><th>URL</th><th>Fecha y hora</th></tr></thead><tbody id="ev-tbody"><tr><td colspan="5" style="text-align:center;padding:2rem;font-family:'Space Mono',monospace;font-size:.7rem;color:var(--muted)">Cargando...</td></tr></tbody></table></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB MAILS -->
+  <div class="tab-panel" id="tab-mails">
+    <div style="font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--purple);letter-spacing:4px;text-transform:uppercase;margin-bottom:1rem;">// DROPMAIL — RESUMEN</div>
+    <div class="kpis" style="margin-bottom:2px;">
+      <div class="kpi"><div class="kpi-tag">Addresses creadas</div><div class="kpi-val" id="mail-kpi-addr">—</div><div class="kpi-sub">addresses generadas</div></div>
+      <div class="kpi"><div class="kpi-tag">Mails recibidos</div><div class="kpi-val" id="mail-kpi-recv">—</div><div class="kpi-sub">emails entrantes</div></div>
+      <div class="kpi"><div class="kpi-tag">Mails por address</div><div class="kpi-val" id="mail-kpi-avg">—</div><div class="kpi-sub">promedio</div></div>
+      <div class="kpi"><div class="kpi-tag">Address más activa</div><div class="kpi-val" id="mail-kpi-top" style="font-size:1rem;padding-top:0.5rem">—</div><div class="kpi-sub">más mails recibidos</div></div>
+    </div>
+    <div class="diagonal-bar"></div>
+    <div class="main-grid" style="margin-bottom:2px;">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Top addresses creadas</div><div class="card-count" id="mail-addr-count"></div></div>
+        <div class="bar-list" id="mail-addr-bars"><div class="empty">Sin datos aún</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Mails recibidos por address</div><div class="card-count" id="mail-recv-count"></div></div>
+        <div class="bar-list" id="mail-recv-bars"><div class="empty">Sin datos aún</div></div>
+      </div>
+      <div class="card card-full">
+        <div class="card-header"><div class="card-title">Actividad reciente — Dropmail</div><div class="card-count" id="mail-recent-count"></div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Acción</th><th>Tipo</th><th>Address</th><th>Fecha y hora</th></tr></thead>
+            <tbody id="mail-tbody"><tr><td colspan="5" style="text-align:center;padding:2rem;font-family:'Space Mono',monospace;font-size:.7rem;color:var(--muted)">Cargando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const SUPABASE_URL = "https://hxfwzyfaenxpbgsvbnsn.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4Znd6eWZhZW54cGJnc3ZibnNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODg0OTIsImV4cCI6MjA5NTA2NDQ5Mn0.lIglDBigwP4XChdUs1kz2kgDCmJ5IRPgkN9iEzTQAG8";
+  const H = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` };
+
+  let todosLosDatos = [];
+  let filtroActivo = 'todo';
+
+  const SECCIONES = [
+    { id: 'vistas', icon: '📄', name: 'Vistas de Página', sub: 'PAGE VIEWS', match: r => r.label.startsWith('📄') },
+    { id: 'nav', icon: '🔗', name: 'Navegación', sub: 'NAV LINKS', match: r => r.label.includes('Nav') },
+    { id: 'hero', icon: '🚀', name: 'Hero', sub: 'CTA · BOTONES', match: r => r.label.includes('Hero') || r.label.startsWith('🚀') },
+    { id: 'engines', icon: '🎮', name: 'Dev / Engines', sub: 'GAME ENGINES', match: r => r.label.includes('Engine') },
+    { id: 'twitch', icon: '🟣', name: 'Twitch', sub: 'STREAMING · VODS', match: r => r.label.includes('VOD') || (r.label.includes('Twitch') && !r.label.includes('Nav') && !r.label.includes('Link')) },
+    { id: 'yt', icon: '▶', name: 'YouTube', sub: 'VIDEOS · CANAL', match: r => r.label.startsWith('▶') || (r.label.includes('YouTube') && !r.label.includes('Nav') && !r.label.includes('Link')) },
+    { id: 'edit', icon: '🎬', name: 'Edición', sub: 'TOOLS · SOFTWARE', match: r => r.label.startsWith('🎬') },
+    { id: 'links', icon: '🌐', name: 'Links / RRSS', sub: 'REDES SOCIALES', match: r => r.label.startsWith('🔗 Link') },
+    { id: 'banner', icon: '📢', name: 'Banner Evento', sub: 'PURRFECT APAWCALYPSE', match: r => r.label.includes('Banner') },
+    { id: 'lang', icon: '🌍', name: 'Idioma', sub: 'ES / EN', match: r => r.label.includes('Idioma') || r.label.includes('Toggle') || r.label.startsWith('🌐 Idioma') },
+  ];
+
+  function setTab(tab, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    setTimeout(() => {
+      document.querySelectorAll('.bar-fill, .section-bar-fill').forEach(b => { b.classList.remove('animate'); void b.offsetWidth; b.classList.add('animate'); });
+    }, 50);
+  }
+
+  function filtrarPorFecha(data, filtro) {
+    const ahora = new Date();
+    if (filtro === 'hoy') { const i = new Date(ahora); i.setHours(0,0,0,0); return data.filter(r => new Date(r.created_at) >= i); }
+    if (filtro === 'semana') { const i = new Date(ahora); i.setDate(ahora.getDate()-7); return data.filter(r => new Date(r.created_at) >= i); }
+    if (filtro === 'mes') { const i = new Date(ahora); i.setDate(ahora.getDate()-30); return data.filter(r => new Date(r.created_at) >= i); }
+    return data;
+  }
+
+  function setFiltro(filtro, btn) {
+    filtroActivo = filtro;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderTodo(filtrarPorFecha(todosLosDatos, filtroActivo));
+  }
+
+  async function cargarDatos() {
+    const pill = document.getElementById('status-pill');
+    const txt = document.getElementById('status-text');
+    pill.className = 'status-pill loading'; txt.textContent = 'Actualizando...';
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/clicks?select=*&order=created_at.desc&limit=2000`, { headers: H });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      todosLosDatos = await res.json();
+      pill.className = 'status-pill ok';
+      txt.textContent = `Conectado — ${todosLosDatos.length} registros`;
+      document.getElementById('last-update').textContent = 'Actualizado: ' + new Date().toLocaleTimeString('es-AR');
+      renderTodo(filtrarPorFecha(todosLosDatos, filtroActivo));
+    } catch (e) {
+      pill.className = 'status-pill err'; txt.textContent = `Error: ${e.message}`;
+    }
+  }
+
+  function contar(data, fn) {
+    const map = {};
+    data.forEach(r => { const k = fn(r); if (k) map[k] = (map[k]||0)+1; });
+    return Object.entries(map).sort((a,b) => b[1]-a[1]);
+  }
+
+  function renderBarras(id, entries, max10 = true) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (!entries.length) { el.innerHTML = '<div class="empty">Sin datos para este período</div>'; return; }
+    const lista = max10 ? entries.slice(0,10) : entries;
+    const max = lista[0][1];
+    el.innerHTML = lista.map(([label, count]) => `
+      <div class="bar-item">
+        <div class="bar-label" title="${label}">${label}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(count/max*100).toFixed(1)}%"></div></div>
+        <div class="bar-count">${count}</div>
+      </div>`).join('');
+    setTimeout(() => el.querySelectorAll('.bar-fill').forEach(b => b.classList.add('animate')), 50);
+  }
+
+  function getTipo(label) {
+    if (label.startsWith('📄')) return ['page','PÁGINA'];
+    if (label.startsWith('🔗')) return ['link','LINK'];
+    if (label.startsWith('🌐')) return ['link','IDIOMA'];
+    if (label.startsWith('▶'))  return ['yt','YOUTUBE'];
+    if (label.startsWith('📺')) return ['twitch','TWITCH'];
+    if (label.startsWith('🎮') && label.includes('Engine')) return ['engine','ENGINE'];
+    if (label.startsWith('🎬')) return ['engine','TOOL'];
+    if (label.startsWith('📧')) return ['mail','MAIL'];
+    return ['link','OTRO'];
+  }
+
+  function getSeccion(label) {
+    if (label.startsWith('📄'))   return '📄 Vistas';
+    if (label.includes('Nav'))    return '🔗 Navegación';
+    if (label.includes('Engine')) return '🎮 Dev / Engines';
+    if (label.startsWith('▶') || label.includes('YT') || label.includes('YouTube')) return '▶ YouTube';
+    if (label.includes('VOD') || label.includes('Twitch')) return '🟣 Twitch';
+    if (label.startsWith('🔗 Link')) return '🌐 Links / RRSS';
+    if (label.includes('Banner')) return '📢 Banner evento';
+    if (label.includes('Idioma') || label.includes('Toggle') || label.startsWith('🌐 Idioma')) return '🌍 Idioma';
+    if (label.includes('Hero') || label.startsWith('🚀')) return '🚀 Hero';
+    if (label.startsWith('🎬'))   return '🎬 Edición';
+    if (label.startsWith('📧'))   return '📧 Dropmail';
+    return '❓ Otro';
+  }
+
+  function getLang(label) {
+    if (label.includes('Español')) return 'Español 🇦🇷';
+    if (label.includes('English')) return 'English 🇺🇸';
+    return null;
+  }
+
+  function renderGeneral(data) {
+    const vistas = data.filter(r => r.label.startsWith('📄')).length;
+    const clics  = data.filter(r => !r.label.startsWith('📄')).length;
+    const unicos = new Set(data.map(r => r.label)).size;
+    document.getElementById('kpi-total').textContent  = data.length;
+    document.getElementById('kpi-views').textContent  = vistas;
+    document.getElementById('kpi-clicks').textContent = clics;
+    document.getElementById('kpi-unique').textContent = unicos;
+    const noVistas = data.filter(r => !r.label.startsWith('📄'));
+    const topLinks = contar(noVistas, r => r.label);
+    document.getElementById('top-links-count').textContent = topLinks.length + ' elementos';
+    renderBarras('top-links', topLinks);
+    const topPages = contar(data, r => r.url || null);
+    document.getElementById('top-pages-count').textContent = topPages.length + ' URLs';
+    renderBarras('top-pages', topPages);
+    renderBarras('by-section', contar(data, r => getSeccion(r.label)), false);
+    const idiomas = data.map(r => getLang(r.label)).filter(Boolean);
+    if (idiomas.length) {
+      const langMap = {}; idiomas.forEach(l => langMap[l] = (langMap[l]||0)+1);
+      renderBarras('by-lang', Object.entries(langMap).sort((a,b)=>b[1]-a[1]), false);
+    } else {
+      document.getElementById('by-lang').innerHTML = '<div class="empty">Sin selecciones de idioma aún</div>';
+    }
+    document.getElementById('recent-count').textContent = data.length + ' registros';
+    const tbody = document.getElementById('recent-tbody');
+    if (!data.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;font-family:\'Space Mono\',monospace;font-size:.7rem;color:var(--muted)">Sin actividad aún</td></tr>'; return; }
+    tbody.innerHTML = data.slice(0,50).map((r,i) => {
+      const [cls, lbl] = getTipo(r.label);
+      return `<tr><td class="num">${i+1}</td><td>${r.label}</td><td><span class="tag-pill ${cls}">${lbl}</span></td><td class="mono">${r.url||'—'}</td><td class="mono">${new Date(r.created_at).toLocaleString('es-AR')}</td></tr>`;
+    }).join('');
+  }
+
+  function renderDetalle(data) {
+    const summaryGrid = document.getElementById('detail-summary-grid');
+    document.getElementById('detail-total-label').textContent = data.length + ' eventos totales';
+    const summaryItems = SECCIONES.map(sec => ({ ...sec, total: data.filter(sec.match).length })).filter(s => s.total > 0).slice(0, 10);
+    summaryGrid.innerHTML = summaryItems.map(s => `<div class="dsg-item"><div class="dsg-icon">${s.icon}</div><div class="dsg-val">${s.total}</div><div class="dsg-label">${s.sub}</div></div>`).join('');
+    const detailGrid = document.getElementById('detail-grid');
+    detailGrid.innerHTML = '';
+    SECCIONES.forEach(sec => {
+      const secData = data.filter(sec.match);
+      if (!secData.length) return;
+      const topItems = contar(secData, r => r.label).slice(0, 6);
+      const maxCount = topItems[0]?.[1] || 1;
+      const masReciente = secData[0] ? new Date(secData[0].created_at).toLocaleDateString('es-AR') : '—';
+      const barsHTML = topItems.length ? topItems.map(([label, count]) => `<div class="section-bar-item"><div class="section-bar-top"><div class="section-bar-label" title="${label}">${label}</div><div class="section-bar-count">${count}</div></div><div class="section-bar-track"><div class="section-bar-fill" style="width:${(count/maxCount*100).toFixed(1)}%"></div></div></div>`).join('') : '<div class="section-empty">Sin actividad</div>';
+      const card = document.createElement('div');
+      card.className = 'section-card'; card.setAttribute('data-sec', sec.id);
+      card.innerHTML = `<div class="section-card-header"><div class="section-icon">${sec.icon}</div><div class="section-card-info"><div class="section-card-name">${sec.name}</div><div class="section-card-sub">${sec.sub}</div></div><div class="section-card-total">${secData.length}</div></div><div class="section-bar-list">${barsHTML}</div><div style="margin-top:1rem;font-family:'Space Mono',monospace;font-size:0.55rem;color:var(--muted);border-top:1px solid var(--border);padding-top:0.8rem;">ÚLTIMO: ${masReciente} · ${secData.length} EVENTO${secData.length!==1?'S':''}</div>`;
+      detailGrid.appendChild(card);
+    });
+    setTimeout(() => detailGrid.querySelectorAll('.section-bar-fill').forEach(b => b.classList.add('animate')), 100);
+    if (!detailGrid.children.length) detailGrid.innerHTML = '<div class="empty" style="grid-column:1/-1;padding:3rem">Sin datos registrados aún</div>';
+  }
+
+  function renderEvento(data) {
+    const ev = data.filter(r => r.label.startsWith('🎮 Evento'));
+    document.getElementById('ev-kpi-dl-beta').textContent   = ev.filter(r => r.label.includes('Descarga Beta')).length;
+    document.getElementById('ev-kpi-dl-webp').textContent   = ev.filter(r => r.label.includes('Descarga WebP')).length;
+    document.getElementById('ev-kpi-dl-png').textContent    = ev.filter(r => r.label.includes('Descarga PNG')).length;
+    document.getElementById('ev-kpi-dl-premio').textContent = ev.filter(r => r.label.includes('Descarga WebP') || r.label.includes('Descarga PNG')).length;
+    document.getElementById('ev-kpi-claim').textContent     = ev.filter(r => r.label.includes('Vista: Claim')).length;
+    document.getElementById('ev-kpi-feedback').textContent  = ev.filter(r => r.label.includes('Vista: Beta')).length;
+    document.getElementById('ev-kpi-pass-ok').textContent   = ev.filter(r => r.label.includes('Contraseña Correcta')).length;
+    document.getElementById('ev-kpi-pass-fail').textContent = ev.filter(r => r.label.includes('Contraseña Incorrecta')).length;
+    const passData = ev.filter(r => r.label.includes('Contraseña'));
+    const passEntries = contar(passData, r => r.label.includes('Correcta') ? '✅ Correcta' : '❌ Incorrecta');
+    document.getElementById('ev-pass-count').textContent = passData.length + ' intentos';
+    renderBarras('ev-pass-bars', passEntries, false);
+    const dlData = ev.filter(r => r.label.includes('Descarga'));
+    const dlEntries = contar(dlData, r => r.label.includes('WebP') ? '📦 WebP Pack' : r.label.includes('PNG') ? '🖼 PNG Pack HQ' : '🎮 Beta Build');
+    document.getElementById('ev-dl-count').textContent = dlData.length + ' descargas';
+    renderBarras('ev-dl-bars', dlEntries, false);
+    document.getElementById('ev-recent-count').textContent = ev.length + ' registros';
+    const tbody = document.getElementById('ev-tbody');
+    if (!ev.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;font-family:\'Space Mono\',monospace;font-size:.7rem;color:var(--muted)">Sin actividad del evento aún</td></tr>'; return; }
+    tbody.innerHTML = ev.slice(0,100).map((r,i) => {
+      let tipoClass='link',tipoLabel='OTRO';
+      if (r.label.includes('Vista'))              { tipoClass='page';   tipoLabel='VISTA'; }
+      else if (r.label.includes('Descarga Beta')) { tipoClass='engine'; tipoLabel='DL BETA'; }
+      else if (r.label.includes('Descarga'))      { tipoClass='engine'; tipoLabel='DL PREMIO'; }
+      else if (r.label.includes('Correcta'))      { tipoClass='twitch'; tipoLabel='PASS ✅'; }
+      else if (r.label.includes('Incorrecta'))    { tipoClass='yt';     tipoLabel='PASS ❌'; }
+      return `<tr><td class="num">${i+1}</td><td>${r.label.replace('🎮 Evento — ','')}</td><td><span class="tag-pill ${tipoClass}">${tipoLabel}</span></td><td class="mono">${r.url||'—'}</td><td class="mono">${new Date(r.created_at).toLocaleString('es-AR')}</td></tr>`;
+    }).join('');
+  }
+
+  function renderMails(data) {
+    const mailData = data.filter(r => r.label.startsWith('📧 Dropmail'));
+    const creadas  = mailData.filter(r => r.label.includes('Address creada'));
+    const recibidos = mailData.filter(r => r.label.includes('Mail recibido'));
+
+    document.getElementById('mail-kpi-addr').textContent = creadas.length;
+    document.getElementById('mail-kpi-recv').textContent = recibidos.length;
+
+    // Promedio mails por address
+    const avg = creadas.length ? (recibidos.length / creadas.length).toFixed(1) : '—';
+    document.getElementById('mail-kpi-avg').textContent = avg;
+
+    // Address más activa — extraer email del label "Mail recibido (...): email"
+    const recvByAddr = {};
+    recibidos.forEach(r => {
+      const m = r.label.match(/:\s*(.+@valens429\.site)/);
+      if (m) recvByAddr[m[1]] = (recvByAddr[m[1]]||0)+1;
+    });
+    const topAddr = Object.entries(recvByAddr).sort((a,b)=>b[1]-a[1])[0];
+    document.getElementById('mail-kpi-top').textContent = topAddr ? topAddr[0].split('@')[0] : '—';
+
+    // Barras addresses creadas
+    const addrEntries = contar(creadas, r => { const m = r.label.match(/:\s*(.+)/); return m ? m[1].trim() : null; });
+    document.getElementById('mail-addr-count').textContent = addrEntries.length + ' addresses';
+    renderBarras('mail-addr-bars', addrEntries);
+
+    // Barras mails recibidos por address
+    const recvEntries = Object.entries(recvByAddr).sort((a,b)=>b[1]-a[1]);
+    document.getElementById('mail-recv-count').textContent = recibidos.length + ' mails';
+    renderBarras('mail-recv-bars', recvEntries);
+
+    // Tabla
+    document.getElementById('mail-recent-count').textContent = mailData.length + ' registros';
+    const tbody = document.getElementById('mail-tbody');
+    if (!mailData.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;font-family:\'Space Mono\',monospace;font-size:.7rem;color:var(--muted)">Sin actividad de dropmail aún</td></tr>'; return; }
+    tbody.innerHTML = mailData.slice(0,100).map((r,i) => {
+      const esRecibido = r.label.includes('Mail recibido');
+      const esCreada   = r.label.includes('Address creada');
+      const tipoClass  = esRecibido ? 'mail' : 'page';
+      const tipoLabel  = esRecibido ? 'RECIBIDO' : esCreada ? 'CREADA' : 'OTRO';
+      const addrMatch  = r.label.match(/:\s*(.+@valens429\.site)/);
+      const addr       = addrMatch ? addrMatch[1] : r.url || '—';
+      return `<tr><td class="num">${i+1}</td><td>${r.label.replace('📧 Dropmail — ','')}</td><td><span class="tag-pill ${tipoClass}">${tipoLabel}</span></td><td class="mono">${addr}</td><td class="mono">${new Date(r.created_at).toLocaleString('es-AR')}</td></tr>`;
+    }).join('');
+  }
+
+  function renderTodo(data) {
+    renderGeneral(data);
+    renderDetalle(data);
+    renderEvento(data);
+    renderMails(data);
+  }
+
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  const ring   = document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove', e=>{ mx=e.clientX; my=e.clientY; cursor.style.left=mx-6+'px'; cursor.style.top=my-6+'px'; });
+  function animRing(){ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; ring.style.left=rx-18+'px'; ring.style.top=ry-18+'px'; requestAnimationFrame(animRing); }
+  animRing();
+  document.querySelectorAll('a,button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{ cursor.style.transform='scale(2)'; ring.style.borderColor='var(--cyan)'; });
+    el.addEventListener('mouseleave',()=>{ cursor.style.transform='scale(1)'; ring.style.borderColor='var(--purple)'; });
+  });
+
+  cargarDatos();
+  setInterval(cargarDatos, 30000);
+</script>
+</body>
+</html>

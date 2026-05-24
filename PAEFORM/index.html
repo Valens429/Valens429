@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claim Reward — Valens429</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080810; --bg2: #0d0d1a; --purple: #a855f7; --cyan: #06b6d4;
+    --purple-dim: #7c3aed44; --cyan-dim: #06b6d422; --text: #e2e8f0;
+    --muted: #64748b; --border: #1e1e3a;
+    --glow-p: 0 0 40px #a855f755; --glow-c: 0 0 40px #06b6d455;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; overflow-x: hidden; cursor: none; min-height: 100vh; display: flex; flex-direction: column; }
+
+  .cursor { position: fixed; width: 12px; height: 12px; background: var(--cyan); border-radius: 50%; pointer-events: none; z-index: 9999; transition: transform 0.1s ease; mix-blend-mode: screen; }
+  .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--purple); border-radius: 50%; pointer-events: none; z-index: 9998; transition: all 0.15s ease; mix-blend-mode: screen; }
+
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9000; opacity: 0.3; }
+
+  .blob { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; opacity: 0.15; }
+  .blob-1 { width: 600px; height: 600px; background: var(--purple); top: -200px; left: -200px; animation: blobFloat 12s ease-in-out infinite; }
+  .blob-2 { width: 500px; height: 500px; background: var(--cyan); bottom: 20%; right: -150px; animation: blobFloat 15s ease-in-out infinite reverse; }
+  @keyframes blobFloat { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-30px) scale(1.05)} 66%{transform:translate(-20px,20px) scale(0.95)} }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 20px 60px; background: linear-gradient(180deg, var(--bg) 0%, transparent 100%); backdrop-filter: blur(10px); }
+  .nav-logo { font-family: 'Space Mono', monospace; font-size: 1.2rem; color: var(--cyan); text-shadow: var(--glow-c); letter-spacing: 2px; text-decoration: none; }
+  .nav-logo span { color: var(--purple); }
+  .nav-links a { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--muted); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; }
+  .nav-links a:hover { color: var(--cyan); text-shadow: var(--glow-c); }
+
+  .main-content { position: relative; z-index: 1; padding: 140px 20px 80px; max-width: 1000px; width: 100%; margin: 0 auto; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+  .reward-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 40px; width: 100%; max-width: 800px; box-shadow: var(--glow-p); position: relative; overflow: hidden; display: grid; grid-template-columns: 1fr; gap: 30px; }
+  @media (min-width: 650px) { .reward-card { grid-template-columns: auto 1fr; align-items: center; } }
+  .reward-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--purple), var(--cyan)); }
+
+  .sprite-display { width: 220px; height: 300px; background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; margin: 0 auto; }
+  .sprite-display img { max-width: 90%; max-height: 90%; object-fit: contain; filter: drop-shadow(0 0 15px rgba(6,182,212,0.3)); animation: spriteFloat 4s ease-in-out infinite; }
+  @keyframes spriteFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+  .reward-info { display: flex; flex-direction: column; justify-content: center; text-align: center; }
+  @media (min-width: 650px) { .reward-info { text-align: left; } }
+
+  .section-tag { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--cyan); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px; }
+  .reward-title { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; line-height: 1.1; margin-bottom: 15px; }
+  .reward-title .accent { background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .reward-desc { color: var(--muted); line-height: 1.6; font-size: 0.95rem; margin-bottom: 30px; }
+
+  .buttons-group { display: flex; flex-direction: column; gap: 15px; width: 100%; }
+  @media (min-width: 480px) { .buttons-group { flex-direction: row; } }
+
+  .btn-download { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; gap: 10px; color: #fff; font-family: 'Space Mono', monospace; font-size: 0.85rem; font-weight: 700; text-decoration: none; padding: 16px 24px; border-radius: 4px; letter-spacing: 2px; text-transform: uppercase; overflow: hidden; transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1); cursor: none; }
+  .btn-webp { background: linear-gradient(135deg, var(--purple) 0%, #7c3aed 100%); box-shadow: 0 0 20px rgba(168,85,247,0.3); border: 1px solid rgba(255,255,255,0.05); }
+  .btn-webp:hover { transform: translateY(-3px); background: linear-gradient(135deg, #7c3aed 0%, var(--cyan) 100%); box-shadow: 0 0 25px rgba(6,182,212,0.5); color: #080810; }
+  .btn-png { background: transparent; border: 1px solid var(--cyan); color: var(--cyan); box-shadow: 0 0 15px rgba(6,182,212,0.1); }
+  .btn-png:hover { transform: translateY(-3px); background: var(--cyan); color: #080810; box-shadow: 0 0 25px rgba(6,182,212,0.4); }
+  .btn-download svg { width: 16px; height: 16px; fill: currentColor; }
+
+  #mobile-block { display: none; position: fixed; inset: 0; background: #080810; z-index: 99999; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; font-family: 'Space Mono', monospace; }
+  #mobile-block .mb-icon { font-size: 3.5rem; margin-bottom: 1.5rem; }
+  #mobile-block h2 { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; color: #e2e8f0; margin-bottom: 1rem; }
+  #mobile-block p { font-size: 0.78rem; color: #64748b; line-height: 1.8; max-width: 280px; letter-spacing: 0.05em; }
+  #mobile-block .mb-accent { color: #a855f7; }
+  #mobile-block .mb-line { width: 60px; height: 2px; background: linear-gradient(90deg, #a855f7, #06b6d4); margin: 1.5rem auto; }
+  @media (max-width: 768px) { #mobile-block { display: flex; } body > *:not(#mobile-block) { display: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<div id="mobile-block">
+  <div class="mb-icon">🖥️</div>
+  <h2><span class="mb-accent">Desktop</span> only</h2>
+  <div class="mb-line"></div>
+  <p>This section is optimized for computers.<br><br>Visit from a <span class="mb-accent">PC</span> to claim your sprites.</p>
+</div>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<nav>
+  <a href="https://valens429.site" class="nav-logo">Valens<span>_</span>429</a>
+  <div class="nav-links">
+    <a href="https://valens429.site">← Back to Home</a>
+  </div>
+</nav>
+
+<main class="main-content">
+  <div class="reward-card">
+
+    <div class="sprite-display">
+      <img src="imgs/olivecheer.png" alt="Olive Cheer Preview">
+    </div>
+
+    <div class="reward-info">
+      <div class="section-tag">[ UNLOCKED REWARD ]</div>
+      <h1 class="reward-title">Mission <span class="accent">Accomplished</span>!</h1>
+      <p class="reward-desc">
+        Here is your reward for playtesting the VN beta. The pack includes all full sprites processed without layers by the Python script. Choose the format that works best for you:
+      </p>
+
+      <div class="buttons-group">
+        <a href="No disponible" target="_blank" class="btn-download btn-webp" id="btn-webp">
+          <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+          .WebP Pack (Light)
+        </a>
+        <a href="No disponible" target="_blank" class="btn-download btn-png" id="btn-png">
+          <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+          .PNG Pack (Full HQ)
+        </a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- TRACKER -->
+<script>
+(function () {
+  const SUPABASE_URL = "https://hxfwzyfaenxpbgsvbnsn.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4Znd6eWZhZW54cGJnc3ZibnNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODg0OTIsImV4cCI6MjA5NTA2NDQ5Mn0.lIglDBigwP4XChdUs1kz2kgDCmJ5IRPgkN9iEzTQAG8";
+
+  async function track(label, url) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/clicks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({ label, url: url || window.location.pathname }),
+      });
+    } catch (_) {}
+  }
+
+  // Vista de página
+  track("🎮 Evento — Vista: Claim Reward", window.location.pathname);
+
+  // Descargas
+  document.getElementById('btn-webp').addEventListener('click', () => {
+    track("🎮 Evento — Descarga WebP", window.location.pathname);
+  });
+  document.getElementById('btn-png').addEventListener('click', () => {
+    track("🎮 Evento — Descarga PNG", window.location.pathname);
+  });
+})();
+</script>
+
+<!-- CURSOR -->
+<script>
+  const cursor = document.getElementById('cursor');
+  const cursorRing = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', (e) => {
+    cursor.style.transform = `translate3d(${e.clientX - 6}px, ${e.clientY - 6}px, 0)`;
+    cursorRing.style.transform = `translate3d(${e.clientX - 18}px, ${e.clientY - 18}px, 0)`;
+  });
+  document.addEventListener('mousedown', () => { cursor.style.transform += ' scale(0.8)'; cursorRing.style.transform += ' scale(1.3)'; });
+  document.addEventListener('mouseup', () => { cursor.style.transform = cursor.style.transform.replace(' scale(0.8)', ''); cursorRing.style.transform = cursorRing.style.transform.replace(' scale(1.3)', ''); });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valens429</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080810; --bg2: #0d0d1a; --purple: #a855f7; --cyan: #06b6d4;
+    --purple-dim: #7c3aed44; --cyan-dim: #06b6d422; --text: #e2e8f0;
+    --muted: #64748b; --border: #1e1e3a;
+    --glow-p: 0 0 40px #a855f755; --glow-c: 0 0 40px #06b6d455;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; overflow-x: hidden; cursor: none; padding-top: 38px; }
+
+  /* CURSOR */
+  .cursor { position: fixed; width: 12px; height: 12px; background: var(--cyan); border-radius: 50%; pointer-events: none; z-index: 99999; transition: transform 0.1s ease; }
+  .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--purple); border-radius: 50%; pointer-events: none; z-index: 99998; transition: all 0.15s ease; }
+
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9000; opacity: 0.3; }
+
+  .blob { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; opacity: 0.15; }
+  .blob-1 { width: 600px; height: 600px; background: var(--purple); top: -200px; left: -200px; animation: blobFloat 12s ease-in-out infinite; }
+  .blob-2 { width: 500px; height: 500px; background: var(--cyan); bottom: 20%; right: -150px; animation: blobFloat 15s ease-in-out infinite reverse; }
+  .blob-3 { width: 300px; height: 300px; background: var(--purple); bottom: 0; left: 30%; animation: blobFloat 10s ease-in-out infinite 3s; }
+  @keyframes blobFloat { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-30px) scale(1.05)} 66%{transform:translate(-20px,20px) scale(0.95)} }
+
+  /* LANG SPLASH */
+  #lang-splash {
+    position: fixed; inset: 0; z-index: 99990;
+    background: var(--bg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 48px;
+  }
+  #lang-splash.hide { opacity: 0; pointer-events: none; transition: opacity 0.6s ease; }
+  .splash-logo { font-family: 'Space Mono', monospace; font-size: 1.4rem; color: var(--cyan); letter-spacing: 4px; }
+  .splash-logo span { color: var(--purple); }
+  .splash-label { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 5px; text-transform: uppercase; }
+  .splash-cards { display: flex; gap: 24px; }
+  .lang-card { position: relative; width: 220px; padding: 40px 30px; background: var(--bg2); border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 16px; cursor: none; transition: all 0.3s ease; overflow: hidden; }
+  .lang-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--purple-dim), var(--cyan-dim)); opacity: 0; transition: opacity 0.3s; }
+  .lang-card:hover { border-color: var(--purple); transform: translateY(-6px); box-shadow: var(--glow-p); }
+  .lang-card:hover::before { opacity: 1; }
+  .lang-flag { font-size: 3rem; position: relative; z-index: 1; }
+  .lang-name { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; position: relative; z-index: 1; }
+  .lang-sub { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 2px; position: relative; z-index: 1; }
+  .lang-line { width: 40px; height: 2px; background: linear-gradient(90deg, var(--purple), var(--cyan)); position: relative; z-index: 1; }
+  .splash-grid { position: absolute; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%); opacity: 0.3; pointer-events: none; }
+
+  /* LANG TOGGLE */
+  .lang-toggle { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 2px; cursor: none; background: none; border: 1px solid var(--border); padding: 6px 12px; transition: all 0.3s; }
+  .lang-toggle:hover { color: var(--cyan); border-color: var(--cyan); }
+
+  /* EVENTO BANNER */
+  .evento-banner { position: fixed; top: 0; left: 0; right: 0; z-index: 2000; background: linear-gradient(90deg, #7c3aed, #a855f7, #06b6d4, #a855f7, #7c3aed); background-size: 300% 100%; animation: bannerShift 4s linear infinite; text-align: center; padding: 10px 20px; cursor: none; }
+  .evento-banner a { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: #fff; text-decoration: none; letter-spacing: 3px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .evento-banner .ev-dot { width: 8px; height: 8px; background: #fff; border-radius: 50%; animation: blink 1s ease-in-out infinite; flex-shrink: 0; }
+  .evento-banner a:hover { opacity: 0.85; }
+  .evento-banner .ev-arrow { transition: transform 0.3s; }
+  .evento-banner a:hover .ev-arrow { transform: translateX(4px); }
+  @keyframes bannerShift { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  /* NAV */
+  nav { position: fixed; top: 38px; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 20px 60px; background: linear-gradient(180deg, var(--bg) 0%, transparent 100%); backdrop-filter: blur(10px); }
+  .nav-logo { font-family: 'Space Mono', monospace; font-size: 1.2rem; color: var(--cyan); text-shadow: var(--glow-c); letter-spacing: 2px; }
+  .nav-logo span { color: var(--purple); }
+  .nav-links { display: flex; gap: 40px; align-items: center; }
+  .nav-links a { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--muted); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; position: relative; }
+  .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: var(--cyan); transition: width 0.3s; }
+  .nav-links a:hover { color: var(--cyan); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* SECTIONS */
+  section { position: relative; z-index: 1; padding: 120px 80px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+  .section-tag { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--purple); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 16px; opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+  .section-tag.visible { opacity: 1; transform: translateY(0); }
+  h1, h2 { font-family: 'Syne', sans-serif; line-height: 1.05; opacity: 0; transform: translateY(30px); transition: all 0.7s ease 0.1s; }
+  h1.visible, h2.visible { opacity: 1; transform: translateY(0); }
+  .section-heading { font-family: 'Syne', sans-serif; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; line-height: 1.05; }
+  .section-heading .accent { background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+  /* HERO */
+  #hero { min-height: 100vh; justify-content: center; align-items: flex-start; padding-top: 0; overflow: hidden; }
+  .hero-inner { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 60px; height: 100vh; padding: 0 80px; }
+  .hero-label { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--cyan); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 24px; animation: fadeUp 0.8s ease 0.2s both; }
+  .hero-name { font-family: 'Syne', sans-serif; font-size: clamp(3.5rem, 7vw, 7rem); font-weight: 800; line-height: 1; margin-bottom: 12px; animation: fadeUp 0.8s ease 0.4s both; }
+  .hero-name .grad { background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-sub { font-size: 1.1rem; color: var(--muted); margin-bottom: 40px; line-height: 1.7; max-width: 480px; animation: fadeUp 0.8s ease 0.6s both; }
+  .hero-cta { display: flex; gap: 20px; animation: fadeUp 0.8s ease 0.8s both; }
+  .btn { font-family: 'Space Mono', monospace; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; padding: 14px 30px; border: none; cursor: none; text-decoration: none; transition: all 0.3s; }
+  .btn-primary { background: linear-gradient(135deg, var(--purple), var(--cyan)); color: #000; font-weight: 700; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: var(--glow-p); }
+  .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn-outline:hover { border-color: var(--cyan); color: var(--cyan); transform: translateY(-2px); }
+  .hero-visual { position: relative; height: 500px; animation: fadeUp 1s ease 0.5s both; }
+  .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); animation: gridPulse 4s ease-in-out infinite; }
+  @keyframes gridPulse { 0%,100%{opacity:0.4} 50%{opacity:0.8} }
+  .hero-card { position: absolute; background: var(--bg2); border: 1px solid var(--border); border-radius: 2px; padding: 20px 24px; font-family: 'Space Mono', monospace; font-size: 0.75rem; }
+  .hero-card-1 { top: 60px; left: 40px; border-color: var(--purple); box-shadow: var(--glow-p); animation: cardFloat 6s ease-in-out infinite; }
+  .hero-card-2 { bottom: 80px; right: 20px; border-color: var(--cyan); box-shadow: var(--glow-c); animation: cardFloat 8s ease-in-out infinite 2s; }
+  .hero-card-3 { top: 50%; right: 60px; animation: cardFloat3 7s ease-in-out infinite 1s; }
+  .card-label { color: var(--muted); font-size: 0.65rem; margin-bottom: 8px; letter-spacing: 2px; }
+  .card-val { color: var(--cyan); font-size: 1.2rem; }
+  .card-val-p { color: var(--purple); font-size: 1.2rem; }
+  @keyframes cardFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+  @keyframes cardFloat3 { 0%,100%{transform:translateY(-50%)} 50%{transform:translateY(calc(-50% - 12px))} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+  /* DEV */
+  .engines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-top: 60px; }
+  .engine-card { position: relative; background: var(--bg2); border: 1px solid var(--border); padding: 40px 30px; cursor: none; transition: all 0.4s ease; overflow: hidden; }
+  .engine-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--purple-dim), var(--cyan-dim)); opacity: 0; transition: opacity 0.4s; }
+  .engine-card:hover::before { opacity: 1; }
+  .engine-card:hover { border-color: var(--purple); transform: translateY(-4px); box-shadow: var(--glow-p); }
+  .engine-card.active { border-color: var(--cyan); box-shadow: var(--glow-c); }
+  .engine-icon { width: 56px; height: 56px; margin-bottom: 20px; position: relative; z-index: 1; }
+  .engine-icon img { width: 100%; height: 100%; object-fit: contain; }
+  .engine-name { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; position: relative; z-index: 1; }
+  .engine-lang { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--cyan); letter-spacing: 2px; position: relative; z-index: 1; }
+  .engine-arrow { position: absolute; bottom: 20px; right: 20px; color: var(--muted); font-size: 1.2rem; transition: all 0.3s; z-index: 1; }
+  .engine-card:hover .engine-arrow { color: var(--cyan); transform: rotate(90deg); }
+  .engine-card.active .engine-arrow { color: var(--cyan); transform: rotate(180deg); }
+  .engine-detail { max-height: 0; overflow: hidden; transition: max-height 0.6s cubic-bezier(0.16,1,0.3,1); background: var(--bg2); border: 1px solid transparent; border-top: none; }
+  .engine-detail.open { max-height: 600px; border-color: var(--cyan); }
+  .engine-detail-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 0; padding: 60px; }
+  .engine-detail-img { position: relative; overflow: hidden; height: 300px; background: var(--bg); border-right: 1px solid var(--border); }
+  .engine-detail-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; filter: saturate(0.7) brightness(0.8); transition: all 0.5s; }
+  .engine-detail-img:hover img { opacity: 1; filter: saturate(1) brightness(1); }
+  .engine-detail-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--purple-dim), var(--cyan-dim)); pointer-events: none; }
+  .engine-detail-text { padding: 0 0 0 50px; display: flex; flex-direction: column; justify-content: center; }
+  .engine-detail-text h3 { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .engine-detail-text .sub { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--cyan); letter-spacing: 3px; margin-bottom: 20px; }
+  .engine-detail-text p { color: var(--muted); line-height: 1.8; font-size: 0.95rem; margin-bottom: 16px; }
+  .engine-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .engine-tag { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 1px; padding: 4px 10px; border: 1px solid var(--border); color: var(--muted); }
+
+  /* TWITCH */
+  .twitch-hero { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 60px; }
+  .twitch-info h3 { font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800; margin-bottom: 16px; }
+  .twitch-info h3 span { color: #9147ff; }
+  .twitch-info p { color: var(--muted); line-height: 1.8; margin-bottom: 24px; }
+  .twitch-stats { display: flex; gap: 40px; margin-top: 30px; }
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #9147ff, var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .stat-label { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 2px; }
+  .vods-grid { display: flex; flex-direction: column; gap: 12px; }
+  .vod-card { background: var(--bg2); border: 1px solid var(--border); padding: 20px 24px; display: flex; align-items: center; gap: 20px; cursor: none; transition: all 0.3s; position: relative; overflow: hidden; }
+  .vod-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: #9147ff; transform: scaleY(0); transition: transform 0.3s; }
+  .vod-card:hover::before { transform: scaleY(1); }
+  .vod-card:hover { border-color: #9147ff33; transform: translateX(8px); }
+  .vod-thumb { width: 80px; height: 50px; background: var(--bg); border: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 1.2rem; }
+  .vod-info { flex: 1; }
+  .vod-title { font-weight: 600; margin-bottom: 4px; }
+  .vod-meta { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); }
+  .vod-duration { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: #9147ff; }
+
+  /* YOUTUBE */
+  .yt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 50px; }
+  .yt-card { background: var(--bg2); border: 1px solid var(--border); overflow: hidden; cursor: none; transition: all 0.4s; }
+  .yt-card:hover { transform: translateY(-6px); border-color: #ff000066; box-shadow: 0 0 30px #ff000022; }
+  .yt-thumb { height: 160px; background: var(--bg); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+  .yt-thumb-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, var(--purple-dim), #ff000011); }
+  .yt-play { position: absolute; width: 48px; height: 48px; background: #ff0000; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.1rem; opacity: 0; transform: scale(0.8); transition: all 0.3s; z-index: 2; padding-left: 4px; }
+  .yt-card:hover .yt-play { opacity: 1; transform: scale(1); }
+  .yt-info { padding: 20px; }
+  .yt-title { font-weight: 600; margin-bottom: 8px; line-height: 1.4; }
+  .yt-meta { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); }
+
+  /* EDITING */
+  .editing-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 60px; }
+  .tool-card { background: var(--bg2); border: 1px solid var(--border); padding: 50px 40px; position: relative; overflow: hidden; cursor: none; transition: all 0.4s; }
+  .tool-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at center, var(--purple-dim), transparent 70%); opacity: 0; transition: opacity 0.5s; }
+  .tool-card:hover::before { opacity: 1; }
+  .tool-card:hover { border-color: var(--purple); transform: translateY(-4px); }
+  .tool-logo { width: 60px; height: 60px; margin-bottom: 24px; position: relative; z-index: 1; }
+  .tool-logo img { width: 100%; height: 100%; object-fit: contain; }
+  .tool-name { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; position: relative; z-index: 1; }
+  .tool-type { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--purple); letter-spacing: 3px; margin-bottom: 20px; position: relative; z-index: 1; }
+  .tool-desc { color: var(--muted); line-height: 1.8; position: relative; z-index: 1; }
+  .tool-features { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 1; }
+  .tool-feature { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--muted); padding-left: 16px; position: relative; }
+  .tool-feature::before { content: '›'; position: absolute; left: 0; color: var(--cyan); }
+
+  /* LINKS */
+  .apps-strip { margin-top: 80px; padding-top: 60px; border-top: 1px solid var(--border); }
+  .apps-logos { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; align-items: center; }
+  .app-logo-item { display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0.5; transition: all 0.3s; cursor: none; text-decoration: none; color: var(--text); }
+  .app-logo-item:hover { opacity: 1; transform: translateY(-4px); }
+  .app-logo-item img { width: 36px; height: 36px; object-fit: contain; }
+  .app-logo-item span { font-family: 'Space Mono', monospace; font-size: 0.55rem; color: var(--muted); letter-spacing: 1px; }
+
+  /* SOLUCIONES */
+  .solutions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-top: 60px; }
+  .solution-card { background: var(--bg2); border: 1px solid var(--border); padding: 40px 36px; position: relative; overflow: hidden; transition: all 0.4s; }
+  .solution-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--purple-dim), var(--cyan-dim)); opacity: 0; transition: opacity 0.4s; }
+  .solution-card:hover { border-color: var(--cyan); transform: translateY(-4px); box-shadow: var(--glow-c); }
+  .solution-card:hover::before { opacity: 1; }
+  .solution-card-tag { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--cyan); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px; position: relative; z-index: 1; }
+  .solution-card-icon { font-size: 2.4rem; margin-bottom: 18px; position: relative; z-index: 1; }
+  .solution-card-name { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; position: relative; z-index: 1; background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .solution-card-desc { color: var(--muted); line-height: 1.8; font-size: 0.95rem; margin-bottom: 28px; position: relative; z-index: 1; }
+  .solution-features { margin-bottom: 32px; display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 1; }
+  .solution-feature { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--muted); padding-left: 16px; position: relative; }
+  .solution-feature::before { content: '›'; position: absolute; left: 0; color: var(--purple); }
+  .solution-btn { display: inline-flex; align-items: center; gap: 10px; font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; padding: 12px 24px; border: 1px solid var(--cyan); color: var(--cyan); background: var(--cyan-dim); transition: all 0.3s; position: relative; z-index: 1; cursor: none; }
+  .solution-btn:hover { background: var(--cyan); color: #000; transform: translateX(4px); }
+  .solution-btn-arrow { transition: transform 0.3s; }
+  .solution-btn:hover .solution-btn-arrow { transform: translateX(4px); }
+
+  /* DIAGONAL */
+  .diagonal-divider { position: relative; height: 120px; overflow: hidden; z-index: 2; }
+  .diagonal-divider::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--purple) 0%, var(--cyan) 100%); clip-path: polygon(0 0, 100% 60%, 100% 100%, 0 100%); opacity: 0.08; }
+  .diagonal-divider .diag-line { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; }
+  .diagonal-divider .diag-line::after { content: ''; position: absolute; left: -10%; width: 120%; height: 2px; background: linear-gradient(90deg, transparent, var(--purple), var(--cyan), transparent); top: 50%; transform: rotate(-3deg); box-shadow: 0 0 20px var(--purple), 0 0 40px var(--cyan); }
+
+  /* FOOTER */
+  footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 40px 80px; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 1; }
+  .footer-logo { font-family: 'Space Mono', monospace; font-size: 0.9rem; color: var(--cyan); }
+  .footer-copy { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); }
+
+  /* REVEAL */
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--purple); }
+
+  /* MOBILE */
+  #mobile-block { display: none; position: fixed; inset: 0; background: #080810; z-index: 999999; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; font-family: 'Space Mono', monospace; }
+  #mobile-block .mb-icon { font-size: 3.5rem; margin-bottom: 1.5rem; }
+  #mobile-block h2 { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; color: #e2e8f0; margin-bottom: 1rem; opacity: 1 !important; transform: none !important; }
+  #mobile-block p { font-size: 0.78rem; color: #64748b; line-height: 1.8; max-width: 280px; }
+  #mobile-block .mb-accent { color: #a855f7; }
+  #mobile-block .mb-line { width: 60px; height: 2px; background: linear-gradient(90deg, #a855f7, #06b6d4); margin: 1.5rem auto; }
+  @media (max-width: 768px) { #mobile-block { display: flex; } body > *:not(#mobile-block) { display: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- LANG SPLASH -->
+<div id="lang-splash">
+  <div class="splash-grid"></div>
+  <div class="splash-logo">Valens<span>_</span>429</div>
+  <div class="splash-label" id="splash-label">Seleccioná tu idioma / Select your language</div>
+  <div class="splash-cards">
+    <div class="lang-card" onclick="setLang('es')" data-track-label="🌐 Idioma — Español">
+      <div class="lang-flag">🇦🇷</div>
+      <div class="lang-line"></div>
+      <div class="lang-name">Español</div>
+      <div class="lang-sub">SELECCIONAR</div>
+    </div>
+    <div class="lang-card" onclick="setLang('en')" data-track-label="🌐 Idioma — English">
+      <div class="lang-flag">🇺🇸</div>
+      <div class="lang-line"></div>
+      <div class="lang-name">English</div>
+      <div class="lang-sub">SELECT</div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE BLOCK -->
+<div id="mobile-block">
+  <div class="mb-icon">🖥️</div>
+  <h2 id="mb-title">Only on <span class="mb-accent">desktop</span></h2>
+  <div class="mb-line"></div>
+  <p id="mb-desc">This site is not available on mobile devices.<br><br>Visit it from a <span class="mb-accent">computer</span> for the full experience.</p>
+</div>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<!-- EVENTO BANNER -->
+<div class="evento-banner">
+  <a href="https://Valens429.site/EventPA/" id="banner-link" data-track-label="🎮 Banner — Purrfect Apawcalypse">
+    <span class="ev-dot"></span>
+    <span id="banner-text">ACTIVE EVENT! — Purrfect Apawcalypse Enhanced Beta</span>
+    <span class="ev-arrow">→</span>
+  </a>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Valens<span>_</span>429</div>
+  <div class="nav-links">
+    <a href="#dev" data-i="nav-dev" data-track-label="🔗 Nav — Dev">Dev</a>
+    <a href="#twitch-section" data-track-label="🔗 Nav — Twitch">Twitch</a>
+    <a href="#youtube-section" data-track-label="🔗 Nav — YouTube">YouTube</a>
+    <a href="#editing-section" data-i="nav-edit" data-track-label="🔗 Nav — Edición">Edición</a>
+    <a href="#soluciones" data-i="nav-sol" data-track-label="🔗 Nav — Soluciones">Soluciones</a>
+    <a href="#links-section" data-track-label="🔗 Nav — Links">Links</a>
+    <button class="lang-toggle" id="lang-toggle-btn" onclick="showSplash()" data-track-label="🌐 Toggle idioma">🌐 ES / EN</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-label" data-i="hero-label">// Desarrollador &amp; Creador de Contenido</div>
+      <h1 class="hero-name" data-i="hero-name">Soy<br><span class="grad">Valens</span></h1>
+      <p class="hero-sub" data-i="hero-sub">Hago juegos, programo cosas, creo contenido.</p>
+      <div class="hero-cta">
+        <a href="#dev" class="btn btn-primary" data-i="hero-btn1" data-track-label="🚀 Hero — Ver proyectos">Ver proyectos</a>
+        <a href="#soluciones" class="btn btn-outline" data-i="hero-btn2" data-track-label="🛠️ Hero — Soluciones">Soluciones →</a>
+        <a href="#links-section" class="btn btn-outline" data-track-label="🔗 Hero — Links">Links →</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-grid"></div>
+      <div class="hero-card hero-card-1"><div class="card-label">ENGINES</div><div class="card-val-p">× 4</div></div>
+      <div class="hero-card hero-card-2"><div class="card-label" data-i="card-live">EN VIVO</div><div class="card-val">TWITCH</div></div>
+      <div class="hero-card hero-card-3"><div class="card-label">CONTENT</div><div class="card-val-p">CREATOR</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="diagonal-divider"><div class="diag-line"></div></div>
+
+<!-- DEV -->
+<section id="dev">
+  <div class="section-inner" style="max-width:1200px;margin:0 auto;width:100%">
+    <div class="section-tag reveal" data-i="dev-tag">[ 01 — DESARROLLO ]</div>
+    <h2 class="section-heading reveal reveal-delay-1">Game Dev &amp;<br><span class="accent" data-i="dev-h2">Programación</span></h2>
+    <p class="reveal reveal-delay-2" style="color:var(--muted);max-width:580px;margin-top:20px;line-height:1.8;" data-i="dev-sub">Trabajo con distintos motores y lenguajes según el proyecto. Hacé click en cada motor para ver más detalles.</p>
+    <div class="engines-grid reveal reveal-delay-3">
+      <div class="engine-card" onclick="toggleEngine('python')" data-track-label="🐍 Engine — Python">
+        <div class="engine-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python"></div>
+        <div class="engine-name">Python</div><div class="engine-lang">&amp; RenPy</div><div class="engine-arrow">↓</div>
+      </div>
+      <div class="engine-card" onclick="toggleEngine('clickteam')" data-track-label="🎮 Engine — Clickteam">
+        <div class="engine-icon"><img src="Icons/Clickteam.png" alt="Clickteam"></div>
+        <div class="engine-name">Clickteam</div><div class="engine-lang">FUSION 2.5</div><div class="engine-arrow">↓</div>
+      </div>
+      <div class="engine-card" onclick="toggleEngine('gamemaker')" data-track-label="🎮 Engine — GameMaker">
+        <div class="engine-icon"><img src="Icons/Gamemaker.png" alt="GameMaker"></div>
+        <div class="engine-name">GameMaker</div><div class="engine-lang">GML</div><div class="engine-arrow">↓</div>
+      </div>
+      <div class="engine-card" onclick="toggleEngine('unity')" data-track-label="🎮 Engine — Unity">
+        <div class="engine-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/unity/unity-original.svg" alt="Unity" style="filter:invert(1)"></div>
+        <div class="engine-name">Unity</div><div class="engine-lang">C#</div><div class="engine-arrow">↓</div>
+      </div>
+    </div>
+    <div class="engine-detail" id="detail-python"><div class="engine-detail-inner"><div class="engine-detail-img"><img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=800&q=80" alt="Python"></div><div class="engine-detail-text"><h3>Python &amp; RenPy</h3><div class="sub">SCRIPTING / VISUAL NOVELS</div><p data-i="py-p1">Python es el lenguaje base: scripts, automatizaciones, bots, herramientas. Versátil, legible y potente.</p><p data-i="py-p2">RenPy extiende Python para crear visual novels con sistema de diálogos, ramas narrativas, manejo de sprites, música y variables de historia.</p><div class="engine-tags"><span class="engine-tag">Python 3.x</span><span class="engine-tag">RenPy SDK</span><span class="engine-tag">Visual Novels</span><span class="engine-tag">Scripting</span><span class="engine-tag" data-i="tag-auto">Automatización</span></div></div></div></div>
+    <div class="engine-detail" id="detail-clickteam"><div class="engine-detail-inner"><div class="engine-detail-img"><img src="Banners/ctf.jpg" alt="Clickteam"></div><div class="engine-detail-text"><h3>Clickteam Fusion</h3><div class="sub">EVENT-DRIVEN GAME DEV</div><p data-i="ct-p1">Clickteam Fusion 2.5 es un entorno de desarrollo de juegos basado en eventos. Sin escribir código tradicional, se construyen lógicas complejas mediante condiciones y acciones visuales.</p><p data-i="ct-p2">Muy usado para juegos 2D indie clásicos. Exporta a Windows, HTML5 y móvil.</p><div class="engine-tags"><span class="engine-tag">Event Editor</span><span class="engine-tag">2D Games</span><span class="engine-tag">Indie Dev</span><span class="engine-tag">Windows / HTML5</span></div></div></div></div>
+    <div class="engine-detail" id="detail-gamemaker"><div class="engine-detail-inner"><div class="engine-detail-img"><img src="Banners/gm.jpg" alt="GameMaker"></div><div class="engine-detail-text"><h3>GameMaker</h3><div class="sub">2D GAME ENGINE / GML</div><p data-i="gm-p1">GameMaker Studio es el motor detrás de grandes títulos indie como Undertale, Hotline Miami o Spelunky. GML es específico del engine pero extremadamente eficiente para 2D.</p><p data-i="gm-p2">Su flujo de trabajo combina editor visual con scripting directo. Ideal para juegos 2D pixel art, roguelikes y metroidvanias.</p><div class="engine-tags"><span class="engine-tag">GML</span><span class="engine-tag">Pixel Art</span><span class="engine-tag">2D Expert</span><span class="engine-tag">Multiplatform</span></div></div></div></div>
+    <div class="engine-detail" id="detail-unity"><div class="engine-detail-inner"><div class="engine-detail-img"><img src="Banners/u.png" alt="Unity"></div><div class="engine-detail-text"><h3>Unity</h3><div class="sub">3D / 2D ENGINE / C#</div><p data-i="u-p1">Unity es el motor más completo del catálogo. Programado en C#, permite crear experiencias en 2D y 3D con un ecosistema enorme de assets, paquetes y documentación.</p><p data-i="u-p2">Su editor incluye sistema de física, animación, shaders, UI y networking. Exporta a más de 25 plataformas.</p><div class="engine-tags"><span class="engine-tag">C#</span><span class="engine-tag">3D / 2D</span><span class="engine-tag">HLSL Shaders</span><span class="engine-tag" data-i="tag-plat">25+ Plataformas</span><span class="engine-tag">Asset Store</span></div></div></div></div>
+  </div>
+</section>
+
+<div class="diagonal-divider"><div class="diag-line"></div></div>
+
+<!-- TWITCH -->
+<section id="twitch-section">
+  <div class="section-inner" style="max-width:1200px;margin:0 auto;width:100%">
+    <div class="section-tag reveal" data-i="twitch-tag">[ 02 — STREAMING ]</div>
+    <h2 class="section-heading reveal reveal-delay-1"><span data-i="twitch-h2a">En vivo</span><br><span class="accent">en Twitch</span></h2>
+    <div class="twitch-hero">
+      <div class="twitch-info reveal">
+        <h3><span>twitch</span>.tv/Nyxr_ar</h3>
+        <p data-i="twitch-p1">Streams de Visual novels, juegos indie, devlogs y sesiones de gamedev. Comunidad pequeña y cercana donde se ven proyectos nacer desde cero.</p>
+        <p data-i="twitch-p2">Las transmisiones mezclan programación real con gaming casual. Sin guión, sin postureo.</p>
+        <div class="twitch-stats">
+          <div class="stat"><div class="stat-num">138</div><div class="stat-label" data-i="stat-followers">SEGUIDORES</div></div>
+          <div class="stat"><div class="stat-num">+100</div><div class="stat-label" data-i="stat-streams">STREAMS</div></div>
+          <div class="stat"><div class="stat-num">+250hs</div><div class="stat-label" data-i="stat-live">EN DIRECTO</div></div>
+        </div>
+      </div>
+      <div class="vods-grid reveal reveal-delay-2">
+        <div class="vod-card" data-track-label="📺 VOD — Hytale"><div class="vod-thumb">📺</div><div class="vod-info"><div class="vod-title" data-i="vod1-title">Probando por primera vez Hytale — ¡Recién salió!</div><div class="vod-meta"><span data-i="vod1-date">26/1/26</span> · Gameplay</div></div><div class="vod-duration">1:49:13</div></div>
+        <div class="vod-card" data-track-label="📺 VOD — Purrfect Apawcalypse"><div class="vod-thumb">🎮</div><div class="vod-info"><div class="vod-title" data-i="vod2-title">Purrfect Apawcalypse — Saga completa</div><div class="vod-meta"><span data-i="vod2-date">11/3/26</span> · Visual Novel</div></div><div class="vod-duration">8:51:09</div></div>
+        <div class="vod-card" data-track-label="📺 VOD — Danganronpa"><div class="vod-thumb">🔴</div><div class="vod-info"><div class="vod-title" data-i="vod3-title">Probando DANGANRONPA ¿es este el PEAK?</div><div class="vod-meta"><span data-i="vod3-date">26/3/26</span> · Visual Novel</div></div><div class="vod-duration">1:36:19</div></div>
+        <div class="vod-card" data-track-label="📺 VOD — Los furros"><div class="vod-thumb">💻</div><div class="vod-info"><div class="vod-title" data-i="vod4-title">Los furros me persiguen (Pero yo soy más rápido)</div><div class="vod-meta"><span data-i="vod4-date">26/11/25</span> · Visual Novel</div></div><div class="vod-duration">47:10</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="diagonal-divider"><div class="diag-line"></div></div>
+
+<!-- YOUTUBE -->
+<section id="youtube-section">
+  <div class="section-inner" style="max-width:1200px;margin:0 auto;width:100%">
+    <div class="section-tag reveal" data-i="yt-tag">[ 03 — YOUTUBE ]</div>
+    <h2 class="section-heading reveal reveal-delay-1"><span data-i="yt-h2a">Seguime en</span><br><span class="accent">Nyxr_ar</span></h2>
+    <div class="yt-grid reveal reveal-delay-2">
+      <div class="yt-card" data-track-label="▶ YT — Purrfect Apawcalypse"><div class="yt-thumb">🎮<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt1">No era tan inocente como parecía… 💀 | Purrfect Apawcalypse</div><div class="yt-meta"><span data-i="yt1-meta">+170 vistas · hace 4 semanas</span></div></div></div>
+      <div class="yt-card" data-track-label="▶ YT — CHANGED"><div class="yt-thumb">🐍<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt2">Jugué CHANGED y me arrepiento</div><div class="yt-meta"><span data-i="yt2-meta">+50 vistas · hace 1 mes</span></div></div></div>
+      <div class="yt-card" data-track-label="▶ YT — Caballero stream"><div class="yt-thumb">⚙️<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt3">INTENTÉ VENCER AL CABALLERO EN STREAM Y PASÓ ESTO...</div><div class="yt-meta"><span data-i="yt3-meta">+580 vistas · hace 10 meses</span></div></div></div>
+      <div class="yt-card" data-track-label="▶ YT — Keydrop"><div class="yt-thumb">🕹️<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt4">MIRÁ LO QUE GANÉ EN KEYDROP 🤑🤑</div><div class="yt-meta"><span data-i="yt4-meta">+100 vistas · hace 1 año</span></div></div></div>
+      <div class="yt-card" data-track-label="▶ YT — Vivir con una zorra"><div class="yt-thumb">🔥<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt5">Así es vivir con una zorra (spoiler: es un desastre)</div><div class="yt-meta"><span data-i="yt5-meta">+130 vistas · hace 5 meses</span></div></div></div>
+      <div class="yt-card" data-track-label="▶ YT — OneShot"><div class="yt-thumb">🎬<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt6">PROBÉ OneShot y me rompió el PC (y mi corazón)</div><div class="yt-meta"><span data-i="yt6-meta">+40 vistas · hace 2 meses</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="diagonal-divider"><div class="diag-line"></div></div>
+
+<!-- EDITING -->
+<section id="editing-section">
+  <div class="section-inner" style="max-width:1200px;margin:0 auto;width:100%">
+    <div class="section-tag reveal" data-i="edit-tag">[ 04 — EDICIÓN ]</div>
+    <h2 class="section-heading reveal reveal-delay-1"><span data-i="edit-h2a">Edición</span><br><span class="accent" data-i="edit-h2b">de video</span></h2>
+    <p class="reveal reveal-delay-2" style="color:var(--muted);max-width:580px;margin-top:20px;line-height:1.8;" data-i="edit-sub">Dos herramientas, dos flujos de trabajo. Cada una para lo que mejor hace.</p>
+    <div class="editing-tools">
+      <div class="tool-card reveal reveal-delay-2" data-track-label="🎬 Tool — Filmora">
+        <div class="tool-logo"><img src="Icons/Filmora.png" alt="Filmora"></div>
+        <div class="tool-name">Wondershare Filmora</div>
+        <div class="tool-type" data-i="filmora-type">EDICIÓN PRINCIPAL</div>
+        <div class="tool-desc" data-i="filmora-desc">Filmora 15 es mi software principal de edición. Interfaz limpia, timeline intuitivo y efectos de calidad sin complicarse con software profesional pesado.</div>
+        <div class="tool-features">
+          <div class="tool-feature" data-i="filmora-f1">Edición multicapa con transiciones personalizadas</div>
+          <div class="tool-feature" data-i="filmora-f2">Efectos de color grading y LUTs</div>
+          <div class="tool-feature" data-i="filmora-f3">Keyframes para animaciones de texto y títulos</div>
+          <div class="tool-feature" data-i="filmora-f4">Audio ducking y mixer integrado</div>
+          <div class="tool-feature" data-i="filmora-f5">Screen recorder + editor en uno</div>
+        </div>
+      </div>
+      <div class="tool-card reveal reveal-delay-3" data-track-label="🎬 Tool — Clipchamp">
+        <div class="tool-logo"><img src="Icons/Clipchamp.png" alt="Clipchamp"></div>
+        <div class="tool-name">Clipchamp</div>
+        <div class="tool-type" data-i="clip-type">EDICIÓN RÁPIDA / CLIPS</div>
+        <div class="tool-desc" data-i="clip-desc">Microsoft Clipchamp para ediciones rápidas, clips de Twitch y contenido de formato corto. Directamente en el browser, sin instalar nada extra.</div>
+        <div class="tool-features">
+          <div class="tool-feature" data-i="clip-f1">Edición en browser — sin instalación</div>
+          <div class="tool-feature" data-i="clip-f2">Clips de Twitch listos para TikTok/Shorts</div>
+          <div class="tool-feature" data-i="clip-f3">Templates para contenido de formato corto</div>
+          <div class="tool-feature" data-i="clip-f4">Integración nativa con OneDrive</div>
+          <div class="tool-feature" data-i="clip-f5">Exportación directa a redes sociales</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="diagonal-divider"><div class="diag-line"></div></div>
+
+<!-- SOLUCIONES -->
+<section id="soluciones">
+  <div class="section-inner" style="max-width:1200px;margin:0 auto;width:100%">
+    <div class="section-tag reveal" data-i="sol-tag">[ 05 — SOLUCIONES ]</div>
+    <h2 class="section-heading reveal reveal-delay-1"><span data-i="sol-h2a">Mis</span><br><span class="accent" data-i="sol-h2b">herramientas</span></h2>
+    <p class="reveal reveal-delay-2" style="color:var(--muted);max-width:580px;margin-top:20px;line-height:1.8;" data-i="sol-sub">Pequeñas soluciones que armé y uso. Gratis, sin registro.</p>
+    <div class="solutions-grid">
+      <div class="solution-card reveal reveal-delay-2">
+        <div class="solution-card-tag">// EMAIL TEMPORAL</div>
+        <div class="solution-card-icon"><img src="Icons/dropmail.png" alt="dropmail" width="96" height="96" style="object-fit:contain;"></div>
+        <div class="solution-card-name">dropmail</div>
+        <div class="solution-card-desc" data-i="sol-dropmail-desc">Generá una dirección de email temporal en segundos. Sin registro, sin spam. Usala para proteger tu email real en cualquier servicio.</div>
+        <div class="solution-features">
+          <div class="solution-feature" data-i="sol-f1">Múltiples addresses simultáneas</div>
+          <div class="solution-feature" data-i="sol-f2">Recepción de mails en tiempo real</div>
+          <div class="solution-feature" data-i="sol-f3">Sin registro ni cuenta requerida</div>
+          <div class="solution-feature" data-i="sol-f4">100% gratis</div>
+        </div>
+        <a href="https://valens429.site/dropmail" target="_blank" class="solution-btn" data-track-label="🛠️ Soluciones — dropmail">
+          Abrir dropmail <span class="solution-btn-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="diagonal-divider"><div class="diag-line"></div></div>
+
+<!-- LINKS -->
+<section id="links-section">
+  <div class="section-inner" style="max-width:1200px;margin:0 auto;width:100%">
+    <div class="section-tag reveal" data-i="links-tag">[ 06 — LINKS ]</div>
+    <h2 class="section-heading reveal reveal-delay-1"><span data-i="links-h2a">Encontrame</span><br><span class="accent" data-i="links-h2b">en todos lados</span></h2>
+    <p class="reveal reveal-delay-2" style="color:var(--muted);max-width:580px;margin-top:20px;line-height:1.8;" data-i="links-sub">Todos mis espacios en internet, en un solo lugar.</p>
+    <div class="apps-strip reveal reveal-delay-3">
+      <div class="apps-logos">
+        <a href="https://www.youtube.com/@Valens429VODs" target="_blank" class="app-logo-item" data-track-label="🔗 Link — YouTube"><svg width="36" height="36" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.5 20.5 12 20.5 12 20.5s7.5 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg><span>YouTube</span></a>
+        <a href="https://www.twitch.tv/nyxr_ar" target="_blank" class="app-logo-item" data-track-label="🔗 Link — Twitch"><svg width="36" height="36" viewBox="0 0 24 24" fill="#9147ff"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg><span>Twitch</span></a>
+        <a href="https://bsky.app/profile/valens429.bsky.social" target="_blank" class="app-logo-item" data-track-label="🔗 Link — Bluesky"><svg width="36" height="36" viewBox="0 0 24 24" fill="#0085ff"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.479 0-.689-.139-1.861-.902-2.206-.659-.299-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z"/></svg><span>Bluesky</span></a>
+        <a href="https://github.com/Valens429" target="_blank" class="app-logo-item" data-track-label="🔗 Link — GitHub"><svg width="36" height="36" viewBox="0 0 24 24" fill="#fff"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg><span>GitHub</span></a>
+        <a href="https://discord.gg/Tajpn7ddUV" target="_blank" class="app-logo-item" data-track-label="🔗 Link — Discord"><img src="Icons/Discord.png" alt="Discord" width="36" height="36"><span>Discord</span></a>
+        <a href="https://drive.google.com/drive/folders/1s9XBix-wr949mTLPTmgenUe3eulBHFN8" target="_blank" class="app-logo-item" data-track-label="🔗 Link — Assets Drive"><img src="Icons/Drive.png" alt="Drive" width="36" height="36"><span data-i="assets-label">Assets</span></a>
+        <a href="https://gamejolt.com/@Valens429" target="_blank" class="app-logo-item" data-track-label="🔗 Link — GameJolt"><img src="Icons/Gamejolt.png" alt="GameJolt" width="36" height="36"><span>GameJolt</span></a>
+        <a href="https://www.tiktok.com/@nyxrar" target="_blank" class="app-logo-item" data-track-label="🔗 Link — TikTok"><img src="Icons/Tiktok.png" alt="TikTok" width="36" height="36"><span>TikTok</span></a>
+        <a href="https://valens429.itch.io" target="_blank" class="app-logo-item" data-track-label="🔗 Link — itch.io"><img src="Icons/Itchio.png" alt="itch.io" width="36" height="36"><span>itch.io</span></a>
+        <a href="https://ko-fi.com/valens429" target="_blank" class="app-logo-item" data-track-label="☕ Link — Ko-fi"><svg width="36" height="36" viewBox="0 0 24 24" fill="#ff5e5b"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 2.692.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"/></svg><span>Ko-fi</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Valens429</div>
+  <div class="footer-copy" data-i="footer-copy">// Con cariño</div>
+</footer>
+
+<!-- =============================================
+     TRACKER DE STATS — No tocar
+============================================= -->
+<script>
+(function () {
+  const SUPABASE_URL = "https://hxfwzyfaenxpbgsvbnsn.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4Znd6eWZhZW54cGJnc3ZibnNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODg0OTIsImV4cCI6MjA5NTA2NDQ5Mn0.lIglDBigwP4XChdUs1kz2kgDCmJ5IRPgkN9iEzTQAG8";
+
+  async function track(label, url) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/clicks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({ label, url: url || window.location.pathname }),
+      });
+    } catch (_) {}
+  }
+
+  // Trackea clics en todos los elementos con data-track-label
+  document.addEventListener("click", function (e) {
+    const el = e.target.closest("[data-track-label]");
+    if (!el) return;
+    const label = el.getAttribute("data-track-label");
+    const url = el.href || el.dataset.trackUrl || window.location.pathname;
+    track(label, url);
+  });
+
+  // Vista de página
+  track("📄 Vista — " + (document.title || "index"), window.location.pathname);
+})();
+</script>
+
+<script>
+const t = {
+  es: {
+    'html-lang': 'es', 'page-title': '¡Valens429 Website!',
+    'banner-text': 'EVENTO ACTIVO — Purrfect Apawcalypse Enhanced Beta',
+    'nav-dev': 'Dev', 'nav-edit': 'Edición', 'nav-sol': 'Soluciones',
+    'hero-label': '// Desarrollador & Creador de Contenido',
+    'hero-btn1': 'Ver proyectos', 'hero-btn2': 'Soluciones →',
+    'sol-tag': '[ 05 — SOLUCIONES ]', 'sol-h2a': 'Mis', 'sol-h2b': 'herramientas',
+    'sol-sub': 'Pequeñas soluciones que armé y uso. Gratis, sin registro.',
+    'sol-dropmail-desc': 'Generá una dirección de email temporal en segundos. Sin registro, sin spam. Usala para proteger tu email real en cualquier servicio.',
+    'sol-f1': 'Múltiples addresses simultáneas', 'sol-f2': 'Recepción de mails en tiempo real',
+    'sol-f3': 'Sin registro ni cuenta requerida', 'sol-f4': '100% gratis',
+    'links-tag': '[ 06 — LINKS ]',
+    'hero-name': 'Soy<br><span class="grad">Valens</span>',
+    'hero-sub': 'Hago juegos, programo cosas, creo contenido.',
+    'hero-btn1': 'Ver proyectos', 'card-live': 'EN VIVO',
+    'dev-tag': '[ 01 — DESARROLLO ]', 'dev-h2': 'Programación',
+    'dev-sub': 'Trabajo con distintos motores y lenguajes según el proyecto. Hacé click en cada motor para ver más detalles.',
+    'py-p1': 'Python es el lenguaje base: scripts, automatizaciones, bots, herramientas. Versátil, legible y potente.',
+    'py-p2': 'RenPy extiende Python para crear visual novels con sistema de diálogos, ramas narrativas, manejo de sprites, música y variables de historia.',
+    'tag-auto': 'Automatización',
+    'ct-p1': 'Clickteam Fusion 2.5 es un entorno de desarrollo de juegos basado en eventos. Sin escribir código tradicional, se construyen lógicas complejas mediante condiciones y acciones visuales.',
+    'ct-p2': 'Muy usado para juegos 2D indie clásicos. Exporta a Windows, HTML5 y móvil.',
+    'gm-p1': 'GameMaker Studio es el motor detrás de grandes títulos indie como Undertale, Hotline Miami o Spelunky. GML es específico del engine pero extremadamente eficiente para 2D.',
+    'gm-p2': 'Su flujo de trabajo combina editor visual con scripting directo. Ideal para juegos 2D pixel art, roguelikes y metroidvanias.',
+    'u-p1': 'Unity es el motor más completo del catálogo. Programado en C#, permite crear experiencias en 2D y 3D con un ecosistema enorme de assets, paquetes y documentación.',
+    'u-p2': 'Su editor incluye sistema de física, animación, shaders, UI y networking. Exporta a más de 25 plataformas.',
+    'tag-plat': '25+ Plataformas', 'twitch-tag': '[ 02 — STREAMING ]', 'twitch-h2a': 'En vivo',
+    'twitch-p1': 'Streams de Visual novels, juegos indie, devlogs y sesiones de gamedev. Comunidad pequeña y cercana donde se ven proyectos nacer desde cero.',
+    'twitch-p2': 'Las transmisiones mezclan programación real con gaming casual. Sin guión, sin postureo.',
+    'stat-followers': 'SEGUIDORES', 'stat-streams': 'STREAMS', 'stat-live': 'EN DIRECTO',
+    'vod1-title': 'Probando por primera vez Hytale — ¡Recién salió!', 'vod1-date': '26/1/26',
+    'vod2-title': 'Purrfect Apawcalypse — Saga completa', 'vod2-date': '11/3/26',
+    'vod3-title': 'Probando DANGANRONPA ¿es este el PEAK?', 'vod3-date': '26/3/26',
+    'vod4-title': 'Los furros me persiguen (Pero yo soy más rápido)', 'vod4-date': '26/11/25',
+    'yt-tag': '[ 03 — YOUTUBE ]', 'yt-h2a': 'Seguime en',
+    'yt1': 'No era tan inocente como parecía… 💀 | Purrfect Apawcalypse', 'yt1-meta': '+170 vistas · hace 4 semanas',
+    'yt2': 'Jugué CHANGED y me arrepiento', 'yt2-meta': '+50 vistas · hace 1 mes',
+    'yt3': 'INTENTÉ VENCER AL CABALLERO EN STREAM Y PASÓ ESTO...', 'yt3-meta': '+580 vistas · hace 10 meses',
+    'yt4': 'MIRÁ LO QUE GANÉ EN KEYDROP 🤑🤑', 'yt4-meta': '+100 vistas · hace 1 año',
+    'yt5': 'Así es vivir con una zorra (spoiler: es un desastre)', 'yt5-meta': '+130 vistas · hace 5 meses',
+    'yt6': 'PROBÉ OneShot y me rompió el PC (y mi corazón)', 'yt6-meta': '+40 vistas · hace 2 meses',
+    'edit-tag': '[ 04 — EDICIÓN ]', 'edit-h2a': 'Edición', 'edit-h2b': 'de video',
+    'edit-sub': 'Dos herramientas, dos flujos de trabajo. Cada una para lo que mejor hace.',
+    'filmora-type': 'EDICIÓN PRINCIPAL',
+    'filmora-desc': 'Filmora 15 es mi software principal de edición. Interfaz limpia, timeline intuitivo y efectos de calidad sin complicarse con software profesional pesado.',
+    'filmora-f1': 'Edición multicapa con transiciones personalizadas', 'filmora-f2': 'Efectos de color grading y LUTs',
+    'filmora-f3': 'Keyframes para animaciones de texto y títulos', 'filmora-f4': 'Audio ducking y mixer integrado',
+    'filmora-f5': 'Screen recorder + editor en uno', 'clip-type': 'EDICIÓN RÁPIDA / CLIPS',
+    'clip-desc': 'Microsoft Clipchamp para ediciones rápidas, clips de Twitch y contenido de formato corto. Directamente en el browser, sin instalar nada extra.',
+    'clip-f1': 'Edición en browser — sin instalación', 'clip-f2': 'Clips de Twitch listos para TikTok/Shorts',
+    'clip-f3': 'Templates para contenido de formato corto', 'clip-f4': 'Integración nativa con OneDrive',
+    'clip-f5': 'Exportación directa a redes sociales', 'links-tag': '[ 06 — LINKS ]',
+    'links-h2a': 'Encontrame', 'links-h2b': 'en todos lados',
+    'links-sub': 'Todos mis espacios en internet, en un solo lugar.',
+    'assets-label': 'Assets', 'footer-copy': '// Con cariño',
+    'mb-title': 'Solo en <span class="mb-accent">desktop</span>',
+    'mb-desc': 'Este sitio no está disponible en dispositivos móviles.<br><br>Visitalo desde una <span class="mb-accent">computadora</span> para la experiencia completa.',
+  },
+  en: {
+    'html-lang': 'en', 'page-title': 'Valens429 — Website',
+    'banner-text': 'ACTIVE EVENT — Purrfect Apawcalypse Enhanced Beta',
+    'nav-dev': 'Dev', 'nav-edit': 'Editing', 'nav-sol': 'Solutions',
+    'hero-label': '// Developer & Content Creator',
+    'hero-name': "I'm<br><span class=\"grad\">Valens</span>",
+    'hero-sub': 'I make games, write code, create content.',
+    'hero-btn1': 'See projects', 'hero-btn2': 'Solutions →', 'card-live': 'LIVE ON',
+    'dev-tag': '[ 01 — DEVELOPMENT ]', 'dev-h2': 'Programming',
+    'dev-sub': 'I work with different engines and languages depending on the project. Click each engine to learn more.',
+    'py-p1': 'Python is my base language: scripts, automation, bots, tools. Versatile, readable and powerful.',
+    'py-p2': 'RenPy extends Python to create visual novels with dialogue systems, narrative branches, sprite handling, music and story variables.',
+    'tag-auto': 'Automation',
+    'ct-p1': 'Clickteam Fusion 2.5 is an event-driven game development environment. Without writing traditional code, complex logic is built through visual conditions and actions.',
+    'ct-p2': 'Widely used for classic 2D indie games. Exports to Windows, HTML5 and mobile.',
+    'gm-p1': 'GameMaker Studio is the engine behind major indie titles like Undertale, Hotline Miami and Spelunky. GML is engine-specific but extremely efficient for 2D.',
+    'gm-p2': 'Its workflow combines a visual editor with direct scripting. Ideal for 2D pixel art games, roguelikes and metroidvanias.',
+    'u-p1': 'Unity is the most complete engine in the lineup. Written in C#, it allows creating 2D and 3D experiences with a huge ecosystem of assets, packages and documentation.',
+    'u-p2': 'Its editor includes physics, animation, shaders, UI and networking. Exports to 25+ platforms.',
+    'tag-plat': '25+ Platforms', 'twitch-tag': '[ 02 — STREAMING ]', 'twitch-h2a': 'Live on',
+    'twitch-p1': 'Streams of Visual novels, indie games, devlogs and gamedev sessions. Small and tight-knit community where projects are born from scratch.',
+    'twitch-p2': 'Streams mix real programming with casual gaming. No script, no fake persona.',
+    'stat-followers': 'FOLLOWERS', 'stat-streams': 'STREAMS', 'stat-live': 'LIVE',
+    'vod1-title': 'Playing Hytale for the first time — Just dropped!', 'vod1-date': '1/26/26',
+    'vod2-title': 'Purrfect Apawcalypse — Full saga', 'vod2-date': '3/11/26',
+    'vod3-title': 'Playing DANGANRONPA — is this peak fiction?', 'vod3-date': '3/26/26',
+    'vod4-title': "The furries are chasing me (but I'm faster)", 'vod4-date': '11/26/25',
+    'yt-tag': '[ 03 — YOUTUBE ]', 'yt-h2a': 'Follow me on',
+    'yt1': "It wasn't as innocent as it seemed… 💀 | Purrfect Apawcalypse", 'yt1-meta': '+170 views · 4 weeks ago',
+    'yt2': 'I played CHANGED and I regret it', 'yt2-meta': '+50 views · 1 month ago',
+    'yt3': 'I TRIED TO BEAT THE KNIGHT ON STREAM AND THIS HAPPENED...', 'yt3-meta': '+580 views · 10 months ago',
+    'yt4': 'LOOK WHAT I WON ON KEYDROP 🤑🤑', 'yt4-meta': '+100 views · 1 year ago',
+    'yt5': "Living with a fox (spoiler: it's a disaster)", 'yt5-meta': '+130 views · 5 months ago',
+    'yt6': 'I played OneShot and it broke my PC (and my heart)', 'yt6-meta': '+40 views · 2 months ago',
+    'edit-tag': '[ 04 — EDITING ]', 'edit-h2a': 'Video', 'edit-h2b': 'Editing',
+    'edit-sub': 'Two tools, two workflows. Each one for what it does best.',
+    'filmora-type': 'MAIN EDITING',
+    'filmora-desc': 'Filmora 15 is my main editing software. Clean interface, intuitive timeline and quality effects without the overhead of heavy professional software.',
+    'filmora-f1': 'Multi-layer editing with custom transitions', 'filmora-f2': 'Color grading effects and LUTs',
+    'filmora-f3': 'Keyframes for text and title animations', 'filmora-f4': 'Audio ducking and integrated mixer',
+    'filmora-f5': 'Screen recorder + editor in one', 'clip-type': 'QUICK EDITING / CLIPS',
+    'clip-desc': 'Microsoft Clipchamp for quick edits, Twitch clips and short-form content. Directly in the browser, no installation needed.',
+    'clip-f1': 'Browser editing — no install required', 'clip-f2': 'Twitch clips ready for TikTok/Shorts',
+    'clip-f3': 'Templates for short-form content', 'clip-f4': 'Native OneDrive integration',
+    'clip-f5': 'Direct export to social media',
+    'sol-tag': '[ 05 — SOLUTIONS ]', 'sol-h2a': 'My', 'sol-h2b': 'tools',
+    'sol-sub': 'Small solutions I built and use. Free, no sign-up.',
+    'sol-dropmail-desc': 'Generate a temporary email address in seconds. No registration, no spam. Use it to protect your real email on any service.',
+    'sol-f1': 'Multiple simultaneous addresses', 'sol-f2': 'Real-time mail delivery',
+    'sol-f3': 'No account required', 'sol-f4': '100% free',
+    'links-tag': '[ 06 — LINKS ]',
+    'links-h2a': 'Find me', 'links-h2b': 'everywhere',
+    'links-sub': 'All my spaces on the internet, in one place.',
+    'assets-label': 'Assets', 'footer-copy': '// Made with love',
+    'mb-title': '<span class="mb-accent">Desktop</span> only',
+    'mb-desc': 'This site is not available on mobile devices.<br><br>Visit from a <span class="mb-accent">computer</span> for the full experience.',
+  }
+};
+
+let currentLang = 'es';
+
+function applyLang(lang) {
+  currentLang = lang;
+  const tr = t[lang];
+  document.documentElement.lang = tr['html-lang'];
+  document.title = tr['page-title'];
+  document.querySelectorAll('[data-i]').forEach(el => {
+    const key = el.getAttribute('data-i');
+    if (tr[key] !== undefined) el.innerHTML = tr[key];
+  });
+}
+
+function setLang(lang) {
+  applyLang(lang);
+  const splash = document.getElementById('lang-splash');
+  splash.classList.add('hide');
+  setTimeout(() => splash.style.display = 'none', 600);
+}
+
+function showSplash() {
+  const splash = document.getElementById('lang-splash');
+  splash.style.display = 'flex';
+  splash.classList.remove('hide');
+}
+
+// CURSOR
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx - 6 + 'px';
+  cursor.style.top = my - 6 + 'px';
+});
+function animRing() {
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx - 18 + 'px'; ring.style.top = ry - 18 + 'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+document.querySelectorAll('a, button, .engine-card, .vod-card, .yt-card, .tool-card, .app-logo-item, .lang-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2)'; ring.style.transform = 'scale(1.5)'; ring.style.borderColor = 'var(--cyan)'; });
+  el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.transform = 'scale(1)'; ring.style.borderColor = 'var(--purple)'; });
+});
+
+// ENGINE TOGGLE
+function toggleEngine(id) {
+  const detail = document.getElementById('detail-' + id);
+  const allCards = document.querySelectorAll('.engine-card');
+  const allDetails = document.querySelectorAll('.engine-detail');
+  const card = [...allCards].find(c => c.getAttribute('onclick') && c.getAttribute('onclick').includes(id));
+  const isOpen = detail.classList.contains('open');
+  allDetails.forEach(d => d.classList.remove('open'));
+  allCards.forEach(c => c.classList.remove('active'));
+  if (!isOpen) { detail.classList.add('open'); card && card.classList.add('active'); setTimeout(() => detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100); }
+}
+
+// SCROLL REVEAL
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal, .section-tag, h2').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
