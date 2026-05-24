@@ -192,6 +192,24 @@
   .app-logo-item img { width: 36px; height: 36px; object-fit: contain; }
   .app-logo-item span { font-family: 'Space Mono', monospace; font-size: 0.55rem; color: var(--muted); letter-spacing: 1px; }
 
+  /* SOLUCIONES */
+  .solutions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-top: 60px; }
+  .solution-card { background: var(--bg2); border: 1px solid var(--border); padding: 40px 36px; position: relative; overflow: hidden; transition: all 0.4s; }
+  .solution-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--purple-dim), var(--cyan-dim)); opacity: 0; transition: opacity 0.4s; }
+  .solution-card:hover { border-color: var(--cyan); transform: translateY(-4px); box-shadow: var(--glow-c); }
+  .solution-card:hover::before { opacity: 1; }
+  .solution-card-tag { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--cyan); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px; position: relative; z-index: 1; }
+  .solution-card-icon { font-size: 2.4rem; margin-bottom: 18px; position: relative; z-index: 1; }
+  .solution-card-name { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; position: relative; z-index: 1; background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .solution-card-desc { color: var(--muted); line-height: 1.8; font-size: 0.95rem; margin-bottom: 28px; position: relative; z-index: 1; }
+  .solution-features { margin-bottom: 32px; display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 1; }
+  .solution-feature { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--muted); padding-left: 16px; position: relative; }
+  .solution-feature::before { content: '›'; position: absolute; left: 0; color: var(--purple); }
+  .solution-btn { display: inline-flex; align-items: center; gap: 10px; font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; padding: 12px 24px; border: 1px solid var(--cyan); color: var(--cyan); background: var(--cyan-dim); transition: all 0.3s; position: relative; z-index: 1; cursor: none; }
+  .solution-btn:hover { background: var(--cyan); color: #000; transform: translateX(4px); }
+  .solution-btn-arrow { transition: transform 0.3s; }
+  .solution-btn:hover .solution-btn-arrow { transform: translateX(4px); }
+
   /* DIAGONAL */
   .diagonal-divider { position: relative; height: 120px; overflow: hidden; z-index: 2; }
   .diagonal-divider::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--purple) 0%, var(--cyan) 100%); clip-path: polygon(0 0, 100% 60%, 100% 100%, 0 100%); opacity: 0.08; }
@@ -280,6 +298,7 @@
     <a href="#twitch-section" data-track-label="🔗 Nav — Twitch">Twitch</a>
     <a href="#youtube-section" data-track-label="🔗 Nav — YouTube">YouTube</a>
     <a href="#editing-section" data-i="nav-edit" data-track-label="🔗 Nav — Edición">Edición</a>
+    <a href="#soluciones" data-i="nav-sol" data-track-label="🔗 Nav — Soluciones">Soluciones</a>
     <a href="#links-section" data-track-label="🔗 Nav — Links">Links</a>
     <button class="lang-toggle" id="lang-toggle-btn" onclick="showSplash()" data-track-label="🌐 Toggle idioma">🌐 ES / EN</button>
   </div>
@@ -294,6 +313,7 @@
       <p class="hero-sub" data-i="hero-sub">Hago juegos, programo cosas, creo contenido.</p>
       <div class="hero-cta">
         <a href="#dev" class="btn btn-primary" data-i="hero-btn1" data-track-label="🚀 Hero — Ver proyectos">Ver proyectos</a>
+        <a href="#soluciones" class="btn btn-outline" data-i="hero-btn2" data-track-label="🛠️ Hero — Soluciones">Soluciones →</a>
         <a href="#links-section" class="btn btn-outline" data-track-label="🔗 Hero — Links">Links →</a>
       </div>
     </div>
@@ -426,10 +446,38 @@
 
 <div class="diagonal-divider"><div class="diag-line"></div></div>
 
+<!-- SOLUCIONES -->
+<section id="soluciones">
+  <div class="section-inner" style="max-width:1200px;margin:0 auto;width:100%">
+    <div class="section-tag reveal" data-i="sol-tag">[ 05 — SOLUCIONES ]</div>
+    <h2 class="section-heading reveal reveal-delay-1"><span data-i="sol-h2a">Mis</span><br><span class="accent" data-i="sol-h2b">herramientas</span></h2>
+    <p class="reveal reveal-delay-2" style="color:var(--muted);max-width:580px;margin-top:20px;line-height:1.8;" data-i="sol-sub">Pequeñas soluciones que armé y uso. Gratis, sin registro.</p>
+    <div class="solutions-grid">
+      <div class="solution-card reveal reveal-delay-2">
+        <div class="solution-card-tag">// EMAIL TEMPORAL</div>
+        <div class="solution-card-icon"><img src="Icons/dropmail.png" alt="dropmail" width="48" height="48" style="object-fit:contain;"></div>
+        <div class="solution-card-name">dropmail</div>
+        <div class="solution-card-desc" data-i="sol-dropmail-desc">Generá una dirección de email temporal en segundos. Sin registro, sin spam. Usala para proteger tu email real en cualquier servicio.</div>
+        <div class="solution-features">
+          <div class="solution-feature" data-i="sol-f1">Múltiples addresses simultáneas</div>
+          <div class="solution-feature" data-i="sol-f2">Recepción de mails en tiempo real</div>
+          <div class="solution-feature" data-i="sol-f3">Sin registro ni cuenta requerida</div>
+          <div class="solution-feature" data-i="sol-f4">100% gratis</div>
+        </div>
+        <a href="https://valens429.site/dropmail" target="_blank" class="solution-btn" data-track-label="🛠️ Soluciones — dropmail">
+          Abrir dropmail <span class="solution-btn-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="diagonal-divider"><div class="diag-line"></div></div>
+
 <!-- LINKS -->
 <section id="links-section">
   <div class="section-inner" style="max-width:1200px;margin:0 auto;width:100%">
-    <div class="section-tag reveal" data-i="links-tag">[ 05 — LINKS ]</div>
+    <div class="section-tag reveal" data-i="links-tag">[ 06 — LINKS ]</div>
     <h2 class="section-heading reveal reveal-delay-1"><span data-i="links-h2a">Encontrame</span><br><span class="accent" data-i="links-h2b">en todos lados</span></h2>
     <p class="reveal reveal-delay-2" style="color:var(--muted);max-width:580px;margin-top:20px;line-height:1.8;" data-i="links-sub">Todos mis espacios en internet, en un solo lugar.</p>
     <div class="apps-strip reveal reveal-delay-3">
@@ -496,8 +544,15 @@ const t = {
   es: {
     'html-lang': 'es', 'page-title': '¡Valens429 Website!',
     'banner-text': 'EVENTO ACTIVO — Purrfect Apawcalypse Enhanced Beta',
-    'nav-dev': 'Dev', 'nav-edit': 'Edición',
+    'nav-dev': 'Dev', 'nav-edit': 'Edición', 'nav-sol': 'Soluciones',
     'hero-label': '// Desarrollador & Creador de Contenido',
+    'hero-btn1': 'Ver proyectos', 'hero-btn2': 'Soluciones →',
+    'sol-tag': '[ 05 — SOLUCIONES ]', 'sol-h2a': 'Mis', 'sol-h2b': 'herramientas',
+    'sol-sub': 'Pequeñas soluciones que armé y uso. Gratis, sin registro.',
+    'sol-dropmail-desc': 'Generá una dirección de email temporal en segundos. Sin registro, sin spam. Usala para proteger tu email real en cualquier servicio.',
+    'sol-f1': 'Múltiples addresses simultáneas', 'sol-f2': 'Recepción de mails en tiempo real',
+    'sol-f3': 'Sin registro ni cuenta requerida', 'sol-f4': '100% gratis',
+    'links-tag': '[ 06 — LINKS ]',
     'hero-name': 'Soy<br><span class="grad">Valens</span>',
     'hero-sub': 'Hago juegos, programo cosas, creo contenido.',
     'hero-btn1': 'Ver proyectos', 'card-live': 'EN VIVO',
@@ -537,7 +592,7 @@ const t = {
     'clip-desc': 'Microsoft Clipchamp para ediciones rápidas, clips de Twitch y contenido de formato corto. Directamente en el browser, sin instalar nada extra.',
     'clip-f1': 'Edición en browser — sin instalación', 'clip-f2': 'Clips de Twitch listos para TikTok/Shorts',
     'clip-f3': 'Templates para contenido de formato corto', 'clip-f4': 'Integración nativa con OneDrive',
-    'clip-f5': 'Exportación directa a redes sociales', 'links-tag': '[ 05 — LINKS ]',
+    'clip-f5': 'Exportación directa a redes sociales', 'links-tag': '[ 06 — LINKS ]',
     'links-h2a': 'Encontrame', 'links-h2b': 'en todos lados',
     'links-sub': 'Todos mis espacios en internet, en un solo lugar.',
     'assets-label': 'Assets', 'footer-copy': '// Con cariño',
@@ -547,11 +602,11 @@ const t = {
   en: {
     'html-lang': 'en', 'page-title': 'Valens429 — Website',
     'banner-text': 'ACTIVE EVENT — Purrfect Apawcalypse Enhanced Beta',
-    'nav-dev': 'Dev', 'nav-edit': 'Editing',
+    'nav-dev': 'Dev', 'nav-edit': 'Editing', 'nav-sol': 'Solutions',
     'hero-label': '// Developer & Content Creator',
     'hero-name': "I'm<br><span class=\"grad\">Valens</span>",
     'hero-sub': 'I make games, write code, create content.',
-    'hero-btn1': 'See projects', 'card-live': 'LIVE ON',
+    'hero-btn1': 'See projects', 'hero-btn2': 'Solutions →', 'card-live': 'LIVE ON',
     'dev-tag': '[ 01 — DEVELOPMENT ]', 'dev-h2': 'Programming',
     'dev-sub': 'I work with different engines and languages depending on the project. Click each engine to learn more.',
     'py-p1': 'Python is my base language: scripts, automation, bots, tools. Versatile, readable and powerful.',
@@ -588,7 +643,13 @@ const t = {
     'clip-desc': 'Microsoft Clipchamp for quick edits, Twitch clips and short-form content. Directly in the browser, no installation needed.',
     'clip-f1': 'Browser editing — no install required', 'clip-f2': 'Twitch clips ready for TikTok/Shorts',
     'clip-f3': 'Templates for short-form content', 'clip-f4': 'Native OneDrive integration',
-    'clip-f5': 'Direct export to social media', 'links-tag': '[ 05 — LINKS ]',
+    'clip-f5': 'Direct export to social media',
+    'sol-tag': '[ 05 — SOLUTIONS ]', 'sol-h2a': 'My', 'sol-h2b': 'tools',
+    'sol-sub': 'Small solutions I built and use. Free, no sign-up.',
+    'sol-dropmail-desc': 'Generate a temporary email address in seconds. No registration, no spam. Use it to protect your real email on any service.',
+    'sol-f1': 'Multiple simultaneous addresses', 'sol-f2': 'Real-time mail delivery',
+    'sol-f3': 'No account required', 'sol-f4': '100% free',
+    'links-tag': '[ 06 — LINKS ]',
     'links-h2a': 'Find me', 'links-h2b': 'everywhere',
     'links-sub': 'All my spaces on the internet, in one place.',
     'assets-label': 'Assets', 'footer-copy': '// Made with love',
