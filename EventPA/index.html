@@ -16,41 +16,106 @@
   html { scroll-behavior: smooth; }
   body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; overflow-x: hidden; cursor: none; min-height: 100vh; display: flex; flex-direction: column; }
 
-  .cursor { position: fixed; width: 12px; height: 12px; background: var(--cyan); border-radius: 50%; pointer-events: none; z-index: 99999; transition: transform 0.1s ease; }
-  .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--purple); border-radius: 50%; pointer-events: none; z-index: 99999; transition: all 0.15s ease; }
+  /* CURSOR */
+  .cursor { position: fixed; width: 12px; height: 12px; background: var(--cyan); border-radius: 50%; pointer-events: none; z-index: 99999; transition: transform 0.1s ease; mix-blend-mode: screen; }
+  .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--purple); border-radius: 50%; pointer-events: none; z-index: 99998; transition: all 0.15s ease; mix-blend-mode: screen; }
 
+  /* NOISE */
   body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9000; opacity: 0.3; }
 
+  /* BLOBS */
   .blob { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; opacity: 0.15; }
   .blob-1 { width: 600px; height: 600px; background: var(--purple); top: -200px; left: -200px; animation: blobFloat 12s ease-in-out infinite; }
   .blob-2 { width: 500px; height: 500px; background: var(--cyan); bottom: 20%; right: -150px; animation: blobFloat 15s ease-in-out infinite reverse; }
   @keyframes blobFloat { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-30px) scale(1.05)} 66%{transform:translate(-20px,20px) scale(0.95)} }
 
+  /* NAV */
   nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 20px 60px; background: linear-gradient(180deg, var(--bg) 0%, transparent 100%); backdrop-filter: blur(10px); }
   .nav-logo { font-family: 'Space Mono', monospace; font-size: 1.2rem; color: var(--cyan); text-shadow: var(--glow-c); letter-spacing: 2px; text-decoration: none; }
   .nav-logo span { color: var(--purple); }
   .nav-links a { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--muted); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; }
   .nav-links a:hover { color: var(--cyan); text-shadow: var(--glow-c); }
 
+  /* MAIN */
   .main-content { position: relative; z-index: 1; padding: 140px 20px 80px; max-width: 900px; width: 100%; margin: 0 auto; flex: 1; display: flex; flex-direction: column; align-items: center; }
+
+  /* SECTION TAGS */
   .section-tag { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--purple); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 16px; }
   .section-heading { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 800; line-height: 1.1; text-align: center; margin-bottom: 20px; }
   .section-heading .accent { background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .section-sub { color: var(--muted); max-width: 580px; text-align: center; line-height: 1.8; font-size: 0.95rem; margin-bottom: 40px; }
 
+  /* DOWNLOAD BUTTON */
   .download-wrapper { margin-bottom: 60px; text-align: center; width: 100%; max-width: 450px; }
-  .btn-download { position: relative; display: flex; align-items: center; justify-content: center; gap: 12px; background: linear-gradient(135deg, var(--purple) 0%, #7c3aed 100%); color: #fff; font-family: 'Space Mono', monospace; font-size: 1rem; font-weight: 700; text-decoration: none; padding: 20px 40px; border-radius: 4px; letter-spacing: 2px; text-transform: uppercase; overflow: hidden; transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1); box-shadow: 0 0 20px rgba(168,85,247,0.4); border: 1px solid rgba(255,255,255,0.1); cursor: none; }
-  .btn-download::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent); transform: skewX(-25deg); transition: none; }
-  .btn-download:hover::before { left: 150%; transition: left 0.6s ease-in-out; }
-  .btn-download:hover { transform: translateY(-4px); background: linear-gradient(135deg, #7c3aed 0%, var(--cyan) 100%); box-shadow: 0 0 35px rgba(6,182,212,0.6); color: #080810; }
-  .btn-download svg { width: 20px; height: 20px; fill: currentColor; transition: transform 0.3s ease; }
-  .btn-download:hover svg { transform: translateY(2px); }
+  .btn-download-main { position: relative; display: flex; align-items: center; justify-content: center; gap: 12px; background: linear-gradient(135deg, var(--purple) 0%, #7c3aed 100%); color: #fff; font-family: 'Space Mono', monospace; font-size: 1rem; font-weight: 700; text-decoration: none; padding: 20px 40px; border-radius: 4px; letter-spacing: 2px; text-transform: uppercase; overflow: hidden; transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1); box-shadow: 0 0 20px rgba(168,85,247,0.4); border: 1px solid rgba(255,255,255,0.1); cursor: none; }
+  .btn-download-main::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent); transform: skewX(-25deg); transition: none; }
+  .btn-download-main:hover::before { left: 150%; transition: left 0.6s ease-in-out; }
+  .btn-download-main:hover { transform: translateY(-4px); background: linear-gradient(135deg, #7c3aed 0%, var(--cyan) 100%); box-shadow: 0 0 35px rgba(6,182,212,0.6); color: #080810; }
+  .btn-download-main svg { width: 20px; height: 20px; fill: currentColor; transition: transform 0.3s ease; }
+  .btn-download-main:hover svg { transform: translateY(2px); }
 
-  .form-container { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 10px; box-shadow: var(--glow-p); position: relative; overflow: hidden; }
+  /* FORM */
+  .form-container { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 10px; box-shadow: var(--glow-p); position: relative; overflow: hidden; margin-bottom: 40px; }
   .form-container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--purple), var(--cyan)); }
   .form-container iframe { width: 100%; height: 1000px; border: none; display: block; }
 
-  /* PASSWORD OVERLAY */
+  /* CLAIM BUTTON (appears after timer) */
+  #claim-wrap { width: 100%; max-width: 450px; text-align: center; opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; pointer-events: none; margin-bottom: 80px; }
+  #claim-wrap.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+  #claim-hint { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 2px; margin-bottom: 16px; }
+  #claim-hint span { color: var(--cyan); }
+  .btn-claim { width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; background: transparent; border: 1px solid var(--purple); color: var(--purple); font-family: 'Space Mono', monospace; font-size: 0.9rem; font-weight: 700; padding: 18px 32px; border-radius: 4px; letter-spacing: 2px; text-transform: uppercase; cursor: none; transition: all 0.3s; }
+  .btn-claim:hover { background: var(--purple-dim); box-shadow: var(--glow-p); transform: translateY(-2px); }
+  .btn-claim svg { width: 18px; height: 18px; fill: currentColor; }
+
+  /* PRIZE OVERLAY */
+  #prize-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 9997; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 24px; }
+  #prize-overlay.show { display: flex; }
+  #prize-overlay .pass-tag { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--cyan); letter-spacing: 4px; text-transform: uppercase; }
+  #prize-overlay h2 { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; }
+  #prize-overlay h2 span { background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  #prize-overlay p { color: var(--muted); font-size: 0.9rem; text-align: center; max-width: 320px; line-height: 1.7; }
+  #prize-input-wrap { display: flex; gap: 12px; }
+  #prize-input { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: 'Space Mono', monospace; font-size: 1rem; padding: 14px 20px; outline: none; width: 220px; letter-spacing: 3px; transition: border-color 0.3s; cursor: none; }
+  #prize-input:focus { border-color: var(--cyan); box-shadow: var(--glow-c); }
+  #prize-input.error { border-color: #ef4444; animation: shake 0.3s ease; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+  #prize-btn { background: linear-gradient(135deg, var(--cyan), #0891b2); border: none; border-radius: 4px; color: #080810; font-family: 'Space Mono', monospace; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; padding: 14px 24px; cursor: none; transition: all 0.3s; text-transform: uppercase; }
+  #prize-btn:hover { background: linear-gradient(135deg, #0891b2, var(--purple)); color: #fff; box-shadow: var(--glow-p); }
+  #prize-error { color: #ef4444; font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 2px; min-height: 1em; }
+
+  /* REWARD SECTION */
+  #reward-section { display: none; width: 100%; flex-direction: column; align-items: center; }
+  #reward-section.show { display: flex; animation: fadeUp 0.7s ease both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  .reward-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 40px; width: 100%; max-width: 800px; box-shadow: var(--glow-p); position: relative; overflow: hidden; display: grid; grid-template-columns: 1fr; gap: 30px; }
+  @media (min-width: 650px) { .reward-card { grid-template-columns: auto 1fr; align-items: center; } }
+  .reward-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), var(--purple)); }
+
+  .sprite-display { width: 220px; height: 300px; background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: 0 auto; }
+  .sprite-display img { max-width: 90%; max-height: 90%; object-fit: contain; filter: drop-shadow(0 0 15px rgba(6,182,212,0.3)); animation: spriteFloat 4s ease-in-out infinite; }
+  @keyframes spriteFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+  .reward-info { display: flex; flex-direction: column; justify-content: center; text-align: center; }
+  @media (min-width: 650px) { .reward-info { text-align: left; } }
+
+  .reward-tag { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--cyan); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px; }
+  .reward-title { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; line-height: 1.1; margin-bottom: 15px; }
+  .reward-title .accent { background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .reward-desc { color: var(--muted); line-height: 1.6; font-size: 0.95rem; margin-bottom: 30px; }
+
+  .buttons-group { display: flex; flex-direction: column; gap: 15px; width: 100%; }
+  @media (min-width: 480px) { .buttons-group { flex-direction: row; } }
+
+  .btn-prize { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; gap: 10px; color: #fff; font-family: 'Space Mono', monospace; font-size: 0.85rem; font-weight: 700; text-decoration: none; padding: 16px 24px; border-radius: 4px; letter-spacing: 2px; text-transform: uppercase; overflow: hidden; transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1); cursor: none; }
+  .btn-webp { background: linear-gradient(135deg, var(--purple) 0%, #7c3aed 100%); box-shadow: 0 0 20px rgba(168,85,247,0.3); border: 1px solid rgba(255,255,255,0.05); }
+  .btn-webp:hover { transform: translateY(-3px); background: linear-gradient(135deg, #7c3aed 0%, var(--cyan) 100%); box-shadow: 0 0 25px rgba(6,182,212,0.5); color: #080810; }
+  .btn-png { background: transparent; border: 1px solid var(--cyan); color: var(--cyan); box-shadow: 0 0 15px rgba(6,182,212,0.1); }
+  .btn-png:hover { transform: translateY(-3px); background: var(--cyan); color: #080810; box-shadow: 0 0 25px rgba(6,182,212,0.4); }
+  .btn-prize svg { width: 16px; height: 16px; fill: currentColor; }
+
+  /* BETA OVERLAY */
   #pass-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 99998; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; }
   #pass-overlay .pass-tag { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--purple); letter-spacing: 4px; text-transform: uppercase; }
   #pass-overlay h2 { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; }
@@ -60,11 +125,11 @@
   #pass-input { background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: 'Space Mono', monospace; font-size: 1rem; padding: 14px 20px; outline: none; width: 220px; letter-spacing: 3px; transition: border-color 0.3s; cursor: none; }
   #pass-input:focus { border-color: var(--purple); box-shadow: var(--glow-p); }
   #pass-input.error { border-color: #ef4444; animation: shake 0.3s ease; }
-  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
   #pass-btn { background: linear-gradient(135deg, var(--purple), #7c3aed); border: none; border-radius: 4px; color: #fff; font-family: 'Space Mono', monospace; font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; padding: 14px 24px; cursor: none; transition: all 0.3s; text-transform: uppercase; }
   #pass-btn:hover { background: linear-gradient(135deg, #7c3aed, var(--cyan)); color: #080810; box-shadow: var(--glow-c); }
   #pass-error { color: #ef4444; font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 2px; min-height: 1em; }
 
+  /* MOBILE BLOCK */
   #mobile-block { display: none; position: fixed; inset: 0; background: #080810; z-index: 99999; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; font-family: 'Space Mono', monospace; }
   #mobile-block .mb-icon { font-size: 3.5rem; margin-bottom: 1.5rem; }
   #mobile-block h2 { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; color: #e2e8f0; margin-bottom: 1rem; }
@@ -72,6 +137,9 @@
   #mobile-block .mb-accent { color: #a855f7; }
   #mobile-block .mb-line { width: 60px; height: 2px; background: linear-gradient(90deg, #a855f7, #06b6d4); margin: 1.5rem auto; }
   @media (max-width: 768px) { #mobile-block { display: flex; } body > *:not(#mobile-block) { display: none !important; } }
+
+  /* DIVIDER */
+  .section-divider { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 60px 0; }
 </style>
 </head>
 <body>
@@ -79,23 +147,36 @@
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 
-<!-- PASSWORD OVERLAY -->
+<!-- MOBILE BLOCK -->
+<div id="mobile-block">
+  <div class="mb-icon">🖥️</div>
+  <h2><span class="mb-accent">Desktop</span> only</h2>
+  <div class="mb-line"></div>
+  <p>This section is optimized for computers.<br><br>Visit from a <span class="mb-accent">PC</span> to download the beta and claim your reward.</p>
+</div>
+
+<!-- BETA PASSWORD OVERLAY -->
 <div id="pass-overlay">
   <div class="pass-tag">[ Private Access ]</div>
   <h2>Beta <span>Access</span></h2>
   <p>Enter your beta key to continue.</p>
   <div id="pass-input-wrap">
     <input type="password" id="pass-input" placeholder="••••••••" autocomplete="off" />
-    <button id="pass-btn" onclick="checkPass()">Enter</button>
+    <button id="pass-btn" onclick="checkBetaPass()">Enter</button>
   </div>
   <div id="pass-error"></div>
 </div>
 
-<div id="mobile-block">
-  <div class="mb-icon">🖥️</div>
-  <h2><span class="mb-accent">Desktop</span> only</h2>
-  <div class="mb-line"></div>
-  <p>This section is optimized for computers.<br><br>Visit from a <span class="mb-accent">PC</span> to download the beta and leave your feedback.</p>
+<!-- PRIZE PASSWORD OVERLAY -->
+<div id="prize-overlay">
+  <div class="pass-tag">[ Reward Access ]</div>
+  <h2>Claim your <span>Reward</span></h2>
+  <p>Enter the key from your feedback confirmation to unlock your sprites.</p>
+  <div id="prize-input-wrap">
+    <input type="password" id="prize-input" placeholder="••••••••" autocomplete="off" />
+    <button id="prize-btn" onclick="checkPrizePass()">Unlock</button>
+  </div>
+  <div id="prize-error"></div>
 </div>
 
 <div class="blob blob-1"></div>
@@ -109,12 +190,14 @@
 </nav>
 
 <main class="main-content">
+
+  <!-- ── SECTION 1: BETA ── -->
   <div class="section-tag">[ BETA TESTING ]</div>
   <h1 class="section-heading">Playtest & <span class="accent">Feedback</span></h1>
-  <p class="section-sub">Download the latest private beta build from the external link and report any bugs or suggestions down below.</p>
+  <p class="section-sub">Download the latest private beta build and report any bugs or suggestions below.</p>
 
   <div class="download-wrapper">
-    <a href="TU_LINK_DE_DESCARGA_AQUÍ" target="_blank" class="btn-download" id="btn-beta">
+    <a href="TU_LINK_DE_DESCARGA_AQUÍ" target="_blank" class="btn-download-main" id="btn-beta">
       <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
       Download Beta Build
     </a>
@@ -123,6 +206,44 @@
   <div class="form-container">
     <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdhwGluoCAcflHxwqih4JQpfxPbj3dzqkQorabI2Gt3M2qKkQ/viewform?embedded=true" width="100%" height="1000" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
   </div>
+
+  <!-- CLAIM BUTTON (aparece a los 45s) -->
+  <div id="claim-wrap">
+    <div id="claim-hint">Already submitted? <span>Claim your reward below.</span></div>
+    <button class="btn-claim" onclick="openPrizeOverlay()">
+      <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.36C18 2.06 15.96 0 13.5 0c-1.3 0-2.4.56-3.18 1.45L9 3.5 7.68 1.45C6.9.56 5.8 0 4.5 0 2.04 0 0 2.06 0 4.64c0 .48.11.92.18 1.36H0c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-5.5-4c.83 0 1.5.67 1.5 1.5S15.33 5 14.5 5H11l.64-1.07C12.12 3.35 12.77 2 14.5 2zm-9 0c1.73 0 2.38 1.35 2.86 1.93L9 5H5.5C4.67 5 4 4.33 4 3.5S4.67 2 5.5 2z"/></svg>
+      I've submitted my feedback
+    </button>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- ── SECTION 2: REWARD ── -->
+  <div id="reward-section">
+    <div class="reward-card">
+      <div class="sprite-display">
+        <img src="imgs/olivecheer.png" alt="Olive Cheer Preview">
+      </div>
+      <div class="reward-info">
+        <div class="reward-tag">[ UNLOCKED REWARD ]</div>
+        <h2 class="reward-title">Mission <span class="accent">Accomplished</span>!</h2>
+        <p class="reward-desc">
+          Here is your reward for playtesting the VN beta. The pack includes all full sprites processed without layers by the Python script. Choose the format that works best for you:
+        </p>
+        <div class="buttons-group">
+          <a href="No disponible" target="_blank" class="btn-prize btn-webp" id="btn-webp">
+            <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+            .WebP Pack (Light)
+          </a>
+          <a href="No disponible" target="_blank" class="btn-prize btn-png" id="btn-png">
+            <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+            .PNG Pack (Full HQ)
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <!-- TRACKER -->
@@ -131,7 +252,7 @@
   const SUPABASE_URL = "https://hxfwzyfaenxpbgsvbnsn.supabase.co";
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4Znd6eWZhZW54cGJnc3ZibnNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODg0OTIsImV4cCI6MjA5NTA2NDQ5Mn0.lIglDBigwP4XChdUs1kz2kgDCmJ5IRPgkN9iEzTQAG8";
 
-  async function track(label, url) {
+  window._track = async function(label, url) {
     try {
       await fetch(`${SUPABASE_URL}/rest/v1/clicks`, {
         method: "POST",
@@ -144,57 +265,90 @@
         body: JSON.stringify({ label, url: url || window.location.pathname }),
       });
     } catch (_) {}
-  }
-
-  // Vista de página — se trackea solo si ya pasó la contraseña
-  // (se llama desde checkPass al éxito)
-  window._trackBetaView = function () {
-    track("🎮 Evento — Vista: Beta Feedback", window.location.pathname);
   };
 
   // Descarga beta
   document.getElementById('btn-beta').addEventListener('click', () => {
-    track("🎮 Evento — Descarga Beta", window.location.pathname);
+    window._track("🎮 Evento — Descarga Beta", window.location.pathname);
   });
 
-  // Exponer track para checkPass
-  window._trackEvento = track;
+  // Descargas premio
+  document.getElementById('btn-webp').addEventListener('click', () => {
+    window._track("🎮 Evento — Descarga WebP", window.location.pathname);
+  });
+  document.getElementById('btn-png').addEventListener('click', () => {
+    window._track("🎮 Evento — Descarga PNG", window.location.pathname);
+  });
 })();
 </script>
 
-<!-- LÓGICA CONTRASEÑA + CURSOR -->
+<!-- LÓGICA PRINCIPAL -->
 <script>
+  // ── CURSOR ──
   const cursor = document.getElementById('cursor');
   const cursorRing = document.getElementById('cursorRing');
   document.addEventListener('mousemove', (e) => {
     cursor.style.transform = `translate3d(${e.clientX - 6}px, ${e.clientY - 6}px, 0)`;
     cursorRing.style.transform = `translate3d(${e.clientX - 18}px, ${e.clientY - 18}px, 0)`;
   });
-  document.addEventListener('mousedown', () => { cursor.style.transform += ' scale(0.8)'; cursorRing.style.transform += ' scale(1.3)'; });
-  document.addEventListener('mouseup', () => { cursor.style.transform = cursor.style.transform.replace(' scale(0.8)', ''); cursorRing.style.transform = cursorRing.style.transform.replace(' scale(1.3)', ''); });
-
-  document.getElementById('pass-input').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') checkPass();
+  document.addEventListener('mousedown', () => {
+    cursor.style.transform += ' scale(0.8)';
+    cursorRing.style.transform += ' scale(1.3)';
+  });
+  document.addEventListener('mouseup', () => {
+    cursor.style.transform = cursor.style.transform.replace(' scale(0.8)', '');
+    cursorRing.style.transform = cursorRing.style.transform.replace(' scale(1.3)', '');
   });
 
-  function checkPass() {
+  // ── CONTRASEÑA BETA ──
+  document.getElementById('pass-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') checkBetaPass();
+  });
+
+  function checkBetaPass() {
     const input = document.getElementById('pass-input');
     const error = document.getElementById('pass-error');
     if (input.value.toLowerCase() === '90%hub') {
-      // Trackear acceso correcto
-      if (window._trackEvento) {
-        window._trackEvento("🎮 Evento — Contraseña Correcta", window.location.pathname);
-      }
-      // Trackear vista de página (ahora que accedió)
-      if (window._trackBetaView) {
-        window._trackBetaView();
-      }
+      window._track("🎮 Evento — Contraseña Correcta", window.location.pathname);
+      window._track("🎮 Evento — Vista: Beta Feedback", window.location.pathname);
       document.getElementById('pass-overlay').style.display = 'none';
+      // Mostrar botón de claim después de 45s
+      setTimeout(() => {
+        document.getElementById('claim-wrap').classList.add('visible');
+      }, 45000);
     } else {
-      // Trackear intento fallido
-      if (window._trackEvento) {
-        window._trackEvento("🎮 Evento — Contraseña Incorrecta", window.location.pathname);
-      }
+      window._track("🎮 Evento — Contraseña Incorrecta", window.location.pathname);
+      input.classList.add('error');
+      error.textContent = 'Wrong key. Try again.';
+      input.value = '';
+      setTimeout(() => input.classList.remove('error'), 400);
+    }
+  }
+
+  // ── OVERLAY PREMIO ──
+  function openPrizeOverlay() {
+    document.getElementById('prize-overlay').classList.add('show');
+    setTimeout(() => document.getElementById('prize-input').focus(), 100);
+  }
+
+  document.getElementById('prize-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') checkPrizePass();
+  });
+
+  function checkPrizePass() {
+    const input = document.getElementById('prize-input');
+    const error = document.getElementById('prize-error');
+    if (input.value.toLowerCase() === 'thankyou') {
+      window._track("🎮 Evento — Contraseña Premio Correcta", window.location.pathname);
+      window._track("🎮 Evento — Vista: Claim Reward", window.location.pathname);
+      document.getElementById('prize-overlay').classList.remove('show');
+      document.getElementById('reward-section').classList.add('show');
+      // Scroll suave a la sección
+      setTimeout(() => {
+        document.getElementById('reward-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    } else {
+      window._track("🎮 Evento — Contraseña Premio Incorrecta", window.location.pathname);
       input.classList.add('error');
       error.textContent = 'Wrong key. Try again.';
       input.value = '';
