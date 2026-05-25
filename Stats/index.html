@@ -214,15 +214,22 @@
     </div>
     <div style="font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:2px;padding-left:4px;margin-top:10px;">VISITAS</div>
     <div class="kpis" style="margin-bottom:2px;">
-      <div class="kpi"><div class="kpi-tag">Claim Reward</div><div class="kpi-val" id="ev-kpi-claim">—</div><div class="kpi-sub">accesos a claim page</div></div>
-      <div class="kpi"><div class="kpi-tag">Beta Feedback</div><div class="kpi-val" id="ev-kpi-feedback">—</div><div class="kpi-sub">accesos post-contraseña</div></div>
-      <div class="kpi"><div class="kpi-tag">Pass Correcta</div><div class="kpi-val" id="ev-kpi-pass-ok">—</div><div class="kpi-sub">accesos válidos</div></div>
-      <div class="kpi"><div class="kpi-tag">Pass Incorrecta</div><div class="kpi-val" id="ev-kpi-pass-fail">—</div><div class="kpi-sub">intentos fallidos</div></div>
+      <div class="kpi"><div class="kpi-tag">Beta Feedback</div><div class="kpi-val" id="ev-kpi-feedback">—</div><div class="kpi-sub">entraron con pass beta</div></div>
+      <div class="kpi"><div class="kpi-tag">Premio Desbloqueado</div><div class="kpi-val" id="ev-kpi-claim">—</div><div class="kpi-sub">vieron la recompensa</div></div>
+      <div class="kpi"><div class="kpi-tag">Pass Beta ✅</div><div class="kpi-val" id="ev-kpi-pass-ok">—</div><div class="kpi-sub">accesos beta válidos</div></div>
+      <div class="kpi"><div class="kpi-tag">Pass Beta ❌</div><div class="kpi-val" id="ev-kpi-pass-fail">—</div><div class="kpi-sub">intentos fallidos beta</div></div>
+    </div>
+    <div style="font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:2px;padding-left:4px;margin-top:10px;">CONTRASEÑA PREMIO</div>
+    <div class="kpis" style="margin-bottom:2px;">
+      <div class="kpi"><div class="kpi-tag">Pass Premio ✅</div><div class="kpi-val" id="ev-kpi-prize-ok">—</div><div class="kpi-sub">premios desbloqueados</div></div>
+      <div class="kpi"><div class="kpi-tag">Pass Premio ❌</div><div class="kpi-val" id="ev-kpi-prize-fail">—</div><div class="kpi-sub">intentos fallidos premio</div></div>
+      <div class="kpi"><div class="kpi-tag">Total Intentos</div><div class="kpi-val" id="ev-kpi-pass-total">—</div><div class="kpi-sub">beta + premio combinados</div></div>
+      <div class="kpi"><div class="kpi-tag">Tasa Conversión</div><div class="kpi-val" id="ev-kpi-conversion">—</div><div class="kpi-sub">beta → premio</div></div>
     </div>
     <div class="diagonal-bar"></div>
     <div style="font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--purple);letter-spacing:4px;text-transform:uppercase;margin-bottom:1rem;">// DATOS EN CRUDO</div>
     <div class="main-grid" style="margin-bottom:2px;">
-      <div class="card"><div class="card-header"><div class="card-title">Contraseñas — detalle</div><div class="card-count" id="ev-pass-count"></div></div><div class="bar-list" id="ev-pass-bars"><div class="empty">Sin datos aún</div></div></div>
+      <div class="card"><div class="card-header"><div class="card-title">Contraseñas — Beta vs Premio</div><div class="card-count" id="ev-pass-count"></div></div><div class="bar-list" id="ev-pass-bars"><div class="empty">Sin datos aún</div></div></div>
       <div class="card"><div class="card-header"><div class="card-title">Descargas — por tipo</div><div class="card-count" id="ev-dl-count"></div></div><div class="bar-list" id="ev-dl-bars"><div class="empty">Sin datos aún</div></div></div>
       <div class="card card-full">
         <div class="card-header"><div class="card-title">Actividad completa — Evento</div><div class="card-count" id="ev-recent-count"></div></div>
@@ -424,32 +431,69 @@
 
   function renderEvento(data) {
     const ev = data.filter(r => r.label.startsWith('🎮 Evento'));
+
+    // Descargas
     document.getElementById('ev-kpi-dl-beta').textContent   = ev.filter(r => r.label.includes('Descarga Beta')).length;
     document.getElementById('ev-kpi-dl-webp').textContent   = ev.filter(r => r.label.includes('Descarga WebP')).length;
     document.getElementById('ev-kpi-dl-png').textContent    = ev.filter(r => r.label.includes('Descarga PNG')).length;
     document.getElementById('ev-kpi-dl-premio').textContent = ev.filter(r => r.label.includes('Descarga WebP') || r.label.includes('Descarga PNG')).length;
-    document.getElementById('ev-kpi-claim').textContent     = ev.filter(r => r.label.includes('Vista: Claim')).length;
+
+    // Visitas
     document.getElementById('ev-kpi-feedback').textContent  = ev.filter(r => r.label.includes('Vista: Beta')).length;
-    document.getElementById('ev-kpi-pass-ok').textContent   = ev.filter(r => r.label.includes('Contraseña Correcta')).length;
-    document.getElementById('ev-kpi-pass-fail').textContent = ev.filter(r => r.label.includes('Contraseña Incorrecta')).length;
+    document.getElementById('ev-kpi-claim').textContent     = ev.filter(r => r.label.includes('Vista: Claim')).length;
+
+    // Contraseña beta
+    const passOk   = ev.filter(r => r.label === '🎮 Evento — Contraseña Correcta').length;
+    const passFail = ev.filter(r => r.label === '🎮 Evento — Contraseña Incorrecta').length;
+    document.getElementById('ev-kpi-pass-ok').textContent   = passOk;
+    document.getElementById('ev-kpi-pass-fail').textContent = passFail;
+
+    // Contraseña premio
+    const prizeOk   = ev.filter(r => r.label === '🎮 Evento — Contraseña Premio Correcta').length;
+    const prizeFail = ev.filter(r => r.label === '🎮 Evento — Contraseña Premio Incorrecta').length;
+    document.getElementById('ev-kpi-prize-ok').textContent   = prizeOk;
+    document.getElementById('ev-kpi-prize-fail').textContent = prizeFail;
+    document.getElementById('ev-kpi-pass-total').textContent = passOk + passFail + prizeOk + prizeFail;
+
+    // Tasa de conversión beta → premio
+    const conv = passOk > 0 ? Math.round((prizeOk / passOk) * 100) + '%' : '—';
+    document.getElementById('ev-kpi-conversion').textContent = conv;
+
+    // Barras de contraseñas — separadas por tipo
     const passData = ev.filter(r => r.label.includes('Contraseña'));
-    const passEntries = contar(passData, r => r.label.includes('Correcta') ? '✅ Correcta' : '❌ Incorrecta');
+    const passEntries = contar(passData, r => {
+      if (r.label.includes('Premio Correcta'))   return '🏆 Premio ✅';
+      if (r.label.includes('Premio Incorrecta')) return '🏆 Premio ❌';
+      if (r.label.includes('Correcta'))          return '🎮 Beta ✅';
+      if (r.label.includes('Incorrecta'))        return '🎮 Beta ❌';
+      return null;
+    });
     document.getElementById('ev-pass-count').textContent = passData.length + ' intentos';
     renderBarras('ev-pass-bars', passEntries, false);
+
+    // Barras de descargas
     const dlData = ev.filter(r => r.label.includes('Descarga'));
-    const dlEntries = contar(dlData, r => r.label.includes('WebP') ? '📦 WebP Pack' : r.label.includes('PNG') ? '🖼 PNG Pack HQ' : '🎮 Beta Build');
+    const dlEntries = contar(dlData, r =>
+      r.label.includes('WebP') ? '📦 WebP Pack' :
+      r.label.includes('PNG')  ? '🖼 PNG Pack HQ' :
+                                 '🎮 Beta Build'
+    );
     document.getElementById('ev-dl-count').textContent = dlData.length + ' descargas';
     renderBarras('ev-dl-bars', dlEntries, false);
+
+    // Tabla completa
     document.getElementById('ev-recent-count').textContent = ev.length + ' registros';
     const tbody = document.getElementById('ev-tbody');
     if (!ev.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;font-family:\'Space Mono\',monospace;font-size:.7rem;color:var(--muted)">Sin actividad del evento aún</td></tr>'; return; }
     tbody.innerHTML = ev.slice(0,100).map((r,i) => {
-      let tipoClass='link',tipoLabel='OTRO';
-      if (r.label.includes('Vista'))              { tipoClass='page';   tipoLabel='VISTA'; }
-      else if (r.label.includes('Descarga Beta')) { tipoClass='engine'; tipoLabel='DL BETA'; }
-      else if (r.label.includes('Descarga'))      { tipoClass='engine'; tipoLabel='DL PREMIO'; }
-      else if (r.label.includes('Correcta'))      { tipoClass='twitch'; tipoLabel='PASS ✅'; }
-      else if (r.label.includes('Incorrecta'))    { tipoClass='yt';     tipoLabel='PASS ❌'; }
+      let tipoClass='link', tipoLabel='OTRO';
+      if (r.label.includes('Vista'))                        { tipoClass='page';   tipoLabel='VISTA'; }
+      else if (r.label.includes('Descarga Beta'))           { tipoClass='engine'; tipoLabel='DL BETA'; }
+      else if (r.label.includes('Descarga'))                { tipoClass='engine'; tipoLabel='DL PREMIO'; }
+      else if (r.label.includes('Premio Correcta'))         { tipoClass='twitch'; tipoLabel='PRIZE ✅'; }
+      else if (r.label.includes('Premio Incorrecta'))       { tipoClass='yt';     tipoLabel='PRIZE ❌'; }
+      else if (r.label.includes('Contraseña Correcta'))     { tipoClass='twitch'; tipoLabel='BETA ✅'; }
+      else if (r.label.includes('Contraseña Incorrecta'))   { tipoClass='yt';     tipoLabel='BETA ❌'; }
       return `<tr><td class="num">${i+1}</td><td>${r.label.replace('🎮 Evento — ','')}</td><td><span class="tag-pill ${tipoClass}">${tipoLabel}</span></td><td class="mono">${r.url||'—'}</td><td class="mono">${new Date(r.created_at).toLocaleString('es-AR')}</td></tr>`;
     }).join('');
   }
