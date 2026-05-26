@@ -127,6 +127,7 @@
     .reader-divider { height: 1px; background: linear-gradient(90deg, var(--purple), var(--cyan), transparent); margin: 12px 0; }
     .reader-meta { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-bottom: 14px; }
     .reader-body { font-size: 12px; line-height: 2; color: rgba(226,232,240,0.75); white-space: pre-wrap; }
+    .reader-iframe { width: 100%; min-height: 220px; border: none; background: #fff; border-radius: 4px; margin-top: 8px; display: block; }
 
     .toast { position: fixed; bottom: 24px; right: 24px; z-index: 1000; background: var(--surface2); border: 1px solid var(--purple); color: var(--purple); font-family: var(--mono); font-size: 11px; padding: 12px 20px; letter-spacing: 1px; transform: translateY(20px); opacity: 0; transition: all 0.25s; pointer-events: none; box-shadow: var(--glow-p); }
     .toast.show { transform: translateY(0); opacity: 1; }
@@ -336,7 +337,7 @@ function renderContent() {
       <div class="reader-subject">${esc(selectedMail.subject)}</div>
       <div class="reader-divider"></div>
       <div class="reader-meta"><span>${esc(selectedMail.from)}</span><span>${esc(selectedMail.time||'')}</span></div>
-      <div class="reader-body">${esc(selectedMail.body||selectedMail.preview||'')}</div>
+      <iframe class="reader-iframe" id="mail-iframe" sandbox="allow-same-origin"></iframe>
     </div>` : '';
 
   content.innerHTML = `
@@ -350,6 +351,17 @@ function renderContent() {
     ${hintHTML}
     <div class="mail-list">${mailListHTML}</div>
     ${readerHTML}`;
+
+  if (selectedMail) {
+    const iframe = document.getElementById('mail-iframe');
+    if (iframe) {
+      const bodyContent = selectedMail.body || selectedMail.preview || '';
+      const fullHtml = /<!doctype|<html/i.test(bodyContent)
+        ? bodyContent
+        : `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;font-size:14px;padding:16px;margin:0;color:#111;word-wrap:break-word;}</style></head><body>${bodyContent}</body></html>`;
+      iframe.srcdoc = fullHtml;
+    }
+  }
 }
 
 function esc(str) {
