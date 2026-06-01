@@ -287,6 +287,9 @@
   #mobile-block p { font-size: 0.78rem; color: #64748b; line-height: 1.8; max-width: 280px; }
   #mobile-block .mb-accent { color: #a855f7; }
   #mobile-block .mb-line { width: 60px; height: 2px; background: linear-gradient(90deg, #a855f7, #06b6d4); margin: 1.5rem auto; }
+  #mobile-block .mb-btn { display: inline-flex; align-items: center; gap: 10px; margin-top: 1.5rem; padding: 14px 28px; background: linear-gradient(135deg, #a855f7, #06b6d4); color: #000; font-family: 'Space Mono', monospace; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; transition: all 0.3s; }
+  #mobile-block .mb-btn:hover { opacity: 0.85; transform: translateY(-2px); }
+  #mobile-block .mb-redirect-msg { font-size: 0.65rem; color: #64748b; margin-top: 0.75rem; letter-spacing: 1px; }
   @media (max-width: 768px) { #mobile-block { display: flex; } body > *:not(#mobile-block) { display: none !important; } }
 </style>
 </head>
@@ -318,10 +321,14 @@
 
 <!-- MOBILE BLOCK -->
 <div id="mobile-block">
-  <div class="mb-icon">🖥️</div>
-  <h2 id="mb-title">Only on <span class="mb-accent">desktop</span></h2>
+  <div class="mb-icon">📱</div>
+  <h2 id="mb-title">Versión <span class="mb-accent">Mobile</span></h2>
   <div class="mb-line"></div>
-  <p id="mb-desc">This site is not available on mobile devices.<br><br>Visit it from a <span class="mb-accent">computer</span> for the full experience.</p>
+  <p id="mb-desc">Redirigiendo a la versión mobile...<br><br>Si no fuiste redirigido automáticamente, hacé click abajo.</p>
+  <a href="https://valens429.site/mobile/index.html" class="mb-btn" id="mb-btn" data-i="mb-btn">
+    Ir a la versión mobile →
+  </a>
+  <div class="mb-redirect-msg" id="mb-redirect-msg">Redirigiendo en <span id="mb-countdown">3</span>s...</div>
 </div>
 
 <div class="blob blob-1"></div>
@@ -423,8 +430,8 @@
 
       <!-- Centro: anuncio -->
       <div class="twitch-announce">
-        <div class="twitch-announce-tag" data-i="twitch-announce-tag">// ¡Estoy de vuelta!</div>
-        <div class="twitch-announce-title" data-i="twitch-announce-title">
+        <div class="twitch-announce-tag">// ¡Estoy de vuelta!</div>
+        <div class="twitch-announce-title">
           <span class="twitch-return">¡EL</span><br>
           <span class="twitch-return">REGRESO!</span>
         </div>
@@ -445,7 +452,7 @@
     <!-- DIVIDER -->
     <div class="twitch-divider reveal">
       <div class="twitch-divider-line"></div>
-      <div class="twitch-divider-label" data-i="twitch-divider-label">// Horarios &amp; VODs</div>
+      <div class="twitch-divider-label">// Horarios &amp; VODs</div>
       <div class="twitch-divider-line right"></div>
     </div>
 
@@ -454,15 +461,15 @@
 
       <!-- Horarios -->
       <div class="twitch-schedule">
-        <div class="schedule-title" data-i="schedule-title">// Horario de streams</div>
+        <div class="schedule-title">// Horario de streams</div>
         <div class="schedule-grid">
-          <div class="schedule-row"><span class="schedule-day" data-i="day-mon">LUNES</span><span class="schedule-time off">—</span></div>
-          <div class="schedule-row"><span class="schedule-day" data-i="day-tue">MARTES</span><span class="schedule-time off">—</span></div>
-          <div class="schedule-row"><span class="schedule-day" data-i="day-wed">MIÉRCOLES</span><span class="schedule-time">6PM</span></div>
-          <div class="schedule-row"><span class="schedule-day" data-i="day-thu">JUEVES</span><span class="schedule-time off">—</span></div>
-          <div class="schedule-row"><span class="schedule-day" data-i="day-fri">VIERNES</span><span class="schedule-time">5PM</span></div>
-          <div class="schedule-row"><span class="schedule-day" data-i="day-sat">SÁBADO</span><span class="schedule-time">5PM</span></div>
-          <div class="schedule-row"><span class="schedule-day" data-i="day-sun">DOMINGO</span><span class="schedule-time">6PM <span style="font-size:0.6rem;color:var(--muted)" data-i="day-sun-note">(si pinta)</span></span></div>
+          <div class="schedule-row"><span class="schedule-day">LUNES</span><span class="schedule-time off">—</span></div>
+          <div class="schedule-row"><span class="schedule-day">MARTES</span><span class="schedule-time off">—</span></div>
+          <div class="schedule-row"><span class="schedule-day">MIÉRCOLES</span><span class="schedule-time">6PM</span></div>
+          <div class="schedule-row"><span class="schedule-day">JUEVES</span><span class="schedule-time off">—</span></div>
+          <div class="schedule-row"><span class="schedule-day">VIERNES</span><span class="schedule-time">5PM</span></div>
+          <div class="schedule-row"><span class="schedule-day">SÁBADO</span><span class="schedule-time">5PM</span></div>
+          <div class="schedule-row"><span class="schedule-day">DOMINGO</span><span class="schedule-time">6PM <span style="font-size:0.6rem;color:var(--muted)">(si pinta)</span></span></div>
         </div>
         <div class="twitch-stats">
           <div class="stat"><div class="stat-num">+135</div><div class="stat-label" data-i="stat-followers">SEGUIDORES</div></div>
@@ -473,10 +480,10 @@
 
       <!-- VODs -->
       <div class="vods-grid">
-        <a class="vod-card" href="https://www.twitch.tv/videos/2681140694" target="_blank" rel="noopener" data-track-label="📺 VOD — Hytale"><div class="vod-thumb"><img src="images/twitch/hytale.jpg" alt="Hytale" onerror="this.parentElement.innerHTML='📺'"></div><div class="vod-info"><div class="vod-title" data-i="vod1-title">Probando por primera vez Hytale — ¡Recién salió!</div><div class="vod-meta"><span data-i="vod1-date">26/1/26</span> · <span data-i="genre-gameplay">Gameplay</span></div></div><div class="vod-duration">1:49:13</div></a>
-        <a class="vod-card" href="https://www.twitch.tv/collections/NixvN2QrnBieYQ" target="_blank" rel="noopener" data-track-label="📺 VOD — Purrfect Apawcalypse"><div class="vod-thumb"><img src="images/twitch/purrfect.png" alt="Purrfect Apawcalypse" onerror="this.parentElement.innerHTML='🎮'"></div><div class="vod-info"><div class="vod-title" data-i="vod2-title">Purrfect Apawcalypse — Saga completa</div><div class="vod-meta"><span data-i="vod2-date">11/3/26</span> · <span data-i="genre-vn">Visual Novel</span></div></div><div class="vod-duration">8:51:09</div></a>
-        <a class="vod-card" href="https://www.twitch.tv/videos/2732588905" target="_blank" rel="noopener" data-track-label="📺 VOD — Danganronpa"><div class="vod-thumb"><img src="images/twitch/danganronpa.png" alt="Danganronpa" onerror="this.parentElement.innerHTML='🔴'"></div><div class="vod-info"><div class="vod-title" data-i="vod3-title">Probando DANGANRONPA ¿es este el PEAK?</div><div class="vod-meta"><span data-i="vod3-date">26/3/26</span> · <span data-i="genre-vn">Visual Novel</span></div></div><div class="vod-duration">1:36:19</div></a>
-        <a class="vod-card" href="https://www.twitch.tv/videos/2628991514" target="_blank" rel="noopener" data-track-label="📺 VOD — Los furros"><div class="vod-thumb"><img src="images/twitch/furros.jpg" alt="Los furros" onerror="this.parentElement.innerHTML='💻'"></div><div class="vod-info"><div class="vod-title" data-i="vod4-title">Los furros me persiguen (Pero yo soy más rápido)</div><div class="vod-meta"><span data-i="vod4-date">26/11/25</span> · <span data-i="genre-vn">Visual Novel</span></div></div><div class="vod-duration">47:10</div></a>
+        <a class="vod-card" href="https://www.twitch.tv/videos/2681140694" target="_blank" rel="noopener" data-track-label="📺 VOD — Hytale"><div class="vod-thumb"><img src="images/twitch/hytale.jpg" alt="Hytale" onerror="this.parentElement.innerHTML='📺'"></div><div class="vod-info"><div class="vod-title" data-i="vod1-title">Probando por primera vez Hytale — ¡Recién salió!</div><div class="vod-meta"><span data-i="vod1-date">26/1/26</span> · Gameplay</div></div><div class="vod-duration">1:49:13</div></a>
+        <a class="vod-card" href="https://www.twitch.tv/collections/NixvN2QrnBieYQ" target="_blank" rel="noopener" data-track-label="📺 VOD — Purrfect Apawcalypse"><div class="vod-thumb"><img src="images/twitch/purrfect.png" alt="Purrfect Apawcalypse" onerror="this.parentElement.innerHTML='🎮'"></div><div class="vod-info"><div class="vod-title" data-i="vod2-title">Purrfect Apawcalypse — Saga completa</div><div class="vod-meta"><span data-i="vod2-date">11/3/26</span> · Visual Novel</div></div><div class="vod-duration">8:51:09</div></a>
+        <a class="vod-card" href="https://www.twitch.tv/videos/2732588905" target="_blank" rel="noopener" data-track-label="📺 VOD — Danganronpa"><div class="vod-thumb"><img src="images/twitch/danganronpa.png" alt="Danganronpa" onerror="this.parentElement.innerHTML='🔴'"></div><div class="vod-info"><div class="vod-title" data-i="vod3-title">Probando DANGANRONPA ¿es este el PEAK?</div><div class="vod-meta"><span data-i="vod3-date">26/3/26</span> · Visual Novel</div></div><div class="vod-duration">1:36:19</div></a>
+        <a class="vod-card" href="https://www.twitch.tv/videos/2628991514" target="_blank" rel="noopener" data-track-label="📺 VOD — Los furros"><div class="vod-thumb"><img src="images/twitch/furros.jpg" alt="Los furros" onerror="this.parentElement.innerHTML='💻'"></div><div class="vod-info"><div class="vod-title" data-i="vod4-title">Los furros me persiguen (Pero yo soy más rápido)</div><div class="vod-meta"><span data-i="vod4-date">26/11/25</span> · Visual Novel</div></div><div class="vod-duration">47:10</div></a>
       </div>
 
     </div>
@@ -550,7 +557,7 @@
     <p class="reveal reveal-delay-2" style="color:var(--muted);max-width:580px;margin-top:20px;line-height:1.8;" data-i="sol-sub">Pequeñas soluciones que armé y uso. Gratis, sin registro.</p>
     <div class="solutions-grid">
       <div class="solution-card reveal reveal-delay-2">
-        <div class="solution-card-tag" data-i="sol-card-tag">// EMAIL TEMPORAL</div>
+        <div class="solution-card-tag">// EMAIL TEMPORAL</div>
         <div class="solution-card-icon"><img src="images/icons/dropmail.png" alt="dropmail" width="96" height="96" style="object-fit:contain;"></div>
         <div class="solution-card-name">dropmail</div>
         <div class="solution-card-desc" data-i="sol-dropmail-desc">Generá una dirección de email temporal en segundos. Sin registro, sin spam. Usala para proteger tu email real en cualquier servicio.</div>
@@ -560,7 +567,7 @@
           <div class="solution-feature" data-i="sol-f3">Sin registro ni cuenta requerida</div>
           <div class="solution-feature" data-i="sol-f4">100% gratis</div>
         </div>
-        <a href="https://valens429.site/dropmail" target="_blank" class="solution-btn" data-track-label="🛠️ Soluciones — dropmail" data-i="sol-btn">
+        <a href="https://valens429.site/dropmail" target="_blank" class="solution-btn" data-track-label="🛠️ Soluciones — dropmail">
           Abrir dropmail <span class="solution-btn-arrow">→</span>
         </a>
       </div>
@@ -667,16 +674,6 @@ const t = {
     'twitch-p1': 'Streams de Visual novels, juegos indie, devlogs y sesiones de gamedev. Comunidad pequeña y cercana donde se ven proyectos nacer desde cero.',
     'twitch-p2': 'Las transmisiones mezclan programación real con gaming casual. Sin guión, sin postureo.',
     'stat-followers': 'SEGUIDORES', 'stat-streams': 'STREAMS', 'stat-live': 'EN DIRECTO',
-    'twitch-announce-tag': '// ¡Estoy de vuelta!',
-    'twitch-announce-title': '<span class="twitch-return">¡EL</span><br><span class="twitch-return">REGRESO!</span>',
-    'twitch-divider-label': '// Horarios &amp; VODs',
-    'schedule-title': '// Horario de streams',
-    'day-mon': 'LUNES', 'day-tue': 'MARTES', 'day-wed': 'MIÉRCOLES',
-    'day-thu': 'JUEVES', 'day-fri': 'VIERNES', 'day-sat': 'SÁBADO', 'day-sun': 'DOMINGO',
-    'day-sun-note': '(si pinta)',
-    'genre-gameplay': 'Gameplay', 'genre-vn': 'Visual Novel',
-    'sol-card-tag': '// EMAIL TEMPORAL',
-    'sol-btn': 'Abrir dropmail <span class="solution-btn-arrow">→</span>',
     'vod1-title': 'Probando por primera vez Hytale — ¡Recién salió!', 'vod1-date': '26/1/26',
     'vod2-title': 'Purrfect Apawcalypse — Saga completa', 'vod2-date': '11/3/26',
     'vod3-title': 'Probando DANGANRONPA ¿es este el PEAK?', 'vod3-date': '26/3/26',
@@ -702,8 +699,9 @@ const t = {
     'links-h2a': 'Encontrame', 'links-h2b': 'en todos lados',
     'links-sub': 'Todos mis espacios en internet, en un solo lugar.',
     'assets-label': 'Assets', 'footer-copy': '// Con cariño',
-    'mb-title': 'Solo en <span class="mb-accent">desktop</span>',
-    'mb-desc': 'Este sitio no está disponible en dispositivos móviles.<br><br>Visitalo desde una <span class="mb-accent">computadora</span> para la experiencia completa.',
+    'mb-title': 'Versión <span class="mb-accent">Mobile</span>',
+    'mb-desc': 'Redirigiendo a la versión mobile...<br><br>Si no fuiste redirigido automáticamente, hacé click abajo.',
+    'mb-btn': 'Ir a la versión mobile →',
   },
   en: {
     'html-lang': 'en', 'page-title': 'Valens429 — Website',
@@ -728,16 +726,6 @@ const t = {
     'twitch-p1': 'Streams of Visual novels, indie games, devlogs and gamedev sessions. Small and tight-knit community where projects are born from scratch.',
     'twitch-p2': 'Streams mix real programming with casual gaming. No script, no fake persona.',
     'stat-followers': 'FOLLOWERS', 'stat-streams': 'STREAMS', 'stat-live': 'LIVE',
-    'twitch-announce-tag': '// I\'m back!',
-    'twitch-announce-title': '<span class="twitch-return">THE</span><br><span class="twitch-return">RETURN!</span>',
-    'twitch-divider-label': '// Schedule &amp; VODs',
-    'schedule-title': '// Stream schedule',
-    'day-mon': 'MON', 'day-tue': 'TUE', 'day-wed': 'WED',
-    'day-thu': 'THU', 'day-fri': 'FRI', 'day-sat': 'SAT', 'day-sun': 'SUN',
-    'day-sun-note': '(if I feel like it)',
-    'genre-gameplay': 'Gameplay', 'genre-vn': 'Visual Novel',
-    'sol-card-tag': '// TEMP EMAIL',
-    'sol-btn': 'Open dropmail <span class="solution-btn-arrow">→</span>',
     'vod1-title': 'Playing Hytale for the first time — Just dropped!', 'vod1-date': '1/26/26',
     'vod2-title': 'Purrfect Apawcalypse — Full saga', 'vod2-date': '3/11/26',
     'vod3-title': 'Playing DANGANRONPA — is this peak fiction?', 'vod3-date': '3/26/26',
@@ -769,8 +757,9 @@ const t = {
     'links-h2a': 'Find me', 'links-h2b': 'everywhere',
     'links-sub': 'All my spaces on the internet, in one place.',
     'assets-label': 'Assets', 'footer-copy': '// Made with love',
-    'mb-title': '<span class="mb-accent">Desktop</span> only',
-    'mb-desc': 'This site is not available on mobile devices.<br><br>Visit from a <span class="mb-accent">computer</span> for the full experience.',
+    'mb-title': 'Mobile <span class="mb-accent">version</span>',
+    'mb-desc': 'Redirecting to the mobile version...<br><br>If you were not redirected automatically, click below.',
+    'mb-btn': 'Go to mobile version →',
   }
 };
 
@@ -837,6 +826,30 @@ const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal, .section-tag, h2').forEach(el => observer.observe(el));
+
+// MOBILE REDIRECT
+(function() {
+  const MOBILE_URL = 'https://valens429.site/mobile/index.html';
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    || (window.innerWidth <= 768);
+  if (isMobile) {
+    let secs = 3;
+    const countdown = document.getElementById('mb-countdown');
+    const redirectMsg = document.getElementById('mb-redirect-msg');
+    const timer = setInterval(() => {
+      secs--;
+      if (countdown) countdown.textContent = secs;
+      if (secs <= 0) {
+        clearInterval(timer);
+        window.location.href = MOBILE_URL;
+      }
+    }, 1000);
+    // If redirect fails for any reason, update message
+    setTimeout(() => {
+      if (redirectMsg) redirectMsg.style.display = 'none';
+    }, 4000);
+  }
+})();
 </script>
 </body>
 </html>
