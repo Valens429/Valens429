@@ -147,11 +147,12 @@
   .stat-num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #9147ff, var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .stat-label { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 2px; }
   .vods-grid { display: flex; flex-direction: column; gap: 12px; }
-  .vod-card { background: var(--bg2); border: 1px solid var(--border); padding: 20px 24px; display: flex; align-items: center; gap: 20px; cursor: none; transition: all 0.3s; position: relative; overflow: hidden; }
+  .vod-card { background: var(--bg2); border: 1px solid var(--border); padding: 20px 24px; display: flex; align-items: center; gap: 20px; cursor: none; transition: all 0.3s; position: relative; overflow: hidden; text-decoration: none; color: inherit; }
   .vod-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: #9147ff; transform: scaleY(0); transition: transform 0.3s; }
   .vod-card:hover::before { transform: scaleY(1); }
   .vod-card:hover { border-color: #9147ff33; transform: translateX(8px); }
-  .vod-thumb { width: 80px; height: 50px; background: var(--bg); border: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 1.2rem; }
+  .vod-thumb { width: 80px; height: 50px; background: var(--bg); border: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 1.2rem; overflow: hidden; }
+  .vod-thumb img { width: 100%; height: 100%; object-fit: cover; }
   .vod-info { flex: 1; }
   .vod-title { font-weight: 600; margin-bottom: 4px; }
   .vod-meta { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); }
@@ -159,9 +160,10 @@
 
   /* YOUTUBE */
   .yt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 50px; }
-  .yt-card { background: var(--bg2); border: 1px solid var(--border); overflow: hidden; cursor: none; transition: all 0.4s; }
+  .yt-card { background: var(--bg2); border: 1px solid var(--border); overflow: hidden; cursor: none; transition: all 0.4s; text-decoration: none; color: inherit; display: block; }
   .yt-card:hover { transform: translateY(-6px); border-color: #ff000066; box-shadow: 0 0 30px #ff000022; }
   .yt-thumb { height: 160px; background: var(--bg); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
+  .yt-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .yt-thumb-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, var(--purple-dim), #ff000011); }
   .yt-play { position: absolute; width: 48px; height: 48px; background: #ff0000; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.1rem; opacity: 0; transform: scale(0.8); transition: all 0.3s; z-index: 2; padding-left: 4px; }
   .yt-card:hover .yt-play { opacity: 1; transform: scale(1); }
@@ -169,9 +171,15 @@
   .yt-title { font-weight: 600; margin-bottom: 8px; line-height: 1.4; }
   .yt-meta { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); }
 
+  .engine-btns { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+  .engine-goto-btn { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; padding: 10px 20px; border: 1px solid var(--cyan); color: var(--cyan); background: var(--cyan-dim); text-decoration: none; transition: all 0.3s; cursor: none; display: inline-flex; align-items: center; }
+  .engine-goto-btn:hover { background: var(--cyan); color: #000; transform: translateX(4px); }
+
   /* EDITING */
   .editing-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 60px; }
-  .tool-card { background: var(--bg2); border: 1px solid var(--border); padding: 50px 40px; position: relative; overflow: hidden; cursor: none; transition: all 0.4s; }
+
+  /* TOOL CARD AS LINK */
+  .tool-card { background: var(--bg2); border: 1px solid var(--border); padding: 50px 40px; position: relative; overflow: hidden; cursor: none; transition: all 0.4s; text-decoration: none; color: inherit; display: block; }
   .tool-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at center, var(--purple-dim), transparent 70%); opacity: 0; transition: opacity 0.5s; }
   .tool-card:hover::before { opacity: 1; }
   .tool-card:hover { border-color: var(--purple); transform: translateY(-4px); }
@@ -340,11 +348,11 @@
         <div class="engine-name">Python</div><div class="engine-lang">&amp; RenPy</div><div class="engine-arrow">↓</div>
       </div>
       <div class="engine-card" onclick="toggleEngine('clickteam')" data-track-label="🎮 Engine — Clickteam">
-        <div class="engine-icon"><img src="Icons/Clickteam.png" alt="Clickteam"></div>
+        <div class="engine-icon"><img src="images/icons/Clickteam.png" alt="Clickteam"></div>
         <div class="engine-name">Clickteam</div><div class="engine-lang">FUSION 2.5</div><div class="engine-arrow">↓</div>
       </div>
       <div class="engine-card" onclick="toggleEngine('gamemaker')" data-track-label="🎮 Engine — GameMaker">
-        <div class="engine-icon"><img src="Icons/Gamemaker.png" alt="GameMaker"></div>
+        <div class="engine-icon"><img src="images/icons/Gamemaker.png" alt="GameMaker"></div>
         <div class="engine-name">GameMaker</div><div class="engine-lang">GML</div><div class="engine-arrow">↓</div>
       </div>
       <div class="engine-card" onclick="toggleEngine('unity')" data-track-label="🎮 Engine — Unity">
@@ -352,10 +360,10 @@
         <div class="engine-name">Unity</div><div class="engine-lang">C#</div><div class="engine-arrow">↓</div>
       </div>
     </div>
-    <div class="engine-detail" id="detail-python"><div class="engine-detail-inner"><div class="engine-detail-img"><img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=800&q=80" alt="Python"></div><div class="engine-detail-text"><h3>Python &amp; RenPy</h3><div class="sub">SCRIPTING / VISUAL NOVELS</div><p data-i="py-p1">Python es el lenguaje base: scripts, automatizaciones, bots, herramientas. Versátil, legible y potente.</p><p data-i="py-p2">RenPy extiende Python para crear visual novels con sistema de diálogos, ramas narrativas, manejo de sprites, música y variables de historia.</p><div class="engine-tags"><span class="engine-tag">Python 3.x</span><span class="engine-tag">RenPy SDK</span><span class="engine-tag">Visual Novels</span><span class="engine-tag">Scripting</span><span class="engine-tag" data-i="tag-auto">Automatización</span></div></div></div></div>
-    <div class="engine-detail" id="detail-clickteam"><div class="engine-detail-inner"><div class="engine-detail-img"><img src="Banners/ctf.jpg" alt="Clickteam"></div><div class="engine-detail-text"><h3>Clickteam Fusion</h3><div class="sub">EVENT-DRIVEN GAME DEV</div><p data-i="ct-p1">Clickteam Fusion 2.5 es un entorno de desarrollo de juegos basado en eventos. Sin escribir código tradicional, se construyen lógicas complejas mediante condiciones y acciones visuales.</p><p data-i="ct-p2">Muy usado para juegos 2D indie clásicos. Exporta a Windows, HTML5 y móvil.</p><div class="engine-tags"><span class="engine-tag">Event Editor</span><span class="engine-tag">2D Games</span><span class="engine-tag">Indie Dev</span><span class="engine-tag">Windows / HTML5</span></div></div></div></div>
-    <div class="engine-detail" id="detail-gamemaker"><div class="engine-detail-inner"><div class="engine-detail-img"><img src="Banners/gm.jpg" alt="GameMaker"></div><div class="engine-detail-text"><h3>GameMaker</h3><div class="sub">2D GAME ENGINE / GML</div><p data-i="gm-p1">GameMaker Studio es el motor detrás de grandes títulos indie como Undertale, Hotline Miami o Spelunky. GML es específico del engine pero extremadamente eficiente para 2D.</p><p data-i="gm-p2">Su flujo de trabajo combina editor visual con scripting directo. Ideal para juegos 2D pixel art, roguelikes y metroidvanias.</p><div class="engine-tags"><span class="engine-tag">GML</span><span class="engine-tag">Pixel Art</span><span class="engine-tag">2D Expert</span><span class="engine-tag">Multiplatform</span></div></div></div></div>
-    <div class="engine-detail" id="detail-unity"><div class="engine-detail-inner"><div class="engine-detail-img"><img src="Banners/u.png" alt="Unity"></div><div class="engine-detail-text"><h3>Unity</h3><div class="sub">3D / 2D ENGINE / C#</div><p data-i="u-p1">Unity es el motor más completo del catálogo. Programado en C#, permite crear experiencias en 2D y 3D con un ecosistema enorme de assets, paquetes y documentación.</p><p data-i="u-p2">Su editor incluye sistema de física, animación, shaders, UI y networking. Exporta a más de 25 plataformas.</p><div class="engine-tags"><span class="engine-tag">C#</span><span class="engine-tag">3D / 2D</span><span class="engine-tag">HLSL Shaders</span><span class="engine-tag" data-i="tag-plat">25+ Plataformas</span><span class="engine-tag">Asset Store</span></div></div></div></div>
+    <div class="engine-detail" id="detail-python"><div class="engine-detail-inner"><div class="engine-detail-img"><img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=800&q=80" alt="Python"></div><div class="engine-detail-text"><h3>Python &amp; RenPy</h3><div class="sub">SCRIPTING / VISUAL NOVELS</div><p data-i="py-p1">Python es el lenguaje base: scripts, automatizaciones, bots, herramientas. Versátil, legible y potente.</p><p data-i="py-p2">RenPy extiende Python para crear visual novels con sistema de diálogos, ramas narrativas, manejo de sprites, música y variables de historia.</p><div class="engine-tags"><span class="engine-tag">Python 3.x</span><span class="engine-tag">RenPy SDK</span><span class="engine-tag">Visual Novels</span><span class="engine-tag">Scripting</span><span class="engine-tag" data-i="tag-auto">Automatización</span></div><div class="engine-btns"><a href="https://www.python.org" target="_blank" rel="noopener" class="engine-goto-btn">Python →</a><a href="https://www.renpy.org" target="_blank" rel="noopener" class="engine-goto-btn">RenPy →</a></div></div></div></div>
+    <div class="engine-detail" id="detail-clickteam"><div class="engine-detail-inner"><div class="engine-detail-img"><img src="images/banners/ctf.jpg" alt="Clickteam"></div><div class="engine-detail-text"><h3>Clickteam Fusion</h3><div class="sub">EVENT-DRIVEN GAME DEV</div><p data-i="ct-p1">Clickteam Fusion 2.5 es un entorno de desarrollo de juegos basado en eventos. Sin escribir código tradicional, se construyen lógicas complejas mediante condiciones y acciones visuales.</p><p data-i="ct-p2">Muy usado para juegos 2D indie clásicos. Exporta a Windows, HTML5 y móvil.</p><div class="engine-tags"><span class="engine-tag">Event Editor</span><span class="engine-tag">2D Games</span><span class="engine-tag">Indie Dev</span><span class="engine-tag">Windows / HTML5</span></div><div class="engine-btns"><a href="https://www.clickteam.com/clickteam-fusion-2-5" target="_blank" rel="noopener" class="engine-goto-btn">Clickteam Fusion →</a></div></div></div></div>
+    <div class="engine-detail" id="detail-gamemaker"><div class="engine-detail-inner"><div class="engine-detail-img"><img src="images/banners/gm.jpg" alt="GameMaker"></div><div class="engine-detail-text"><h3>GameMaker</h3><div class="sub">2D GAME ENGINE / GML</div><p data-i="gm-p1">GameMaker Studio es el motor detrás de grandes títulos indie como Undertale, Hotline Miami o Spelunky. GML es específico del engine pero extremadamente eficiente para 2D.</p><p data-i="gm-p2">Su flujo de trabajo combina editor visual con scripting directo. Ideal para juegos 2D pixel art, roguelikes y metroidvanias.</p><div class="engine-tags"><span class="engine-tag">GML</span><span class="engine-tag">Pixel Art</span><span class="engine-tag">2D Expert</span><span class="engine-tag">Multiplatform</span></div><div class="engine-btns"><a href="https://gamemaker.io" target="_blank" rel="noopener" class="engine-goto-btn">GameMaker →</a></div></div></div></div>
+    <div class="engine-detail" id="detail-unity"><div class="engine-detail-inner"><div class="engine-detail-img"><img src="images/banners/u.png" alt="Unity"></div><div class="engine-detail-text"><h3>Unity</h3><div class="sub">3D / 2D ENGINE / C#</div><p data-i="u-p1">Unity es el motor más completo del catálogo. Programado en C#, permite crear experiencias en 2D y 3D con un ecosistema enorme de assets, paquetes y documentación.</p><p data-i="u-p2">Su editor incluye sistema de física, animación, shaders, UI y networking. Exporta a más de 25 plataformas.</p><div class="engine-tags"><span class="engine-tag">C#</span><span class="engine-tag">3D / 2D</span><span class="engine-tag">HLSL Shaders</span><span class="engine-tag" data-i="tag-plat">25+ Plataformas</span><span class="engine-tag">Asset Store</span></div><div class="engine-btns"><a href="https://unity.com" target="_blank" rel="noopener" class="engine-goto-btn">Unity →</a></div></div></div></div>
   </div>
 </section>
 
@@ -378,10 +386,10 @@
         </div>
       </div>
       <div class="vods-grid reveal reveal-delay-2">
-        <div class="vod-card" data-track-label="📺 VOD — Hytale"><div class="vod-thumb">📺</div><div class="vod-info"><div class="vod-title" data-i="vod1-title">Probando por primera vez Hytale — ¡Recién salió!</div><div class="vod-meta"><span data-i="vod1-date">26/1/26</span> · Gameplay</div></div><div class="vod-duration">1:49:13</div></div>
-        <div class="vod-card" data-track-label="📺 VOD — Purrfect Apawcalypse"><div class="vod-thumb">🎮</div><div class="vod-info"><div class="vod-title" data-i="vod2-title">Purrfect Apawcalypse — Saga completa</div><div class="vod-meta"><span data-i="vod2-date">11/3/26</span> · Visual Novel</div></div><div class="vod-duration">8:51:09</div></div>
-        <div class="vod-card" data-track-label="📺 VOD — Danganronpa"><div class="vod-thumb">🔴</div><div class="vod-info"><div class="vod-title" data-i="vod3-title">Probando DANGANRONPA ¿es este el PEAK?</div><div class="vod-meta"><span data-i="vod3-date">26/3/26</span> · Visual Novel</div></div><div class="vod-duration">1:36:19</div></div>
-        <div class="vod-card" data-track-label="📺 VOD — Los furros"><div class="vod-thumb">💻</div><div class="vod-info"><div class="vod-title" data-i="vod4-title">Los furros me persiguen (Pero yo soy más rápido)</div><div class="vod-meta"><span data-i="vod4-date">26/11/25</span> · Visual Novel</div></div><div class="vod-duration">47:10</div></div>
+        <a class="vod-card" href="https://www.twitch.tv/videos/2681140694" target="_blank" rel="noopener" data-track-label="📺 VOD — Hytale"><div class="vod-thumb"><img src="images/twitch/hytale.jpg" alt="Hytale" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='📺'"></div><div class="vod-info"><div class="vod-title" data-i="vod1-title">Probando por primera vez Hytale — ¡Recién salió!</div><div class="vod-meta"><span data-i="vod1-date">26/1/26</span> · Gameplay</div></div><div class="vod-duration">1:49:13</div></a>
+        <a class="vod-card" href="https://www.twitch.tv/collections/NixvN2QrnBieYQ" target="_blank" rel="noopener" data-track-label="📺 VOD — Purrfect Apawcalypse"><div class="vod-thumb"><img src="images/twitch/purrfect.jpg" alt="Purrfect Apawcalypse" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='🎮'"></div><div class="vod-info"><div class="vod-title" data-i="vod2-title">Purrfect Apawcalypse — Saga completa</div><div class="vod-meta"><span data-i="vod2-date">11/3/26</span> · Visual Novel</div></div><div class="vod-duration">8:51:09</div></a>
+        <a class="vod-card" href="https://www.twitch.tv/videos/2732588905" target="_blank" rel="noopener" data-track-label="📺 VOD — Danganronpa"><div class="vod-thumb"><img src="images/twitch/danganronpa.jpg" alt="Danganronpa" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='🔴'"></div><div class="vod-info"><div class="vod-title" data-i="vod3-title">Probando DANGANRONPA ¿es este el PEAK?</div><div class="vod-meta"><span data-i="vod3-date">26/3/26</span> · Visual Novel</div></div><div class="vod-duration">1:36:19</div></a>
+        <a class="vod-card" href="https://www.twitch.tv/videos/2628991514" target="_blank" rel="noopener" data-track-label="📺 VOD — Los furros"><div class="vod-thumb"><img src="images/twitch/furros.jpg" alt="Los furros" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='💻'"></div><div class="vod-info"><div class="vod-title" data-i="vod4-title">Los furros me persiguen (Pero yo soy más rápido)</div><div class="vod-meta"><span data-i="vod4-date">26/11/25</span> · Visual Novel</div></div><div class="vod-duration">47:10</div></a>
       </div>
     </div>
   </div>
@@ -395,12 +403,12 @@
     <div class="section-tag reveal" data-i="yt-tag">[ 03 — YOUTUBE ]</div>
     <h2 class="section-heading reveal reveal-delay-1"><span data-i="yt-h2a">Seguime en</span><br><span class="accent">Nyxr_ar</span></h2>
     <div class="yt-grid reveal reveal-delay-2">
-      <div class="yt-card" data-track-label="▶ YT — Purrfect Apawcalypse"><div class="yt-thumb">🎮<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt1">No era tan inocente como parecía… 💀 | Purrfect Apawcalypse</div><div class="yt-meta"><span data-i="yt1-meta">+170 vistas · hace 4 semanas</span></div></div></div>
-      <div class="yt-card" data-track-label="▶ YT — CHANGED"><div class="yt-thumb">🐍<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt2">Jugué CHANGED y me arrepiento</div><div class="yt-meta"><span data-i="yt2-meta">+50 vistas · hace 1 mes</span></div></div></div>
-      <div class="yt-card" data-track-label="▶ YT — Caballero stream"><div class="yt-thumb">⚙️<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt3">INTENTÉ VENCER AL CABALLERO EN STREAM Y PASÓ ESTO...</div><div class="yt-meta"><span data-i="yt3-meta">+580 vistas · hace 10 meses</span></div></div></div>
-      <div class="yt-card" data-track-label="▶ YT — Keydrop"><div class="yt-thumb">🕹️<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt4">MIRÁ LO QUE GANÉ EN KEYDROP 🤑🤑</div><div class="yt-meta"><span data-i="yt4-meta">+100 vistas · hace 1 año</span></div></div></div>
-      <div class="yt-card" data-track-label="▶ YT — Vivir con una zorra"><div class="yt-thumb">🔥<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt5">Así es vivir con una zorra (spoiler: es un desastre)</div><div class="yt-meta"><span data-i="yt5-meta">+130 vistas · hace 5 meses</span></div></div></div>
-      <div class="yt-card" data-track-label="▶ YT — OneShot"><div class="yt-thumb">🎬<div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt6">PROBÉ OneShot y me rompió el PC (y mi corazón)</div><div class="yt-meta"><span data-i="yt6-meta">+40 vistas · hace 2 meses</span></div></div></div>
+      <a class="yt-card" href="https://www.youtube.com/watch?v=B36wh0M_1Pg&t=2s" target="_blank" rel="noopener" data-track-label="▶ YT — Purrfect Apawcalypse"><div class="yt-thumb"><img src="https://img.youtube.com/vi/B36wh0M_1Pg/mqdefault.jpg" alt="Purrfect Apawcalypse"><div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt1">No era tan inocente como parecía… 💀 | Purrfect Apawcalypse</div><div class="yt-meta"><span data-i="yt1-meta">+170 vistas · hace 4 semanas</span></div></div></a>
+      <a class="yt-card" href="https://www.youtube.com/watch?v=fM1bINXEeIw&t=196s" target="_blank" rel="noopener" data-track-label="▶ YT — CHANGED"><div class="yt-thumb"><img src="https://img.youtube.com/vi/fM1bINXEeIw/mqdefault.jpg" alt="CHANGED"><div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt2">Jugué CHANGED y me arrepiento</div><div class="yt-meta"><span data-i="yt2-meta">+50 vistas · hace 1 mes</span></div></div></a>
+      <a class="yt-card" href="https://www.youtube.com/watch?v=2mhqHUx4j4w&t=115s" target="_blank" rel="noopener" data-track-label="▶ YT — Caballero stream"><div class="yt-thumb"><img src="https://img.youtube.com/vi/2mhqHUx4j4w/mqdefault.jpg" alt="Caballero stream"><div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt3">INTENTÉ VENCER AL CABALLERO EN STREAM Y PASÓ ESTO...</div><div class="yt-meta"><span data-i="yt3-meta">+580 vistas · hace 10 meses</span></div></div></a>
+      <a class="yt-card" href="https://www.youtube.com/watch?v=TJZMXYrzQIo" target="_blank" rel="noopener" data-track-label="▶ YT — Keydrop"><div class="yt-thumb"><img src="https://img.youtube.com/vi/TJZMXYrzQIo/mqdefault.jpg" alt="Keydrop"><div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt4">MIRÁ LO QUE GANÉ EN KEYDROP 🤑🤑</div><div class="yt-meta"><span data-i="yt4-meta">+100 vistas · hace 1 año</span></div></div></a>
+      <a class="yt-card" href="https://www.youtube.com/watch?v=nN6VxB0FdYo&t=484s" target="_blank" rel="noopener" data-track-label="▶ YT — Vivir con una zorra"><div class="yt-thumb"><img src="https://img.youtube.com/vi/nN6VxB0FdYo/mqdefault.jpg" alt="Vivir con una zorra"><div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt5">Así es vivir con una zorra (spoiler: es un desastre)</div><div class="yt-meta"><span data-i="yt5-meta">+130 vistas · hace 5 meses</span></div></div></a>
+      <a class="yt-card" href="https://www.youtube.com/watch?v=gI3U_UcLLvo&t=1133s" target="_blank" rel="noopener" data-track-label="▶ YT — OneShot"><div class="yt-thumb"><img src="https://img.youtube.com/vi/gI3U_UcLLvo/mqdefault.jpg" alt="OneShot"><div class="yt-thumb-overlay"></div><div class="yt-play">▶</div></div><div class="yt-info"><div class="yt-title" data-i="yt6">PROBÉ OneShot y me rompió el PC (y mi corazón)</div><div class="yt-meta"><span data-i="yt6-meta">+40 vistas · hace 2 meses</span></div></div></a>
     </div>
   </div>
 </section>
@@ -414,8 +422,8 @@
     <h2 class="section-heading reveal reveal-delay-1"><span data-i="edit-h2a">Edición</span><br><span class="accent" data-i="edit-h2b">de video</span></h2>
     <p class="reveal reveal-delay-2" style="color:var(--muted);max-width:580px;margin-top:20px;line-height:1.8;" data-i="edit-sub">Dos herramientas, dos flujos de trabajo. Cada una para lo que mejor hace.</p>
     <div class="editing-tools">
-      <div class="tool-card reveal reveal-delay-2" data-track-label="🎬 Tool — Filmora">
-        <div class="tool-logo"><img src="Icons/Filmora.png" alt="Filmora"></div>
+      <a class="tool-card reveal reveal-delay-2" href="https://filmora.wondershare.com" target="_blank" rel="noopener" data-track-label="🎬 Tool — Filmora">
+        <div class="tool-logo"><img src="images/icons/Filmora.png" alt="Filmora"></div>
         <div class="tool-name">Wondershare Filmora</div>
         <div class="tool-type" data-i="filmora-type">EDICIÓN PRINCIPAL</div>
         <div class="tool-desc" data-i="filmora-desc">Filmora 15 es mi software principal de edición. Interfaz limpia, timeline intuitivo y efectos de calidad sin complicarse con software profesional pesado.</div>
@@ -426,9 +434,9 @@
           <div class="tool-feature" data-i="filmora-f4">Audio ducking y mixer integrado</div>
           <div class="tool-feature" data-i="filmora-f5">Screen recorder + editor en uno</div>
         </div>
-      </div>
-      <div class="tool-card reveal reveal-delay-3" data-track-label="🎬 Tool — Clipchamp">
-        <div class="tool-logo"><img src="Icons/Clipchamp.png" alt="Clipchamp"></div>
+      </a>
+      <a class="tool-card reveal reveal-delay-3" href="https://clipchamp.com" target="_blank" rel="noopener" data-track-label="🎬 Tool — Clipchamp">
+        <div class="tool-logo"><img src="images/icons/Clipchamp.png" alt="Clipchamp"></div>
         <div class="tool-name">Clipchamp</div>
         <div class="tool-type" data-i="clip-type">EDICIÓN RÁPIDA / CLIPS</div>
         <div class="tool-desc" data-i="clip-desc">Microsoft Clipchamp para ediciones rápidas, clips de Twitch y contenido de formato corto. Directamente en el browser, sin instalar nada extra.</div>
@@ -439,7 +447,7 @@
           <div class="tool-feature" data-i="clip-f4">Integración nativa con OneDrive</div>
           <div class="tool-feature" data-i="clip-f5">Exportación directa a redes sociales</div>
         </div>
-      </div>
+      </a>
     </div>
   </div>
 </section>
@@ -455,7 +463,7 @@
     <div class="solutions-grid">
       <div class="solution-card reveal reveal-delay-2">
         <div class="solution-card-tag">// EMAIL TEMPORAL</div>
-        <div class="solution-card-icon"><img src="Icons/dropmail.png" alt="dropmail" width="96" height="96" style="object-fit:contain;"></div>
+        <div class="solution-card-icon"><img src="images/icons/dropmail.png" alt="dropmail" width="96" height="96" style="object-fit:contain;"></div>
         <div class="solution-card-name">dropmail</div>
         <div class="solution-card-desc" data-i="sol-dropmail-desc">Generá una dirección de email temporal en segundos. Sin registro, sin spam. Usala para proteger tu email real en cualquier servicio.</div>
         <div class="solution-features">
@@ -486,11 +494,11 @@
         <a href="https://www.twitch.tv/nyxr_ar" target="_blank" class="app-logo-item" data-track-label="🔗 Link — Twitch"><svg width="36" height="36" viewBox="0 0 24 24" fill="#9147ff"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg><span>Twitch</span></a>
         <a href="https://bsky.app/profile/valens429.bsky.social" target="_blank" class="app-logo-item" data-track-label="🔗 Link — Bluesky"><svg width="36" height="36" viewBox="0 0 24 24" fill="#0085ff"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.479 0-.689-.139-1.861-.902-2.206-.659-.299-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z"/></svg><span>Bluesky</span></a>
         <a href="https://github.com/Valens429" target="_blank" class="app-logo-item" data-track-label="🔗 Link — GitHub"><svg width="36" height="36" viewBox="0 0 24 24" fill="#fff"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg><span>GitHub</span></a>
-        <a href="https://discord.gg/Tajpn7ddUV" target="_blank" class="app-logo-item" data-track-label="🔗 Link — Discord"><img src="Icons/Discord.png" alt="Discord" width="36" height="36"><span>Discord</span></a>
-        <a href="https://drive.google.com/drive/folders/1s9XBix-wr949mTLPTmgenUe3eulBHFN8" target="_blank" class="app-logo-item" data-track-label="🔗 Link — Assets Drive"><img src="Icons/Drive.png" alt="Drive" width="36" height="36"><span data-i="assets-label">Assets</span></a>
-        <a href="https://gamejolt.com/@Valens429" target="_blank" class="app-logo-item" data-track-label="🔗 Link — GameJolt"><img src="Icons/Gamejolt.png" alt="GameJolt" width="36" height="36"><span>GameJolt</span></a>
-        <a href="https://www.tiktok.com/@nyxrar" target="_blank" class="app-logo-item" data-track-label="🔗 Link — TikTok"><img src="Icons/Tiktok.png" alt="TikTok" width="36" height="36"><span>TikTok</span></a>
-        <a href="https://valens429.itch.io" target="_blank" class="app-logo-item" data-track-label="🔗 Link — itch.io"><img src="Icons/Itchio.png" alt="itch.io" width="36" height="36"><span>itch.io</span></a>
+        <a href="https://discord.gg/Tajpn7ddUV" target="_blank" class="app-logo-item" data-track-label="🔗 Link — Discord"><img src="images/icons/Discord.png" alt="Discord" width="36" height="36"><span>Discord</span></a>
+        <a href="https://drive.google.com/drive/folders/1s9XBix-wr949mTLPTmgenUe3eulBHFN8" target="_blank" class="app-logo-item" data-track-label="🔗 Link — Assets Drive"><img src="images/icons/Drive.png" alt="Drive" width="36" height="36"><span data-i="assets-label">Assets</span></a>
+        <a href="https://gamejolt.com/@Valens429" target="_blank" class="app-logo-item" data-track-label="🔗 Link — GameJolt"><img src="images/icons/Gamejolt.png" alt="GameJolt" width="36" height="36"><span>GameJolt</span></a>
+        <a href="https://www.tiktok.com/@nyxrar" target="_blank" class="app-logo-item" data-track-label="🔗 Link — TikTok"><img src="images/icons/Tiktok.png" alt="TikTok" width="36" height="36"><span>TikTok</span></a>
+        <a href="https://valens429.itch.io" target="_blank" class="app-logo-item" data-track-label="🔗 Link — itch.io"><img src="images/icons/Itchio.png" alt="itch.io" width="36" height="36"><span>itch.io</span></a>
         <a href="https://ko-fi.com/valens429" target="_blank" class="app-logo-item" data-track-label="☕ Link — Ko-fi"><svg width="36" height="36" viewBox="0 0 24 24" fill="#ff5e5b"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 2.692.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"/></svg><span>Ko-fi</span></a>
       </div>
     </div>
