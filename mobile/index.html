@@ -1,0 +1,427 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&family=Outfit:wght@300;400;600&display=swap');
+  .v-root{font-family:'Outfit',sans-serif;background:#080810;color:#e2e8f0;min-height:800px;width:100%;overflow:hidden;position:relative;}
+  .v-root *{box-sizing:border-box;margin:0;padding:0;}
+
+  /* LANG SPLASH */
+  .v-lang-splash{position:fixed;inset:0;z-index:9999;background:#080810;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;padding:24px;}
+  .v-lang-splash.hide{opacity:0;pointer-events:none;transition:opacity 0.5s ease;}
+  .v-splash-logo{font-family:'Space Mono',monospace;font-size:1.1rem;color:#06b6d4;letter-spacing:4px;}
+  .v-splash-logo span{color:#a855f7;}
+  .v-splash-label{font-family:'Space Mono',monospace;font-size:0.6rem;color:#64748b;letter-spacing:4px;text-transform:uppercase;text-align:center;}
+  .v-splash-cards{display:flex;gap:16px;width:100%;max-width:320px;}
+  .v-lang-card{flex:1;background:#0d0d1a;border:1px solid #1e1e3a;padding:28px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;transition:all 0.3s;}
+  .v-lang-card:active{border-color:#a855f7;transform:scale(0.97);}
+  .v-lang-flag{font-size:2.2rem;}
+  .v-lang-name{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;}
+  .v-lang-sub{font-family:'Space Mono',monospace;font-size:0.55rem;color:#64748b;letter-spacing:2px;}
+  .v-lang-line{width:30px;height:2px;background:linear-gradient(90deg,#a855f7,#06b6d4);}
+
+  /* NAV */
+  .v-nav{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:rgba(8,8,16,0.9);backdrop-filter:blur(10px);border-bottom:1px solid #1e1e3a;position:sticky;top:0;z-index:100;}
+  .v-logo{font-family:'Space Mono',monospace;font-size:0.95rem;color:#06b6d4;letter-spacing:2px;}
+  .v-logo span{color:#a855f7;}
+  .v-nav-right{display:flex;align-items:center;gap:12px;}
+  .v-lang-toggle{font-family:'Space Mono',monospace;font-size:0.55rem;color:#64748b;letter-spacing:1px;background:none;border:1px solid #1e1e3a;padding:5px 8px;cursor:pointer;color:#64748b;transition:all 0.3s;}
+  .v-lang-toggle:active{color:#06b6d4;border-color:#06b6d4;}
+  .v-hamburger{display:flex;flex-direction:column;gap:4px;cursor:pointer;padding:4px;}
+  .v-hamburger div{width:22px;height:2px;background:#e2e8f0;border-radius:2px;transition:all 0.3s;}
+  .v-hamburger.open div:nth-child(1){transform:rotate(45deg) translate(4px,4px);}
+  .v-hamburger.open div:nth-child(2){opacity:0;}
+  .v-hamburger.open div:nth-child(3){transform:rotate(-45deg) translate(4px,-4px);}
+  .v-menu{position:absolute;top:100%;right:0;background:#0d0d1a;border:1px solid #1e1e3a;border-right:none;width:180px;padding:12px 0;display:none;z-index:200;}
+  .v-menu.open{display:block;}
+  .v-menu a{display:block;font-family:'Space Mono',monospace;font-size:0.65rem;color:#64748b;letter-spacing:2px;text-transform:uppercase;padding:10px 20px;text-decoration:none;}
+  .v-menu a:active{color:#06b6d4;background:#0a0a18;}
+
+  /* HERO */
+  .v-hero{padding:40px 20px 32px;position:relative;overflow:hidden;}
+  .v-hero-bg{position:absolute;inset:0;background-image:linear-gradient(#1e1e3a 1px,transparent 1px),linear-gradient(90deg,#1e1e3a 1px,transparent 1px);background-size:32px 32px;mask-image:radial-gradient(ellipse at 50% 0,black 20%,transparent 70%);opacity:0.3;pointer-events:none;}
+  .v-blob1{position:absolute;width:300px;height:300px;background:#a855f7;border-radius:50%;filter:blur(80px);opacity:0.08;top:-100px;left:-100px;pointer-events:none;}
+  .v-blob2{position:absolute;width:250px;height:250px;background:#06b6d4;border-radius:50%;filter:blur(80px);opacity:0.06;bottom:-80px;right:-80px;pointer-events:none;}
+  .v-hero-label{font-family:'Space Mono',monospace;font-size:0.6rem;color:#06b6d4;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;position:relative;z-index:1;}
+  .v-hero-name{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;line-height:1;margin-bottom:10px;position:relative;z-index:1;}
+  .v-hero-grad{background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .v-hero-sub{font-size:0.85rem;color:#64748b;margin-bottom:24px;line-height:1.7;position:relative;z-index:1;}
+  .v-cta-row{display:flex;gap:10px;flex-wrap:wrap;position:relative;z-index:1;}
+  .v-btn{font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;padding:13px 20px;text-decoration:none;transition:all 0.3s;display:inline-flex;align-items:center;gap:8px;}
+  .v-btn-primary{background:linear-gradient(135deg,#a855f7,#06b6d4);color:#000;font-weight:700;}
+  .v-btn-outline{background:transparent;color:#e2e8f0;border:1px solid #1e1e3a;}
+  .v-btn-twitch{background:#9147ff;color:#fff;font-weight:700;}
+  .v-dot{width:7px;height:7px;background:#ff4444;border-radius:50%;animation:blink 1s ease-in-out infinite;flex-shrink:0;}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+
+  /* DIVIDERS */
+  .v-divider{height:1px;background:linear-gradient(90deg,transparent,#a855f766,#06b6d466,transparent);margin:0;}
+
+  /* SECTIONS */
+  .v-section{padding:32px 20px;}
+  .v-tag{font-family:'Space Mono',monospace;font-size:0.6rem;color:#a855f7;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;}
+  .v-h2{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;line-height:1.05;margin-bottom:8px;}
+  .v-h2 .accent{background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .v-sub{font-size:0.85rem;color:#64748b;line-height:1.7;margin-bottom:24px;}
+
+  /* ENGINES */
+  .v-engines{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:4px;}
+  .v-engine{background:#0d0d1a;border:1px solid #1e1e3a;padding:18px 14px;position:relative;overflow:hidden;}
+  .v-engine-icon{width:32px;height:32px;margin-bottom:10px;}
+  .v-engine-icon img{width:100%;height:100%;object-fit:contain;}
+  .v-engine-name{font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;margin-bottom:2px;}
+  .v-engine-lang{font-family:'Space Mono',monospace;font-size:0.55rem;color:#06b6d4;letter-spacing:2px;}
+
+  /* TWITCH */
+  .v-twitch-card{background:#0d0d1a;border:1px solid #1e1e3a;border-top:2px solid #9147ff;padding:24px 20px;margin-bottom:12px;}
+  .v-twitch-tag{font-family:'Space Mono',monospace;font-size:0.6rem;color:#9147ff;letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;}
+  .v-twitch-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;line-height:1.1;margin-bottom:10px;background:linear-gradient(135deg,#9147ff,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .v-twitch-sub{font-family:'Space Mono',monospace;font-size:0.7rem;color:#64748b;line-height:1.8;margin-bottom:16px;}
+  .v-schedule{background:#0d0d1a;border:1px solid #1e1e3a;padding:20px;}
+  .v-schedule-title{font-family:'Space Mono',monospace;font-size:0.6rem;color:#9147ff;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;}
+  .v-schedule-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1e1e3a;font-family:'Space Mono',monospace;font-size:0.7rem;}
+  .v-schedule-row:last-child{border-bottom:none;}
+  .v-day{color:#64748b;}
+  .v-time{color:#9147ff;font-weight:700;}
+  .v-time.off{color:#1e1e3a;}
+  .v-stats{display:flex;gap:0;margin-top:16px;border-top:1px solid #1e1e3a;padding-top:16px;}
+  .v-stat{text-align:center;flex:1;}
+  .v-stat+.v-stat{border-left:1px solid #1e1e3a;}
+  .v-stat-num{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#9147ff,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .v-stat-label{font-family:'Space Mono',monospace;font-size:0.55rem;color:#64748b;letter-spacing:2px;}
+
+  /* YOUTUBE */
+  .v-yt-grid{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
+  .v-yt-card{background:#0d0d1a;border:1px solid #1e1e3a;overflow:hidden;display:flex;align-items:stretch;text-decoration:none;color:inherit;}
+  .v-yt-thumb{width:88px;min-width:88px;height:60px;background:#0a0a18;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+  .v-yt-info{padding:10px 12px;flex:1;min-width:0;}
+  .v-yt-title{font-size:0.78rem;font-weight:600;line-height:1.4;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .v-yt-meta{font-family:'Space Mono',monospace;font-size:0.55rem;color:#64748b;}
+
+  /* EDITING */
+  .v-tool-card{background:#0d0d1a;border:1px solid #1e1e3a;padding:20px;margin-bottom:10px;text-decoration:none;color:inherit;display:block;}
+  .v-tool-card:active{border-color:#a855f7;}
+  .v-tool-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+  .v-tool-icon{width:36px;height:36px;flex-shrink:0;}
+  .v-tool-icon img{width:100%;height:100%;object-fit:contain;}
+  .v-tool-name{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;}
+  .v-tool-type{font-family:'Space Mono',monospace;font-size:0.55rem;color:#a855f7;letter-spacing:2px;}
+  .v-tool-desc{font-size:0.8rem;color:#64748b;line-height:1.7;margin-bottom:12px;}
+  .v-tool-features{display:flex;flex-direction:column;gap:6px;}
+  .v-tool-feature{font-family:'Space Mono',monospace;font-size:0.65rem;color:#64748b;padding-left:14px;position:relative;}
+  .v-tool-feature::before{content:'›';position:absolute;left:0;color:#06b6d4;}
+
+  /* LINKS */
+  .v-links-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px;}
+  .v-link-item{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;color:inherit;padding:14px 8px;background:#0d0d1a;border:1px solid #1e1e3a;transition:border-color 0.3s;}
+  .v-link-item:active{border-color:#a855f766;}
+  .v-link-item svg,.v-link-item img{width:28px;height:28px;object-fit:contain;}
+  .v-link-label{font-family:'Space Mono',monospace;font-size:0.55rem;color:#64748b;letter-spacing:1px;}
+
+  /* FOOTER */
+  .v-footer{background:#0d0d1a;border-top:1px solid #1e1e3a;padding:20px;display:flex;justify-content:space-between;align-items:center;}
+  .v-footer-logo{font-family:'Space Mono',monospace;font-size:0.8rem;color:#06b6d4;}
+  .v-footer-copy{font-family:'Space Mono',monospace;font-size:0.6rem;color:#64748b;}
+</style>
+
+<div class="v-root">
+  <h2 class="sr-only">Versión móvil de la web de Valens429</h2>
+
+  <!-- LANG SPLASH -->
+  <div class="v-lang-splash" id="vlang-splash">
+    <div class="v-splash-logo">Valens<span>_</span>429</div>
+    <div class="v-splash-label">Seleccioná tu idioma / Select your language</div>
+    <div class="v-splash-cards">
+      <div class="v-lang-card" onclick="vSetLang('es')">
+        <div class="v-lang-flag">🇦🇷</div>
+        <div class="v-lang-line"></div>
+        <div class="v-lang-name">Español</div>
+        <div class="v-lang-sub">SELECCIONAR</div>
+      </div>
+      <div class="v-lang-card" onclick="vSetLang('en')">
+        <div class="v-lang-flag">🇺🇸</div>
+        <div class="v-lang-line"></div>
+        <div class="v-lang-name">English</div>
+        <div class="v-lang-sub">SELECT</div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="v-nav">
+    <div class="v-logo">Valens<span>_</span>429</div>
+    <div class="v-nav-right">
+      <button class="v-lang-toggle" onclick="vShowSplash()" aria-label="Cambiar idioma">🌐 ES/EN</button>
+      <div class="v-hamburger" id="v-hamburger" onclick="vToggleMenu()" aria-label="Menú">
+        <div></div><div></div><div></div>
+      </div>
+    </div>
+    <div class="v-menu" id="vmenu">
+      <a href="#v-dev" onclick="vCloseMenu()" data-vi="nav-dev">Dev</a>
+      <a href="#v-twitch" onclick="vCloseMenu()" data-vi="nav-twitch">Twitch</a>
+      <a href="#v-youtube" onclick="vCloseMenu()" data-vi="nav-yt">YouTube</a>
+      <a href="#v-editing" onclick="vCloseMenu()" data-vi="nav-edit">Edición</a>
+      <a href="#v-links" onclick="vCloseMenu()" data-vi="nav-links">Links</a>
+    </div>
+  </nav>
+
+  <section class="v-hero">
+    <div class="v-hero-bg"></div>
+    <div class="v-blob1"></div>
+    <div class="v-blob2"></div>
+    <div class="v-hero-label" data-vi="hero-label">// Desarrollador &amp; Creador de Contenido</div>
+    <h1 class="v-hero-name">Soy<br><span class="v-hero-grad" data-vi="hero-name-grad">Valens</span></h1>
+    <p class="v-hero-sub" data-vi="hero-sub">Hago juegos, programo cosas, creo contenido.</p>
+    <div class="v-cta-row">
+      <a href="#v-dev" class="v-btn v-btn-primary" data-vi="hero-btn1">Ver proyectos</a>
+      <a href="#v-links" class="v-btn v-btn-outline" data-vi="hero-btn2">Links →</a>
+    </div>
+  </section>
+
+  <div class="v-divider"></div>
+
+  <section class="v-section" id="v-dev">
+    <div class="v-tag" data-vi="dev-tag">[ 01 — DEV ]</div>
+    <h2 class="v-h2">Game Dev &amp;<br><span class="accent" data-vi="dev-h2b">Programación</span></h2>
+    <p class="v-sub" data-vi="dev-sub">Tocá cada motor para ver más.</p>
+    <div class="v-engines">
+      <div class="v-engine">
+        <div class="v-engine-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python"></div>
+        <div class="v-engine-name">Python</div>
+        <div class="v-engine-lang">&amp; RenPy</div>
+      </div>
+      <div class="v-engine">
+        <div class="v-engine-icon" style="background:#0a0a18;padding:4px;"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/unity/unity-original.svg" alt="Unity" style="filter:invert(1)"></div>
+        <div class="v-engine-name">Unity</div>
+        <div class="v-engine-lang">C#</div>
+      </div>
+      <div class="v-engine" style="border-top:2px solid #a855f744;">
+        <div class="v-engine-icon" style="background:#111;padding:4px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🎮</div>
+        <div class="v-engine-name">Clickteam</div>
+        <div class="v-engine-lang">FUSION 2.5</div>
+      </div>
+      <div class="v-engine" style="border-top:2px solid #06b6d444;">
+        <div class="v-engine-icon" style="background:#111;padding:4px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🕹️</div>
+        <div class="v-engine-name">GameMaker</div>
+        <div class="v-engine-lang">GML</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="v-divider"></div>
+
+  <section class="v-section" id="v-twitch">
+    <div class="v-tag" data-vi="twitch-tag">[ 02 — TWITCH ]</div>
+    <div class="v-twitch-card">
+      <div class="v-twitch-tag" data-vi="twitch-card-tag">// ¡Estoy de vuelta!</div>
+      <div class="v-twitch-title" data-vi="twitch-title">¡EL REGRESO!</div>
+      <p class="v-twitch-sub" data-vi="twitch-sub">Streams de Visual novels, juegos indie y gamedev. Comunidad pequeña y cercana.</p>
+      <a class="v-btn v-btn-twitch" href="https://twitch.tv/Nyxr_ar" target="_blank" rel="noopener">
+        <span class="v-dot"></span>
+        twitch.tv/Nyxr_ar
+      </a>
+    </div>
+    <div class="v-schedule">
+      <div class="v-schedule-title" data-vi="schedule-title">// Horario de streams</div>
+      <div class="v-schedule-row"><span class="v-day" data-vi="day-mon">LUNES</span><span class="v-time off">—</span></div>
+      <div class="v-schedule-row"><span class="v-day" data-vi="day-tue">MARTES</span><span class="v-time off">—</span></div>
+      <div class="v-schedule-row"><span class="v-day" data-vi="day-wed">MIÉRCOLES</span><span class="v-time">6PM</span></div>
+      <div class="v-schedule-row"><span class="v-day" data-vi="day-thu">JUEVES</span><span class="v-time off">—</span></div>
+      <div class="v-schedule-row"><span class="v-day" data-vi="day-fri">VIERNES</span><span class="v-time">5PM</span></div>
+      <div class="v-schedule-row"><span class="v-day" data-vi="day-sat">SÁBADO</span><span class="v-time">5PM</span></div>
+      <div class="v-schedule-row"><span class="v-day" data-vi="day-sun">DOMINGO</span><span class="v-time">6PM (quiza)</span></div>
+      <div class="v-stats">
+        <div class="v-stat"><div class="v-stat-num">+135</div><div class="v-stat-label" data-vi="stat-followers">SEGUIDORES</div></div>
+        <div class="v-stat"><div class="v-stat-num">+100</div><div class="v-stat-label" data-vi="stat-streams">STREAMS</div></div>
+        <div class="v-stat"><div class="v-stat-num">+250hs</div><div class="v-stat-label" data-vi="stat-live">EN VIVO</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="v-divider"></div>
+
+  <section class="v-section" id="v-youtube">
+    <div class="v-tag" data-vi="yt-tag">[ 03 — YOUTUBE ]</div>
+    <h2 class="v-h2" data-vi="yt-h2a">Seguime en<br><span class="accent">YouTube</span></h2>
+    <div class="v-yt-grid">
+      <a class="v-yt-card" href="https://www.youtube.com/watch?v=B36wh0M_1Pg&t" target="_blank" rel="noopener">
+        <div class="v-yt-thumb">📺</div>
+        <div class="v-yt-info"><div class="v-yt-title" data-vi="yt1">Wasn't as innocent as he seemed… 💀 | Purrfect Apawcalypse</div><div class="v-yt-meta" data-vi="yt1-meta">+170 views · 1 month ago</div></div>
+      </a>
+      <a class="v-yt-card" href="https://www.youtube.com/watch?v=nN6VxB0FdYo&t" target="_blank" rel="noopener">
+        <div class="v-yt-thumb">🦊</div>
+        <div class="v-yt-info"><div class="v-yt-title" data-vi="yt2">Living with a fox girl (spoiler: it's a disaster)</div><div class="v-yt-meta" data-vi="yt2-meta">+130 views · 5 months ago</div></div>
+      </a>
+      <a class="v-yt-card" href="https://www.youtube.com/watch?v=fM1bINXEeIw&t" target="_blank" rel="noopener">
+        <div class="v-yt-thumb">🎮</div>
+        <div class="v-yt-info"><div class="v-yt-title" data-vi="yt3">I played CHANGED and I regret it</div><div class="v-yt-meta" data-vi="yt3-meta">+50 views · 2 month ago</div></div>
+      </a>
+    </div>
+  </section>
+
+  <div class="v-divider"></div>
+
+  <section class="v-section" id="v-editing">
+    <div class="v-tag" data-vi="edit-tag">[ 04 — EDICIÓN ]</div>
+    <h2 class="v-h2"><span data-vi="edit-h2a">Edición</span><br><span class="accent" data-vi="edit-h2b">de video</span></h2>
+    <p class="v-sub" data-vi="edit-sub">Dos herramientas, dos flujos de trabajo.</p>
+
+    <a class="v-tool-card" href="https://filmora.wondershare.com" target="_blank" rel="noopener">
+      <div class="v-tool-header">
+        <div class="v-tool-icon"><img src="images/icons/Filmora.png" alt="Filmora" onerror="this.parentElement.innerHTML='🎬'"></div>
+        <div>
+          <div class="v-tool-name">Wondershare Filmora</div>
+          <div class="v-tool-type" data-vi="filmora-type">EDICIÓN PRINCIPAL</div>
+        </div>
+      </div>
+      <div class="v-tool-desc" data-vi="filmora-desc">Filmora 15 es mi software principal de edición. Interfaz limpia, timeline intuitivo y efectos de calidad.</div>
+      <div class="v-tool-features">
+        <div class="v-tool-feature" data-vi="filmora-f1">Edición multicapa con transiciones personalizadas</div>
+        <div class="v-tool-feature" data-vi="filmora-f2">Efectos de color grading y LUTs</div>
+        <div class="v-tool-feature" data-vi="filmora-f3">Screen recorder + editor en uno</div>
+      </div>
+    </a>
+
+    <a class="v-tool-card" href="https://clipchamp.com" target="_blank" rel="noopener">
+      <div class="v-tool-header">
+        <div class="v-tool-icon"><img src="images/icons/Clipchamp.png" alt="Clipchamp" onerror="this.parentElement.innerHTML='✂️'"></div>
+        <div>
+          <div class="v-tool-name">Clipchamp</div>
+          <div class="v-tool-type" data-vi="clip-type">EDICIÓN RÁPIDA / CLIPS</div>
+        </div>
+      </div>
+      <div class="v-tool-desc" data-vi="clip-desc">Microsoft Clipchamp para ediciones rápidas y clips de Twitch. Directamente en el browser, sin instalar nada.</div>
+      <div class="v-tool-features">
+        <div class="v-tool-feature" data-vi="clip-f1">Edición en browser — sin instalación</div>
+        <div class="v-tool-feature" data-vi="clip-f2">Clips de Twitch listos para TikTok/Shorts</div>
+        <div class="v-tool-feature" data-vi="clip-f3">Exportación directa a redes sociales</div>
+      </div>
+    </a>
+  </section>
+
+  <div class="v-divider"></div>
+
+  <section class="v-section" id="v-links">
+    <div class="v-tag" data-vi="links-tag">[ 05 — LINKS ]</div>
+    <h2 class="v-h2"><span data-vi="links-h2a">Encontrame</span><br><span class="accent" data-vi="links-h2b">en todos lados</span></h2>
+    <p class="v-sub" style="margin-bottom:16px" data-vi="links-sub">Todos mis espacios en internet.</p>
+    <div class="v-links-grid">
+      <a href="https://www.twitch.tv/Nyxr_ar" target="_blank" rel="noopener" class="v-link-item"><svg width="28" height="28" viewBox="0 0 24 24" fill="#9147ff"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg><span class="v-link-label">Twitch</span></a>
+      <a href="https://www.youtube.com/@Valens429VODs" target="_blank" rel="noopener" class="v-link-item"><svg width="28" height="28" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.5 20.5 12 20.5 12 20.5s7.5 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg><span class="v-link-label">YouTube</span></a>
+      <a href="https://github.com/Valens429" target="_blank" rel="noopener" class="v-link-item"><svg width="28" height="28" viewBox="0 0 24 24" fill="#e2e8f0"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg><span class="v-link-label">GitHub</span></a>
+      <a href="https://bsky.app/profile/valens429.bsky.social" target="_blank" rel="noopener" class="v-link-item"><svg width="28" height="28" viewBox="0 0 24 24" fill="#0085ff"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.479 0-.689-.139-1.861-.902-2.206-.659-.299-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z"/></svg><span class="v-link-label">Bluesky</span></a>
+      <a href="https://ko-fi.com/valens429" target="_blank" rel="noopener" class="v-link-item"><svg width="28" height="28" viewBox="0 0 24 24" fill="#ff5e5b"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 2.692.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"/></svg><span class="v-link-label">Ko-fi</span></a>
+      <a href="https://discord.gg/Tajpn7ddUV" target="_blank" rel="noopener" class="v-link-item"><svg width="28" height="28" viewBox="0 0 24 24" fill="#5865f2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg><span class="v-link-label">Discord</span></a>
+    </div>
+  </section>
+
+  <footer class="v-footer">
+    <div class="v-footer-logo">Valens429</div>
+    <div class="v-footer-copy" data-vi="footer-copy">// Con cariño</div>
+  </footer>
+</div>
+
+<script>
+const vT = {
+  es: {
+    'nav-dev':'Dev','nav-twitch':'Twitch','nav-yt':'YouTube','nav-edit':'Edición','nav-links':'Links',
+    'hero-label':'// Desarrollador & Creador de Contenido',
+    'hero-name-grad':'Valens','hero-sub':'Hago juegos, programo cosas, creo contenido.',
+    'hero-btn1':'Ver proyectos','hero-btn2':'Links →',
+    'dev-tag':'[ 01 — DEV ]','dev-h2b':'Programación','dev-sub':'Tocá cada motor para ver más.',
+    'twitch-tag':'[ 02 — TWITCH ]','twitch-card-tag':'// ¡Estoy de vuelta!',
+    'twitch-title':'¡EL REGRESO!',
+    'twitch-sub':'Streams de Visual novels, juegos indie y gamedev. Comunidad pequeña y cercana.',
+    'schedule-title':'// Horario de streams',
+    'day-mon':'LUNES','day-tue':'MARTES','day-wed':'MIÉRCOLES','day-thu':'JUEVES',
+    'day-fri':'VIERNES','day-sat':'SÁBADO','day-sun':'DOMINGO',
+    'stat-followers':'SEGUIDORES','stat-streams':'STREAMS','stat-live':'EN VIVO',
+    'yt-tag':'[ 03 — YOUTUBE ]','yt-h2a':'Seguime en',
+    'yt1':'Purrfect Apawcalypse — Saga completa','yt1-meta':'+170 vistas · hace 4 semanas',
+    'yt2':'Así es vivir con una zorra (spoiler: es un desastre)','yt2-meta':'+130 vistas · hace 5 meses',
+    'yt3':'Jugué CHANGED y me arrepiento','yt3-meta':'+50 vistas · hace 1 mes',
+    'edit-tag':'[ 04 — EDICIÓN ]','edit-h2a':'Edición','edit-h2b':'de video',
+    'edit-sub':'Dos herramientas, dos flujos de trabajo.',
+    'filmora-type':'EDICIÓN PRINCIPAL',
+    'filmora-desc':'Filmora 15 es mi software principal de edición. Interfaz limpia, timeline intuitivo y efectos de calidad.',
+    'filmora-f1':'Edición multicapa con transiciones personalizadas',
+    'filmora-f2':'Efectos de color grading y LUTs','filmora-f3':'Screen recorder + editor en uno',
+    'clip-type':'EDICIÓN RÁPIDA / CLIPS',
+    'clip-desc':'Microsoft Clipchamp para ediciones rápidas y clips de Twitch. Directamente en el browser, sin instalar nada.',
+    'clip-f1':'Edición en browser — sin instalación',
+    'clip-f2':'Clips de Twitch listos para TikTok/Shorts','clip-f3':'Exportación directa a redes sociales',
+    'links-tag':'[ 05 — LINKS ]','links-h2a':'Encontrame','links-h2b':'en todos lados',
+    'links-sub':'Todos mis espacios en internet.',
+    'footer-copy':'// Con cariño',
+  },
+  en: {
+    'nav-dev':'Dev','nav-twitch':'Twitch','nav-yt':'YouTube','nav-edit':'Editing','nav-links':'Links',
+    'hero-label':'// Developer & Content Creator',
+    'hero-name-grad':'Valens','hero-sub':'I make games, write code, create content.',
+    'hero-btn1':'See projects','hero-btn2':'Links →',
+    'dev-tag':'[ 01 — DEV ]','dev-h2b':'Programming','dev-sub':'Tap each engine to learn more.',
+    'twitch-tag':'[ 02 — TWITCH ]','twitch-card-tag':'// I\'m back!',
+    'twitch-title':'THE RETURN!',
+    'twitch-sub':'Streams of Visual novels, indie games and gamedev. Small and tight-knit community.',
+    'schedule-title':'// Stream schedule',
+    'day-mon':'MONDAY','day-tue':'TUESDAY','day-wed':'WEDNESDAY','day-thu':'THURSDAY',
+    'day-fri':'FRIDAY','day-sat':'SATURDAY','day-sun':'SUNDAY',
+    'stat-followers':'FOLLOWERS','stat-streams':'STREAMS','stat-live':'LIVE',
+    'yt-tag':'[ 03 — YOUTUBE ]','yt-h2a':'Follow me on',
+    'yt1':'Purrfect Apawcalypse — Full saga','yt1-meta':'+170 views · 4 weeks ago',
+    'yt2':'Living with a fox (spoiler: it\'s a disaster)','yt2-meta':'+130 views · 5 months ago',
+    'yt3':'I played CHANGED and I regret it','yt3-meta':'+50 views · 1 month ago',
+    'edit-tag':'[ 04 — EDITING ]','edit-h2a':'Video','edit-h2b':'editing',
+    'edit-sub':'Two tools, two workflows.',
+    'filmora-type':'MAIN EDITOR',
+    'filmora-desc':'Filmora 15 is my main editing software. Clean interface, intuitive timeline and quality effects.',
+    'filmora-f1':'Multilayer editing with custom transitions',
+    'filmora-f2':'Color grading effects and LUTs','filmora-f3':'Screen recorder + editor in one',
+    'clip-type':'QUICK EDIT / CLIPS',
+    'clip-desc':'Microsoft Clipchamp for quick edits and Twitch clips. Directly in the browser, no install needed.',
+    'clip-f1':'Browser editing — no install','clip-f2':'Twitch clips ready for TikTok/Shorts',
+    'clip-f3':'Direct export to social media',
+    'links-tag':'[ 05 — LINKS ]','links-h2a':'Find me','links-h2b':'everywhere',
+    'links-sub':'All my spaces on the internet.',
+    'footer-copy':'// With love',
+  }
+};
+
+let vLang = 'es';
+
+function vApplyLang(lang) {
+  vLang = lang;
+  const tr = vT[lang];
+  document.querySelectorAll('[data-vi]').forEach(el => {
+    const key = el.getAttribute('data-vi');
+    if (tr[key] !== undefined) el.innerHTML = tr[key];
+  });
+}
+
+function vSetLang(lang) {
+  vApplyLang(lang);
+  const splash = document.getElementById('vlang-splash');
+  splash.classList.add('hide');
+  setTimeout(() => splash.style.display = 'none', 500);
+}
+
+function vShowSplash() {
+  const splash = document.getElementById('vlang-splash');
+  splash.style.display = 'flex';
+  splash.classList.remove('hide');
+}
+
+function vToggleMenu() {
+  const menu = document.getElementById('vmenu');
+  const hamburger = document.getElementById('v-hamburger');
+  menu.classList.toggle('open');
+  hamburger.classList.toggle('open');
+}
+
+function vCloseMenu() {
+  document.getElementById('vmenu').classList.remove('open');
+  document.getElementById('v-hamburger').classList.remove('open');
+}
+
+// Cerrar menú tocando fuera
+document.addEventListener('click', function(e) {
+  const nav = document.querySelector('.v-nav');
+  if (!nav.contains(e.target)) vCloseMenu();
+});
+</script>
