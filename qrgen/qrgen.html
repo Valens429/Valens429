@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR-Gen — Valens429</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root {
+    --bg: #080810; --bg2: #0d0d1a; --purple: #a855f7; --cyan: #06b6d4;
+    --purple-dim: #7c3aed44; --cyan-dim: #06b6d422; --text: #e2e8f0;
+    --muted: #64748b; --border: #1e1e3a;
+    --glow-p: 0 0 40px #a855f755; --glow-c: 0 0 40px #06b6d455;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    overflow-x: hidden; cursor: none;
+    min-height: 100vh;
+  }
+
+  /* CURSOR */
+  .cursor { position: fixed; width: 12px; height: 12px; background: var(--cyan); border-radius: 50%; pointer-events: none; z-index: 99999; transition: transform 0.1s ease; }
+  .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--purple); border-radius: 50%; pointer-events: none; z-index: 99998; transition: all 0.15s ease; }
+
+  /* NOISE */
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9000; opacity: 0.3;
+  }
+
+  /* BLOBS */
+  .blob { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; opacity: 0.12; }
+  .blob-1 { width: 600px; height: 600px; background: var(--purple); top: -200px; left: -200px; animation: blobFloat 12s ease-in-out infinite; }
+  .blob-2 { width: 500px; height: 500px; background: var(--cyan); bottom: 20%; right: -150px; animation: blobFloat 15s ease-in-out infinite reverse; }
+  @keyframes blobFloat { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-30px) scale(1.05)} 66%{transform:translate(-20px,20px) scale(0.95)} }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 60px;
+    background: linear-gradient(180deg, var(--bg) 0%, transparent 100%);
+    backdrop-filter: blur(10px);
+  }
+  .nav-logo { font-family: 'Space Mono', monospace; font-size: 1.2rem; color: var(--cyan); text-shadow: var(--glow-c); letter-spacing: 2px; text-decoration: none; }
+  .nav-logo span { color: var(--purple); }
+  .nav-back { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--muted); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; display: flex; align-items: center; gap: 8px; cursor: none; }
+  .nav-back:hover { color: var(--cyan); }
+  .nav-tag { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--purple); letter-spacing: 3px; }
+
+  /* HERO */
+  .page-header {
+    padding: 140px 80px 60px;
+    position: relative; z-index: 1;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .page-tag { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--purple); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 16px; animation: fadeUp 0.6s ease both; }
+  .page-title { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 6vw, 5rem); font-weight: 800; line-height: 1; animation: fadeUp 0.6s ease 0.1s both; }
+  .page-title .grad { background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .page-sub { font-size: 1rem; color: var(--muted); margin-top: 16px; line-height: 1.7; max-width: 480px; animation: fadeUp 0.6s ease 0.2s both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+  /* MAIN LAYOUT */
+  .app-wrapper {
+    max-width: 1200px; margin: 0 auto;
+    padding: 0 80px 120px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    position: relative; z-index: 1;
+    animation: fadeUp 0.6s ease 0.3s both;
+  }
+
+  /* INPUT PANEL */
+  .panel {
+    background: var(--bg2); border: 1px solid var(--border);
+    padding: 50px 44px;
+    position: relative; overflow: hidden;
+  }
+  .panel::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--purple), var(--cyan));
+  }
+  .panel-label {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    color: var(--cyan); letter-spacing: 4px; text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .field { margin-bottom: 28px; }
+  .field-label {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 10px; display: block;
+  }
+  .field-input {
+    width: 100%; background: var(--bg); border: 1px solid var(--border);
+    color: var(--text); font-family: 'Outfit', sans-serif; font-size: 1rem;
+    padding: 14px 18px; outline: none; transition: border-color 0.3s, box-shadow 0.3s;
+    cursor: none;
+  }
+  .field-input:focus { border-color: var(--cyan); box-shadow: 0 0 0 1px var(--cyan-dim); }
+  .field-input::placeholder { color: var(--muted); }
+  textarea.field-input { resize: vertical; min-height: 100px; }
+
+  /* COLOR PICKERS */
+  .color-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .color-field { display: flex; flex-direction: column; gap: 10px; }
+  .color-preview-wrap {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--bg); border: 1px solid var(--border);
+    padding: 10px 14px; transition: border-color 0.3s;
+  }
+  .color-preview-wrap:focus-within { border-color: var(--cyan); }
+  .color-swatch {
+    width: 28px; height: 28px; border: 1px solid var(--border);
+    cursor: none; flex-shrink: 0; transition: transform 0.2s;
+  }
+  .color-swatch:hover { transform: scale(1.1); }
+  input[type="color"] { opacity: 0; position: absolute; width: 0; height: 0; }
+  .color-hex {
+    font-family: 'Space Mono', monospace; font-size: 0.8rem;
+    color: var(--text); background: none; border: none; outline: none;
+    width: 80px; cursor: none;
+  }
+
+  /* GENERATE BTN */
+  .gen-btn {
+    width: 100%; font-family: 'Space Mono', monospace; font-size: 0.85rem;
+    letter-spacing: 3px; text-transform: uppercase; padding: 18px;
+    background: linear-gradient(135deg, var(--purple), var(--cyan));
+    color: #000; font-weight: 700; border: none; cursor: none;
+    transition: all 0.3s; margin-top: 8px; position: relative; overflow: hidden;
+  }
+  .gen-btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--cyan), var(--purple));
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .gen-btn:hover::before { opacity: 1; }
+  .gen-btn:hover { transform: translateY(-2px); box-shadow: var(--glow-p); }
+  .gen-btn span { position: relative; z-index: 1; }
+
+  /* OUTPUT PANEL */
+  .output-panel {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-left: none;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 50px 44px;
+    position: relative; overflow: hidden;
+    min-height: 600px;
+  }
+  .output-panel::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--purple));
+  }
+
+  /* QR placeholder */
+  .qr-placeholder {
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+    text-align: center; opacity: 0.4;
+  }
+  .qr-placeholder-grid {
+    width: 200px; height: 200px;
+    background-image: linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 20px 20px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border);
+    position: relative;
+  }
+  .qr-placeholder-grid::before, .qr-placeholder-grid::after {
+    content: ''; position: absolute;
+    width: 40px; height: 40px;
+    border: 3px solid var(--purple);
+  }
+  .qr-placeholder-grid::before { top: 16px; left: 16px; border-right: none; border-bottom: none; }
+  .qr-placeholder-grid::after { bottom: 16px; right: 16px; border-left: none; border-top: none; }
+  .qr-placeholder p { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+
+  /* QR output */
+  .qr-output { display: none; flex-direction: column; align-items: center; gap: 32px; width: 100%; }
+  .qr-output.visible { display: flex; animation: fadeUp 0.4s ease both; }
+  .qr-frame {
+    padding: 24px; background: #fff;
+    box-shadow: 0 0 60px #a855f733, 0 0 120px #06b6d422;
+    position: relative;
+  }
+  .qr-frame::before, .qr-frame::after {
+    content: ''; position: absolute;
+    width: 20px; height: 20px;
+    border: 2px solid var(--cyan);
+  }
+  .qr-frame::before { top: -8px; left: -8px; border-right: none; border-bottom: none; }
+  .qr-frame::after { bottom: -8px; right: -8px; border-left: none; border-top: none; }
+  #qrcode canvas, #qrcode img { display: block; }
+
+  .qr-meta {
+    width: 100%; background: var(--bg); border: 1px solid var(--border);
+    padding: 16px 20px;
+    font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted);
+    letter-spacing: 1px; word-break: break-all; line-height: 1.6;
+  }
+  .qr-meta span { color: var(--cyan); }
+
+  /* EXPORT BUTTONS */
+  .export-row { display: flex; gap: 10px; width: 100%; }
+  .export-btn {
+    flex: 1; font-family: 'Space Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 2px; text-transform: uppercase; padding: 14px;
+    border: 1px solid var(--border); background: var(--bg);
+    color: var(--muted); cursor: none; transition: all 0.3s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .export-btn:hover { border-color: var(--cyan); color: var(--cyan); transform: translateY(-2px); }
+  .export-btn.png:hover { border-color: var(--purple); color: var(--purple); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--purple); }
+
+  /* MOBILE */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .page-header { padding: 100px 24px 40px; }
+    .app-wrapper { grid-template-columns: 1fr; padding: 0 24px 80px; }
+    .output-panel { border-left: 1px solid var(--border); border-top: none; min-height: 400px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<nav>
+  <a href="https://valens429.site" class="nav-logo">Valens<span>_</span>429</a>
+  <div style="display:flex;align-items:center;gap:32px">
+    <span class="nav-tag">// QR-GEN</span>
+    <a href="https://valens429.site#soluciones" class="nav-back">← Volver</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="page-tag">[ 05 — SOLUCIONES / QR-GEN ]</div>
+  <h1 class="page-title">Generador de<br><span class="grad">QR Codes</span></h1>
+  <p class="page-sub">Generá códigos QR personalizados en segundos. Sin marcas de agua, sin registro, exportá en alta calidad.</p>
+</div>
+
+<div class="app-wrapper">
+
+  <!-- INPUT -->
+  <div class="panel">
+    <div class="panel-label">// Configuración</div>
+
+    <div class="field">
+      <label class="field-label" for="qr-input">Contenido del QR</label>
+      <textarea class="field-input" id="qr-input" placeholder="URL, texto, lo que quieras..." maxlength="150" oninput="updateCounter()"></textarea>
+      <div style="font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--muted);text-align:right;margin-top:6px;letter-spacing:1px"><span id="char-count">0</span> / 150</div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Colores</label>
+      <div class="color-row">
+        <div class="color-field">
+          <span style="font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:1px">COLOR PRINCIPAL</span>
+          <div class="color-preview-wrap" onclick="document.getElementById('color-dark').click()">
+            <div class="color-swatch" id="swatch-dark" style="background:#000000"></div>
+            <input type="color" id="color-dark" value="#000000">
+            <input class="color-hex" id="hex-dark" value="#000000" maxlength="7" spellcheck="false">
+          </div>
+        </div>
+        <div class="color-field">
+          <span style="font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:1px">COLOR DE FONDO</span>
+          <div class="color-preview-wrap" onclick="document.getElementById('color-light').click()">
+            <div class="color-swatch" id="swatch-light" style="background:#ffffff"></div>
+            <input type="color" id="color-light" value="#ffffff">
+            <input class="color-hex" id="hex-light" value="#ffffff" maxlength="7" spellcheck="false">
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <button class="gen-btn" id="gen-btn" onclick="generateQR()">
+      <span>Generar QR →</span>
+    </button>
+  </div>
+
+  <!-- OUTPUT -->
+  <div class="output-panel">
+    <div class="panel-label" style="position:absolute;top:32px;left:44px">// Preview</div>
+
+    <div class="qr-placeholder" id="qr-placeholder">
+      <div class="qr-placeholder-grid"></div>
+      <p>Ingresá un texto o URL<br>y hacé click en generar</p>
+    </div>
+
+    <div class="qr-output" id="qr-output">
+      <div class="qr-frame">
+        <div id="qrcode"></div>
+      </div>
+      <div class="qr-meta" id="qr-meta">
+        <span>CONTENIDO →</span> <span id="meta-content" style="color:var(--text)"></span>
+      </div>
+      <div class="export-row">
+        <button class="export-btn png" onclick="exportPNG()">↓ Exportar PNG</button>
+        <button class="export-btn" onclick="exportSVG()">↓ Exportar SVG</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// TRACKER — igual que en index.html
+(function () {
+  const SUPABASE_URL = "https://hxfwzyfaenxpbgsvbnsn.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4Znd6eWZhZW54cGJnc3ZibnNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODg0OTIsImV4cCI6MjA5NTA2NDQ5Mn0.lIglDBigwP4XChdUs1kz2kgDCmJ5IRPgkN9iEzTQAG8";
+
+  window.track = async function(label, url) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/clicks`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({ label, url: url || window.location.pathname }),
+      });
+    } catch (_) {}
+  };
+
+  // Vista de página
+  window.track("📄 Vista — QR-Gen", window.location.pathname);
+})();
+
+function updateCounter() {
+  const len = document.getElementById('qr-input').value.length;
+  const counter = document.getElementById('char-count');
+  counter.textContent = len;
+  counter.style.color = len >= 140 ? 'var(--purple)' : 'var(--muted)';
+}
+
+// CURSOR
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx - 6 + 'px';
+  cursor.style.top = my - 6 + 'px';
+});
+function animRing() {
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx - 18 + 'px'; ring.style.top = ry - 18 + 'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+document.querySelectorAll('a, button, input, textarea').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2)'; ring.style.transform = 'scale(1.5)'; ring.style.borderColor = 'var(--cyan)'; });
+  el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.transform = 'scale(1)'; ring.style.borderColor = 'var(--purple)'; });
+});
+
+// STATE
+let qrInstance = null;
+
+// COLOR SYNC
+function syncColor(colorId, swatchId, hexId) {
+  const colorInput = document.getElementById(colorId);
+  const swatch = document.getElementById(swatchId);
+  const hexInput = document.getElementById(hexId);
+  colorInput.addEventListener('input', () => {
+    swatch.style.background = colorInput.value;
+    hexInput.value = colorInput.value;
+  });
+  hexInput.addEventListener('input', () => {
+    const val = hexInput.value;
+    if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+      colorInput.value = val;
+      swatch.style.background = val;
+    }
+  });
+}
+syncColor('color-dark', 'swatch-dark', 'hex-dark');
+syncColor('color-light', 'swatch-light', 'hex-light');
+
+// GENERATE
+function generateQR() {
+  const text = document.getElementById('qr-input').value.trim();
+  if (!text) {
+    document.getElementById('qr-input').style.borderColor = 'var(--purple)';
+    document.getElementById('qr-input').focus();
+    setTimeout(() => document.getElementById('qr-input').style.borderColor = '', 1000);
+    return;
+  }
+
+  const size = 256;
+  const darkColor = document.getElementById('hex-dark').value;
+  const lightColor = document.getElementById('hex-light').value;
+
+  // Clear previous
+  const container = document.getElementById('qrcode');
+  container.innerHTML = '';
+
+  qrInstance = new QRCode(container, {
+    text: text,
+    width: size,
+    height: size,
+    colorDark: darkColor,
+    colorLight: lightColor,
+    correctLevel: QRCode.CorrectLevel.M
+  });
+
+  // Track generación
+  const preview = text.length > 60 ? text.substring(0, 60) + '…' : text;
+  window.track(`🔳 QR Generado — ${preview}`, window.location.pathname);
+
+  // Show output
+  document.getElementById('qr-placeholder').style.display = 'none';
+  const output = document.getElementById('qr-output');
+  output.classList.add('visible');
+
+  // Meta
+  const metaContent = document.getElementById('meta-content');
+  metaContent.textContent = text.length > 60 ? text.substring(0, 60) + '…' : text;
+}
+
+// EXPORT PNG
+function exportPNG() {
+  const canvas = document.querySelector('#qrcode canvas');
+  if (!canvas) return;
+  const link = document.createElement('a');
+  link.download = 'qr-valens429.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+// EXPORT SVG
+function exportSVG() {
+  const canvas = document.querySelector('#qrcode canvas');
+  if (!canvas) return;
+
+  const size = 256;
+  const ctx = canvas.getContext('2d');
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const darkColor = document.getElementById('hex-dark').value;
+  const lightColor = document.getElementById('hex-light').value;
+
+  // Build SVG from canvas pixels
+  const pixelSize = canvas.width;
+  const cellSize = 10;
+  const cells = Math.round(pixelSize / (pixelSize / Math.round(Math.sqrt(pixelSize))));
+
+  // Sample pixels to determine QR modules
+  let svgRects = '';
+  const step = canvas.width / Math.round(canvas.width / 10);
+  const moduleCount = Math.round(canvas.width / step);
+
+  for (let y = 0; y < moduleCount; y++) {
+    for (let x = 0; x < moduleCount; x++) {
+      const px = Math.floor(x * step + step / 2);
+      const py = Math.floor(y * step + step / 2);
+      const idx = (py * canvas.width + px) * 4;
+      const r = imageData.data[idx];
+      const g = imageData.data[idx + 1];
+      const b = imageData.data[idx + 2];
+      // Dark pixel?
+      const brightness = (r + g + b) / 3;
+      if (brightness < 128) {
+        svgRects += `<rect x="${x * cellSize}" y="${y * cellSize}" width="${cellSize}" height="${cellSize}" fill="${darkColor}"/>`;
+      }
+    }
+  }
+
+  const svgSize = moduleCount * cellSize;
+  const svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svgSize} ${svgSize}" width="${size}" height="${size}">
+  <rect width="${svgSize}" height="${svgSize}" fill="${lightColor}"/>
+  ${svgRects}
+</svg>`;
+
+  const blob = new Blob([svg], { type: 'image/svg+xml' });
+  const link = document.createElement('a');
+  link.download = 'qr-valens429.svg';
+  link.href = URL.createObjectURL(blob);
+  link.click();
+}
+
+// Enter key on textarea
+document.getElementById('qr-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.ctrlKey) generateQR();
+});
+</script>
+</body>
+</html>
