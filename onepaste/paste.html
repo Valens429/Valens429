@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecretDrop — Valens429</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080810; --bg2: #0d0d1a; --purple: #a855f7; --cyan: #06b6d4;
+    --purple-dim: #7c3aed44; --cyan-dim: #06b6d422; --text: #e2e8f0;
+    --muted: #64748b; --border: #1e1e3a;
+    --glow-p: 0 0 40px #a855f755; --glow-c: 0 0 40px #06b6d455;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    overflow-x: hidden; cursor: none;
+    min-height: 100vh;
+  }
+
+  /* CURSOR */
+  .cursor { position: fixed; width: 12px; height: 12px; background: var(--cyan); border-radius: 50%; pointer-events: none; z-index: 99999; transition: transform 0.1s ease; }
+  .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid var(--purple); border-radius: 50%; pointer-events: none; z-index: 99998; transition: all 0.15s ease; }
+
+  /* NOISE */
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9000; opacity: 0.3;
+  }
+
+  /* BLOBS */
+  .blob { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; opacity: 0.12; }
+  .blob-1 { width: 600px; height: 600px; background: var(--purple); top: -200px; left: -200px; animation: blobFloat 12s ease-in-out infinite; }
+  .blob-2 { width: 500px; height: 500px; background: var(--cyan); bottom: 20%; right: -150px; animation: blobFloat 15s ease-in-out infinite reverse; }
+  @keyframes blobFloat { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-30px) scale(1.05)} 66%{transform:translate(-20px,20px) scale(0.95)} }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 60px;
+    background: linear-gradient(180deg, var(--bg) 0%, transparent 100%);
+    backdrop-filter: blur(10px);
+  }
+  .nav-logo { font-family: 'Space Mono', monospace; font-size: 1.2rem; color: var(--cyan); text-shadow: var(--glow-c); letter-spacing: 2px; text-decoration: none; }
+  .nav-logo span { color: var(--purple); }
+  .nav-back { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--muted); text-decoration: none; letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; display: flex; align-items: center; gap: 8px; cursor: none; }
+  .nav-back:hover { color: var(--cyan); }
+  .nav-tag { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--purple); letter-spacing: 3px; }
+
+  /* HERO */
+  .page-header {
+    padding: 140px 80px 60px;
+    position: relative; z-index: 1;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .page-tag { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--purple); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 16px; animation: fadeUp 0.6s ease both; }
+  .page-title { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 6vw, 5rem); font-weight: 800; line-height: 1; animation: fadeUp 0.6s ease 0.1s both; }
+  .page-title .grad { background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .page-sub { font-size: 1rem; color: var(--muted); margin-top: 16px; line-height: 1.7; max-width: 480px; animation: fadeUp 0.6s ease 0.2s both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+  /* MAIN LAYOUT */
+  .app-wrapper {
+    max-width: 1200px; margin: 0 auto;
+    padding: 0 80px 120px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    position: relative; z-index: 1;
+    animation: fadeUp 0.6s ease 0.3s both;
+  }
+
+  /* PANELS */
+  .panel {
+    background: var(--bg2); border: 1px solid var(--border);
+    padding: 50px 44px;
+    position: relative; overflow: hidden;
+  }
+  .panel::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--purple), var(--cyan));
+  }
+  .panel-label {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    color: var(--cyan); letter-spacing: 4px; text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .field { margin-bottom: 28px; }
+  .field-label {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    color: var(--muted); letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 10px; display: block;
+  }
+  .field-input {
+    width: 100%; background: var(--bg); border: 1px solid var(--border);
+    color: var(--text); font-family: 'Outfit', sans-serif; font-size: 1rem;
+    padding: 14px 18px; outline: none; transition: border-color 0.3s, box-shadow 0.3s;
+    cursor: none;
+  }
+  .field-input:focus { border-color: var(--cyan); box-shadow: 0 0 0 1px var(--cyan-dim); }
+  .field-input::placeholder { color: var(--muted); }
+  textarea.field-input { resize: vertical; min-height: 220px; font-size: 0.95rem; line-height: 1.6; }
+  select.field-input { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px; }
+
+  /* GENERATE BTN */
+  .gen-btn {
+    width: 100%; font-family: 'Space Mono', monospace; font-size: 0.85rem;
+    letter-spacing: 3px; text-transform: uppercase; padding: 18px;
+    background: linear-gradient(135deg, var(--purple), var(--cyan));
+    color: #000; font-weight: 700; border: none; cursor: none;
+    transition: all 0.3s; margin-top: 8px; position: relative; overflow: hidden;
+  }
+  .gen-btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--cyan), var(--purple));
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .gen-btn:hover::before { opacity: 1; }
+  .gen-btn:hover { transform: translateY(-2px); box-shadow: var(--glow-p); }
+  .gen-btn:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
+  .gen-btn span { position: relative; z-index: 1; }
+
+  /* OUTPUT PANEL */
+  .output-panel {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-left: none;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 50px 44px;
+    position: relative; overflow: hidden;
+    min-height: 600px;
+  }
+  .output-panel::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--purple));
+  }
+
+  /* PLACEHOLDER */
+  .paste-placeholder {
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+    text-align: center; opacity: 0.4;
+  }
+  .placeholder-icon {
+    width: 100px; height: 100px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .placeholder-icon::before, .placeholder-icon::after {
+    content: ''; position: absolute;
+    width: 24px; height: 24px;
+    border: 2px solid var(--purple);
+  }
+  .placeholder-icon::before { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+  .placeholder-icon::after { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+  .placeholder-lines { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+  .placeholder-line { height: 2px; background: var(--border); border-radius: 1px; }
+  .placeholder-icon .placeholder-lines { position: relative; z-index: 1; }
+  .paste-placeholder p { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+
+  /* RESULT */
+  .paste-result { display: none; flex-direction: column; align-items: center; gap: 28px; width: 100%; }
+  .paste-result.visible { display: flex; animation: fadeUp 0.4s ease both; }
+
+  .result-badge {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Space Mono', monospace; font-size: 0.7rem;
+    color: var(--cyan); letter-spacing: 2px;
+  }
+  .result-badge .dot { width: 8px; height: 8px; background: var(--cyan); border-radius: 50%; animation: blink 1.5s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  .link-box {
+    width: 100%; background: var(--bg); border: 1px solid var(--border);
+    padding: 20px 24px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .link-label { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+  .link-url {
+    font-family: 'Space Mono', monospace; font-size: 0.8rem;
+    color: var(--cyan); word-break: break-all; line-height: 1.5;
+    text-shadow: var(--glow-c);
+  }
+
+  .result-meta {
+    width: 100%; background: var(--bg); border: 1px solid var(--border);
+    padding: 16px 20px;
+    font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted);
+    letter-spacing: 1px; line-height: 2;
+  }
+  .result-meta span { color: var(--cyan); }
+  .result-meta .warn { color: var(--purple); }
+
+  .action-row { display: flex; gap: 10px; width: 100%; }
+  .action-btn {
+    flex: 1; font-family: 'Space Mono', monospace; font-size: 0.7rem;
+    letter-spacing: 2px; text-transform: uppercase; padding: 14px;
+    border: 1px solid var(--border); background: var(--bg);
+    color: var(--muted); cursor: none; transition: all 0.3s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .action-btn:hover { border-color: var(--cyan); color: var(--cyan); transform: translateY(-2px); }
+  .action-btn.copy:hover { border-color: var(--purple); color: var(--purple); }
+  .action-btn.new-paste { border-color: var(--border); }
+
+  /* WARN BOX */
+  .warn-box {
+    width: 100%; border: 1px solid #a855f733; background: #a855f708;
+    padding: 14px 18px;
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    color: var(--purple); letter-spacing: 1px; line-height: 1.8;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .warn-icon { flex-shrink: 0; margin-top: 2px; }
+
+  /* CHAR COUNTER */
+  .char-counter {
+    font-family: 'Space Mono', monospace; font-size: 0.6rem;
+    color: var(--muted); text-align: right; margin-top: 6px; letter-spacing: 1px;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--purple); }
+
+  /* MOBILE */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .page-header { padding: 100px 24px 40px; }
+    .app-wrapper { grid-template-columns: 1fr; padding: 0 24px 80px; }
+    .output-panel { border-left: 1px solid var(--border); border-top: none; min-height: 400px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<nav>
+  <a href="https://valens429.site" class="nav-logo">Valens<span>_</span>429</a>
+  <div style="display:flex;align-items:center;gap:32px">
+    <span class="nav-tag">// SECRET-DROP</span>
+    <a href="https://valens429.site#soluciones" class="nav-back">← Volver</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="page-tag">[ 05 — SOLUCIONES / SECRET-DROP ]</div>
+  <h1 class="page-title">Paste de<br><span class="grad">un solo uso</span></h1>
+  <p class="page-sub">Compartí texto o código de forma segura. El link se autodestruye después de ser visto.</p>
+</div>
+
+<div class="app-wrapper">
+
+  <!-- INPUT -->
+  <div class="panel">
+    <div class="panel-label">// Crear paste</div>
+
+    <div class="field">
+      <label class="field-label" for="paste-content">Contenido</label>
+      <textarea class="field-input" id="paste-content" placeholder="Pegá tu texto, código, contraseña, lo que quieras..." maxlength="10000" oninput="updateCounter()"></textarea>
+      <div class="char-counter"><span id="char-count">0</span> / 10000</div>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="paste-expiry">Expiración</label>
+      <select class="field-input" id="paste-expiry">
+        <option value="">Sin límite de tiempo</option>
+        <option value="1">1 hora (o antes si es visto)</option>
+        <option value="6">6 horas (o antes si es visto)</option>
+        <option value="24">24 horas (o antes si es visto)</option>
+        <option value="72">3 días (o antes si es visto)</option>
+        <option value="168">7 días (o antes si es visto)</option>
+      </select>
+    </div>
+
+    <div class="warn-box">
+      <span class="warn-icon">⚠</span>
+      <span>Este paste se destruye al ser visto <strong>o</strong> al expirar el tiempo, lo que ocurra primero. No se puede recuperar. Guardá el link antes de compartirlo.</span>
+    </div>
+
+    <button class="gen-btn" id="gen-btn" onclick="createPaste()" style="margin-top:24px">
+      <span id="btn-text">Crear paste →</span>
+    </button>
+  </div>
+
+  <!-- OUTPUT -->
+  <div class="output-panel">
+    <div class="panel-label" style="position:absolute;top:32px;left:44px">// Resultado</div>
+
+    <div class="paste-placeholder" id="paste-placeholder">
+      <div class="placeholder-icon">
+        <div class="placeholder-lines">
+          <div class="placeholder-line" style="width:40px"></div>
+          <div class="placeholder-line" style="width:28px"></div>
+          <div class="placeholder-line" style="width:34px"></div>
+        </div>
+      </div>
+      <p>El link aparecerá aquí<br>cuando crees el paste</p>
+    </div>
+
+    <div class="paste-result" id="paste-result">
+
+      <div class="result-badge">
+        <div class="dot"></div>
+        PASTE CREADO
+      </div>
+
+      <div class="link-box">
+        <div class="link-label">Link de un solo uso</div>
+        <div class="link-url" id="result-url"></div>
+      </div>
+
+      <div class="result-meta" id="result-meta">
+        <span>ID</span> → <span id="meta-id"></span><br>
+        <span>CREADO</span> → <span id="meta-created"></span><br>
+        <span>EXPIRA</span> → <span id="meta-expires"></span><br>
+        <span class="warn">VISTAS</span> → <span class="warn">1 vez y se destruye</span>
+      </div>
+
+      <div class="action-row">
+        <button class="action-btn copy" onclick="copyLink()">⧉ Copiar link</button>
+        <button class="action-btn new-paste" onclick="resetForm()">+ Nuevo paste</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── CONFIG ──────────────────────────────────────────────────────
+const SUPABASE_URL = "https://bjijucmlmmpoyysmjqgk.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqaWp1Y21sbW1wb3l5c21qcWdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzNTU4MzMsImV4cCI6MjA5NTkzMTgzM30.GCum1r4XB49LcC2giVgSvSuT7-Zzase7C3Jt3QKXXBg";
+
+// Cambiá esto por la URL real de tu página view.html
+const VIEW_BASE_URL = "https://valens429.site/OnePaste/view.html";
+
+// ─── TRACKER ─────────────────────────────────────────────────────
+async function track(label, url) {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/clicks`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify({ label, url: url || window.location.pathname }),
+    });
+  } catch (_) {}
+}
+track("📄 Vista — SecretDrop", window.location.pathname);
+
+// ─── COUNTER ─────────────────────────────────────────────────────
+function updateCounter() {
+  const len = document.getElementById('paste-content').value.length;
+  const counter = document.getElementById('char-count');
+  counter.textContent = len;
+  counter.style.color = len >= 9000 ? 'var(--purple)' : 'var(--muted)';
+}
+
+// ─── CREATE PASTE ────────────────────────────────────────────────
+async function createPaste() {
+  const content = document.getElementById('paste-content').value.trim();
+  const expiryHours = document.getElementById('paste-expiry').value;
+
+  if (!content) {
+    const textarea = document.getElementById('paste-content');
+    textarea.style.borderColor = 'var(--purple)';
+    textarea.focus();
+    setTimeout(() => textarea.style.borderColor = '', 1000);
+    return;
+  }
+
+  const btn = document.getElementById('gen-btn');
+  const btnText = document.getElementById('btn-text');
+  btn.disabled = true;
+  btnText.textContent = 'Creando...';
+
+  try {
+    const body = { content, viewed: false };
+    if (expiryHours) {
+      const expiresAt = new Date();
+      expiresAt.setHours(expiresAt.getHours() + parseInt(expiryHours));
+      body.expires_at = expiresAt.toISOString();
+    }
+
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/pastes`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const [paste] = await res.json();
+
+    // Show result
+    const viewUrl = `${VIEW_BASE_URL}?id=${paste.id}`;
+    document.getElementById('result-url').textContent = viewUrl;
+    document.getElementById('meta-id').textContent = paste.id.split('-')[0] + '...';
+    document.getElementById('meta-created').textContent = new Date(paste.created_at).toLocaleString('es-AR');
+    document.getElementById('meta-expires').textContent = paste.expires_at
+      ? new Date(paste.expires_at).toLocaleString('es-AR')
+      : 'Solo por vistas (no expira)';
+
+    document.getElementById('paste-placeholder').style.display = 'none';
+    document.getElementById('paste-result').classList.add('visible');
+
+    track("📋 Paste Creado", window.location.pathname);
+
+  } catch (err) {
+    alert('Error al crear el paste. Revisá la consola.');
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+    btnText.textContent = 'Crear paste →';
+  }
+}
+
+// ─── COPY LINK ───────────────────────────────────────────────────
+function copyLink() {
+  const url = document.getElementById('result-url').textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.querySelector('.action-btn.copy');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ Copiado';
+    btn.style.color = 'var(--cyan)';
+    btn.style.borderColor = 'var(--cyan)';
+    setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; btn.style.borderColor = ''; }, 2000);
+  });
+}
+
+// ─── RESET ───────────────────────────────────────────────────────
+function resetForm() {
+  document.getElementById('paste-content').value = '';
+  document.getElementById('paste-expiry').value = '';
+  document.getElementById('char-count').textContent = '0';
+  document.getElementById('paste-result').classList.remove('visible');
+  document.getElementById('paste-placeholder').style.display = 'flex';
+}
+
+// ─── CURSOR ──────────────────────────────────────────────────────
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx - 6 + 'px';
+  cursor.style.top = my - 6 + 'px';
+});
+function animRing() {
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx - 18 + 'px'; ring.style.top = ry - 18 + 'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+document.querySelectorAll('a, button, input, textarea, select').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2)'; ring.style.transform = 'scale(1.5)'; ring.style.borderColor = 'var(--cyan)'; });
+  el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.transform = 'scale(1)'; ring.style.borderColor = 'var(--purple)'; });
+});
+</script>
+</body>
+</html>
