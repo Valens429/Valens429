@@ -360,12 +360,23 @@ async function revealPaste() {
           "Content-Type": "application/json",
           apikey: SUPABASE_KEY,
           Authorization: `Bearer ${SUPABASE_KEY}`,
+          Prefer: "return=representation",
         },
         body: JSON.stringify({ paste_id: pasteId }),
       }
     );
 
-    const data = await res.json();
+    const raw = await res.text();
+    console.log("STATUS:", res.status);
+    console.log("RESPONSE:", raw);
+
+    if (!res.ok) {
+      console.error("RPC error:", res.status, raw);
+      throw new Error(`RPC ${res.status}: ${raw}`);
+    }
+
+    let data;
+    try { data = JSON.parse(raw); } catch(e) { data = []; }
 
     if (!data || data.length === 0) {
       showState('state-gone');
