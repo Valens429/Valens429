@@ -14,7 +14,7 @@
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-  body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; overflow-x: hidden; cursor: none; padding-top: 38px; }
+  body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; overflow-x: hidden; cursor: none; }
 
   /* CURSOR */
   .cursor { position: fixed; width: 12px; height: 12px; background: var(--cyan); border-radius: 50%; pointer-events: none; z-index: 99999; transition: transform 0.1s ease; }
@@ -53,18 +53,10 @@
   .lang-toggle { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 2px; cursor: none; background: none; border: 1px solid var(--border); padding: 6px 12px; transition: all 0.3s; }
   .lang-toggle:hover { color: var(--cyan); border-color: var(--cyan); }
 
-  /* EVENTO BANNER */
-  .evento-banner { position: fixed; top: 0; left: 0; right: 0; z-index: 2000; background: linear-gradient(90deg, #7c3aed, #a855f7, #06b6d4, #a855f7, #7c3aed); background-size: 300% 100%; animation: bannerShift 4s linear infinite; text-align: center; padding: 10px 20px; cursor: none; }
-  .evento-banner a { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: #fff; text-decoration: none; letter-spacing: 3px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 12px; }
-  .evento-banner .ev-dot { width: 8px; height: 8px; background: #fff; border-radius: 50%; animation: blink 1s ease-in-out infinite; flex-shrink: 0; }
-  .evento-banner a:hover { opacity: 0.85; }
-  .evento-banner .ev-arrow { transition: transform 0.3s; }
-  .evento-banner a:hover .ev-arrow { transform: translateX(4px); }
-  @keyframes bannerShift { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
 
   /* NAV */
-  nav { position: fixed; top: 38px; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 20px 60px; background: linear-gradient(180deg, var(--bg) 0%, transparent 100%); backdrop-filter: blur(10px); }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 20px 60px; background: linear-gradient(180deg, var(--bg) 0%, transparent 100%); backdrop-filter: blur(10px); }
   .nav-logo { font-family: 'Space Mono', monospace; font-size: 1.2rem; color: var(--cyan); text-shadow: var(--glow-c); letter-spacing: 2px; }
   .nav-logo span { color: var(--purple); }
   .nav-links { display: flex; gap: 40px; align-items: center; }
@@ -336,13 +328,6 @@
 <div class="blob blob-3"></div>
 
 <!-- EVENTO BANNER -->
-<div class="evento-banner">
-  <a href="https://Valens429.site/EventPA/" id="banner-link" data-track-label="🎮 Banner — Purrfect Apawcalypse">
-    <span class="ev-dot"></span>
-    <span id="banner-text">ACTIVE EVENT! — Purrfect Apawcalypse Enhanced Beta</span>
-    <span class="ev-arrow">→</span>
-  </a>
-</div>
 
 <!-- NAV -->
 <nav>
