@@ -241,7 +241,7 @@
   .solution-card-icon { font-size: 2.4rem; margin-bottom: 18px; position: relative; z-index: 1; }
   .solution-card-name { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; position: relative; z-index: 1; background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .solution-card-desc { color: var(--muted); line-height: 1.8; font-size: 0.95rem; margin-bottom: 28px; position: relative; z-index: 1; }
-  .solution-features { margin-bottom: 32px; display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 1; }
+  .solutions-features { margin-bottom: 32px; display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 1; }
   .solution-feature { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--muted); padding-left: 16px; position: relative; }
   .solution-feature::before { content: '›'; position: absolute; left: 0; color: var(--purple); }
   .solution-btn { display: inline-flex; align-items: center; gap: 10px; font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; padding: 12px 24px; border: 1px solid var(--cyan); color: var(--cyan); background: var(--cyan-dim); transition: all 0.3s; position: relative; z-index: 1; cursor: none; }
@@ -517,7 +517,7 @@
       </a>
       <a class="tool-card reveal reveal-delay-3" href="https://clipchamp.com" target="_blank" rel="noopener" data-track-label="🎬 Tool — Clipchamp">
         <div class="tool-logo"><img src="images/icons/Clipchamp.png" alt="Clipchamp"></div>
-        <div class="tool-name">Clipchamp</div>
+        <div class="tool-name">Microsoft Clipchamp</div>
         <div class="tool-type" data-i="clip-type">EDICIÓN RÁPIDA / CLIPS</div>
         <div class="tool-desc" data-i="clip-desc">Microsoft Clipchamp para ediciones rápidas, clips de Twitch y contenido de formato corto. Directamente en el browser, sin instalar nada extra.</div>
         <div class="tool-features">
@@ -556,23 +556,40 @@
           Abrir dropmail <span class="solution-btn-arrow">→</span>
         </a>
       </div>
-	  <div class="solution-card reveal reveal-delay-3">
-  <div class="solution-card-tag" data-i="sol-qrgen-tag">// GENERADOR DE QR</div>
-  <div class="solution-card-icon">
-    <img src="images/icons/qr.png" alt="Qrgen" width="96" height="96" style="object-fit:contain;">
-  </div>
-  <div class="solution-card-name">Qrgen</div>
-  <div class="solution-card-desc" data-i="sol-qrgen-desc">Generá códigos QR al toque y sin vueltas. Ideal para compartir links o textos rápido.</div>
-  <div class="solution-features">
-    <div class="solution-feature" data-i="sol-qrgen-f1">Generación en tiempo real</div>
-    <div class="solution-feature" data-i="sol-qrgen-f2">Descargas en alta calidad</div>
-    <div class="solution-feature" data-i="sol-qrgen-f3">Sin límite de uso</div>
-    <div class="solution-feature" data-i="sol-qrgen-f4">100% gratis y sin login</div>
-  </div>
-  <a href="https://valens429.site/qrgen" target="_blank" class="solution-btn" data-track-label="🛠️ Soluciones — Qrgen">
-    Abrir Qrgen <span class="solution-btn-arrow">→</span>
-  </a>
-</div>
+      <div class="solution-card reveal reveal-delay-3">
+        <div class="solution-card-tag" data-i="sol-qrgen-tag">// GENERADOR DE QR</div>
+        <div class="solution-card-icon">
+          <img src="images/icons/qr.png" alt="Qrgen" width="96" height="96" style="object-fit:contain;">
+        </div>
+        <div class="solution-card-name">Qrgen</div>
+        <div class="solution-card-desc" data-i="sol-qrgen-desc">Generá códigos QR al toque y sin vueltas. Ideal para compartir links o textos rápido.</div>
+        <div class="solutions-features">
+          <div class="solution-feature" data-i="sol-qrgen-f1">Generación en tiempo real</div>
+          <div class="solution-feature" data-i="sol-qrgen-f2">Descargas en alta calidad</div>
+          <div class="solution-feature" data-i="sol-qrgen-f3">Sin límite de uso</div>
+          <div class="solution-feature" data-i="sol-qrgen-f4">100% gratis y sin login</div>
+        </div>
+        <a href="https://valens429.site/qrgen" target="_blank" class="solution-btn" data-track-label="🛠️ Soluciones — Qrgen">
+          Abrir Qrgen <span class="solution-btn-arrow">→</span>
+        </a>
+      </div>
+      <div class="solution-card reveal reveal-delay-3">
+        <div class="solution-card-tag" data-i="sol-lyric-tag">// SUBTÍTULOS A VIDEO</div>
+        <div class="solution-card-icon">
+          <img src="images/icons/lyricstudio.svg" alt="LyricStudio" width="96" height="96" style="object-fit:contain;" onerror="this.parentElement.innerHTML='🎬'">
+        </div>
+        <div class="solution-card-name">LyricStudio</div>
+        <div class="solution-card-desc" data-i="sol-lyric-desc">Creá videos increíbles a partir de tus archivos de subtítulos .LRC o .SRT. Personalizá todo el diseño al toque.</div>
+        <div class="solutions-features">
+          <div class="solution-feature" data-i="sol-lyric-f1">Soporte completo para .LRC y .SRT</div>
+          <div class="solution-feature" data-i="sol-lyric-f2">Múltiples opciones de personalización visual</div>
+          <div class="solution-feature" data-i="sol-lyric-f3">Renderizado rápido y directo</div>
+          <div class="solution-feature" data-i="sol-lyric-f4">100% gratis, online y sin marcas de agua</div>
+        </div>
+        <a href="https://valens429.site/lyricstudio" target="_blank" class="solution-btn" data-track-label="🛠️ Soluciones — LyricStudio">
+          Abrir LyricStudio <span class="solution-btn-arrow">→</span>
+        </a>
+      </div>
     </div>
   </div>
 </section>
@@ -647,6 +664,12 @@
 <script>
 const t = {
   es: {
+    'sol-lyric-tag': '// SUBTÍTULOS A VIDEO',
+    'sol-lyric-desc': 'Creá videos increíbles a partir de tus archivos de subtítulos .LRC o .SRT. Personalizá todo el diseño al toque.',
+    'sol-lyric-f1': 'Soporte completo para .LRC y .SRT',
+    'sol-lyric-f2': 'Múltiples opciones de personalización visual',
+    'sol-lyric-f3': 'Renderizado rápido y directo',
+    'sol-lyric-f4': '100% gratis, online y sin marcas de agua',
     'sol-qrgen-tag': '// GENERADOR DE QR',
     'sol-qrgen-desc': 'Generá códigos QR al toque y sin vueltas. Ideal para compartir links o textos rápido.',
     'sol-qrgen-f1': 'Generación en tiempo real',
@@ -712,6 +735,12 @@ const t = {
     'mb-btn': 'Ir a la versión mobile →',
   },
   en: {
+    'sol-lyric-tag': '// SUBTITLES TO VIDEO',
+    'sol-lyric-desc': 'Create amazing videos from your .LRC or .SRT subtitle files. Customize the full design layout instantly.',
+    'sol-lyric-f1': 'Full support for .LRC and .SRT',
+    'sol-lyric-f2': 'Multiple options for visual customization',
+    'sol-lyric-f3': 'Fast and direct video rendering',
+    'sol-lyric-f4': '100% free, online and no watermarks',
     'sol-qrgen-tag': '// QR GENERATOR',
     'sol-qrgen-desc': 'Generate QR codes instantly and hassle-free. Perfect for sharing links or text fast.',
     'sol-qrgen-f1': 'Real-time generation',
