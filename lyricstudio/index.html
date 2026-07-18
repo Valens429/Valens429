@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Lyric Studio — Generador de video-letras</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;800&family=Archivo+Black&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1B1620;
+    --panel:#241D2C;
+    --panel-2:#2C2436;
+    --line:#3A3145;
+    --ink:#EFE9F2;
+    --ink-dim:#A99BB8;
+    --gold:#E8A33D;
+    --teal:#3EC9A7;
+    --danger:#E8654D;
+    --radius:10px;
+    --mono:'JetBrains Mono', monospace;
+    --body:'Inter', sans-serif;
+    --display:'Space Grotesk', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--body);
+    min-height:100vh;
+  }
+  .wrap{max-width:1320px;margin:0 auto;padding:28px 24px 60px;}
+  header{display:flex;align-items:baseline;gap:14px;margin-bottom:6px;flex-wrap:wrap;}
+  header h1{
+    font-family:var(--display); font-weight:700; font-size:28px; margin:0;
+    letter-spacing:-0.02em;
+  }
+  header .tag{
+    font-family:var(--mono); font-size:11px; color:var(--bg); background:var(--gold);
+    padding:3px 8px; border-radius:20px; letter-spacing:.04em;
+  }
+  header p{color:var(--ink-dim); margin:6px 0 26px; font-size:14px;}
+
+  .grid{display:grid; grid-template-columns: 380px 1fr; gap:22px;}
+  @media (max-width:980px){ .grid{grid-template-columns:1fr;} }
+
+  .panel{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px 18px 20px;
+  }
+  .panel + .panel{margin-top:16px;}
+  .panel h2{
+    font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.09em;
+    color:var(--teal); margin:0 0 14px; display:flex; align-items:center; gap:8px;
+  }
+  .panel h2::before{content:''; width:14px; height:1px; background:var(--teal); display:inline-block;}
+
+  label.field{display:block; font-size:12.5px; color:var(--ink-dim); margin:14px 0 6px;}
+  label.field:first-of-type{margin-top:0;}
+
+  .drop{
+    border:1.5px dashed var(--line); border-radius:8px; padding:14px; text-align:center;
+    font-size:12.5px; color:var(--ink-dim); cursor:pointer; transition:.15s; background:var(--panel-2);
+  }
+  .drop:hover{border-color:var(--gold); color:var(--ink);}
+  .drop.has-file{border-color:var(--teal); color:var(--teal); border-style:solid;}
+  input[type=file]{display:none;}
+
+  select, input[type=text], input[type=number]{
+    width:100%; background:var(--panel-2); border:1px solid var(--line); color:var(--ink);
+    padding:9px 10px; border-radius:7px; font-family:var(--body); font-size:13.5px;
+  }
+  select:focus, input:focus{outline:1.5px solid var(--gold); border-color:var(--gold);}
+
+  .row{display:flex; gap:10px;}
+  .row > *{flex:1;}
+
+  .seg{display:flex; border:1px solid var(--line); border-radius:7px; overflow:hidden;}
+  .seg button{
+    flex:1; background:var(--panel-2); border:none; color:var(--ink-dim); padding:9px 4px;
+    font-size:12px; cursor:pointer; font-family:var(--body); border-right:1px solid var(--line);
+  }
+  .seg button:last-child{border-right:none;}
+  .seg button.active{background:var(--gold); color:#241804; font-weight:600;}
+
+  input[type=color]{width:44px; height:36px; padding:2px; border:1px solid var(--line); border-radius:7px; background:var(--panel-2); cursor:pointer;}
+  input[type=range]{width:100%; accent-color:var(--gold);}
+  .hint{font-size:11px; color:var(--ink-dim); margin-top:5px; line-height:1.5;}
+
+  .bgmode{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;}
+  .bgmode button{
+    background:var(--panel-2); border:1px solid var(--line); color:var(--ink-dim);
+    padding:8px 4px; border-radius:7px; font-size:12px; cursor:pointer;
+  }
+  .bgmode button.active{border-color:var(--teal); color:var(--teal); background:#1E2D29;}
+
+  /* stage */
+  .stage-wrap{display:flex; flex-direction:column; align-items:center; gap:14px;}
+  .stage-outer{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px; width:100%; display:flex; flex-direction:column; align-items:center;
+  }
+  #stage{background:#000; border-radius:4px; max-width:100%; box-shadow:0 20px 60px -20px #000;}
+
+  .timecode{
+    font-family:var(--mono); font-size:12px; color:var(--gold); letter-spacing:.03em;
+    display:flex; align-items:center; gap:10px; margin-top:12px;
+  }
+  .timecode .idx{color:var(--ink-dim);}
+  .timecode .badge{background:var(--panel-2); border:1px solid var(--line); padding:2px 7px; border-radius:4px;}
+
+  .transport{display:flex; align-items:center; gap:12px; width:100%; margin-top:10px;}
+  .transport button{
+    background:var(--panel-2); border:1px solid var(--line); color:var(--ink); width:38px; height:38px;
+    border-radius:50%; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center;
+  }
+  .transport button:hover{border-color:var(--gold);}
+  #seek{flex:1;}
+  .transport .t{font-family:var(--mono); font-size:11px; color:var(--ink-dim); min-width:78px; text-align:right;}
+
+  .export-bar{display:flex; gap:10px; align-items:center; margin-top:16px; flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--gold); color:#241804; border:none; padding:12px 22px; border-radius:8px;
+    font-weight:700; font-size:14px; cursor:pointer; font-family:var(--body);
+  }
+  .btn-primary:disabled{opacity:.4; cursor:not-allowed;}
+  .btn-primary.recording{background:var(--danger); color:#fff;}
+  .progress-line{flex:1; height:4px; background:var(--panel-2); border-radius:4px; overflow:hidden; min-width:120px;}
+  .progress-line i{display:block; height:100%; width:0%; background:var(--teal); transition:.1s;}
+  .export-status{font-family:var(--mono); font-size:11.5px; color:var(--ink-dim);}
+  a.dl{color:var(--teal); font-size:12.5px; font-family:var(--mono);}
+
+  .lyrics-log{
+    margin-top:16px; max-height:150px; overflow-y:auto; font-family:var(--mono); font-size:11.5px;
+    color:var(--ink-dim); border-top:1px solid var(--line); padding-top:10px; width:100%;
+  }
+  .lyrics-log div{padding:2px 0; white-space:pre-wrap;}
+  .lyrics-log .cur{color:var(--gold);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Lyric Studio</h1>
+    <span class="tag">.LRC / .SRT → VIDEO</span>
+  </header>
+  <p>Subí tu letra sincronizada, tu audio y el fondo que quieras. Armás la mezcla acá al lado y exportás un video listo para subir.</p>
+
+  <div class="grid">
+    <!-- CONTROLS -->
+    <div>
+      <div class="panel">
+        <h2>01 · Letra</h2>
+        <div class="drop" id="dropLyrics">Arrastrá o hacé click — .lrc / .srt</div>
+        <input type="file" id="fileLyrics" accept=".lrc,.srt,.txt">
+        <div class="hint" id="lyricsInfo">Sin archivo cargado.</div>
+      </div>
+
+      <div class="panel">
+        <h2>02 · Audio</h2>
+        <div class="drop" id="dropAudio">Arrastrá o hacé click — mp3 / wav / m4a</div>
+        <input type="file" id="fileAudio" accept="audio/*">
+        <div class="hint" id="audioInfo">Sin archivo cargado.</div>
+      </div>
+
+      <div class="panel">
+        <h2>03 · Fondo</h2>
+        <div class="bgmode">
+          <button class="active" data-bg="color">Color / Pantalla verde</button>
+          <button data-bg="image">Imagen</button>
+          <button data-bg="video">Video propio</button>
+          <button data-bg="gradient">Degradé</button>
+        </div>
+
+        <div id="bgColorPanel">
+          <label class="field">Color de fondo</label>
+          <div class="row">
+            <input type="color" id="bgColor" value="#00FF00">
+            <button class="seg" style="flex:none;"></button>
+          </div>
+          <div class="hint">Verde puro (#00FF00) para chroma key en tu editor. Cambiá el color si preferís otro fondo sólido.</div>
+        </div>
+
+        <div id="bgGradientPanel" style="display:none;">
+          <label class="field">De</label>
+          <input type="color" id="gradA" value="#2C2436">
+          <label class="field">A</label>
+          <input type="color" id="gradB" value="#3EC9A7">
+        </div>
+
+        <div id="bgImagePanel" style="display:none;">
+          <div class="drop" id="dropImg">Arrastrá o hacé click — imagen de fondo</div>
+          <input type="file" id="fileImg" accept="image/*">
+        </div>
+
+        <div id="bgVideoPanel" style="display:none;">
+          <div class="drop" id="dropVid">Arrastrá o hacé click — video de fondo</div>
+          <input type="file" id="fileVid" accept="video/*">
+          <div class="hint">Se recorta/loopea para llenar el cuadro elegido. Se silencia automáticamente (usa el audio del paso 02).</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>04 · Formato y texto</h2>
+        <label class="field">Relación de aspecto</label>
+        <div class="seg" id="aspectSeg">
+          <button data-a="9:16" class="active">9:16</button>
+          <button data-a="16:9">16:9</button>
+          <button data-a="1:1">1:1</button>
+          <button data-a="4:5">4:5</button>
+        </div>
+
+        <label class="field">Tipografía</label>
+        <select id="fontSelect">
+          <option value="Archivo Black">Archivo Black (impacto)</option>
+          <option value="Space Grotesk" selected>Space Grotesk</option>
+          <option value="Inter">Inter</option>
+          <option value="JetBrains Mono">JetBrains Mono</option>
+        </select>
+        <div class="drop" id="dropFont" style="margin-top:8px;">Subir tipografía propia (.ttf / .otf / .woff)</div>
+        <input type="file" id="fileFont" accept=".ttf,.otf,.woff,.woff2">
+
+        <label class="field">Animación de línea</label>
+        <select id="animSelect">
+          <option value="fade">Fundido</option>
+          <option value="slide" selected>Deslizar hacia arriba</option>
+          <option value="karaoke">Karaoke (resaltado progresivo)</option>
+          <option value="pop">Pop / escala</option>
+          <option value="none">Sin animación</option>
+        </select>
+
+        <div class="row" style="margin-top:14px;">
+          <div>
+            <label class="field">Color de texto</label>
+            <input type="color" id="textColor" value="#EFE9F2">
+          </div>
+          <div>
+            <label class="field">Color de acento</label>
+            <input type="color" id="accentColor" value="#E8A33D">
+          </div>
+        </div>
+        <label class="field">Tamaño de letra</label>
+        <input type="range" id="fontSize" min="24" max="90" value="46">
+      </div>
+
+      <div class="panel">
+        <h2>05 · Posición y overlays</h2>
+        <label class="field">Posición vertical del texto</label>
+        <div class="seg" id="posVSeg">
+          <button data-pv="top">Arriba</button>
+          <button data-pv="center">Centro</button>
+          <button data-pv="bottom" class="active">Abajo</button>
+          <button data-pv="custom">Libre</button>
+        </div>
+        <div id="customVWrap" style="display:none;">
+          <label class="field">Ajuste fino vertical</label>
+          <input type="range" id="posVCustom" min="5" max="95" value="74">
+        </div>
+
+        <label class="field">Alineación horizontal</label>
+        <div class="seg" id="posHSeg">
+          <button data-ph="left">Izquierda</button>
+          <button data-ph="center" class="active">Centro</button>
+          <button data-ph="right">Derecha</button>
+        </div>
+
+        <label class="field" style="margin-top:16px;">
+          <input type="checkbox" id="vignetteToggle" checked style="margin-right:6px;">
+          Sombra/viñeta inferior para legibilidad
+        </label>
+        <label class="field">
+          <input type="checkbox" id="accentMarkToggle" checked style="margin-right:6px;">
+          Barrita de acento bajo el texto
+        </label>
+        <label class="field">
+          <input type="checkbox" id="textBgToggle" style="margin-right:6px;">
+          Fondo tipo "caja" detrás del texto
+        </label>
+
+        <label class="field" style="margin-top:16px;">
+          <input type="checkbox" id="watermarkToggle" checked style="margin-right:6px;">
+          Marca de agua "Valens429.site"
+        </label>
+        <div id="watermarkWrap">
+          <label class="field">Esquina</label>
+          <div class="seg" id="wmCornerSeg">
+            <button data-c="tl">↖</button>
+            <button data-c="tr">↗</button>
+            <button data-c="bl">↙</button>
+            <button data-c="br" class="active">↘</button>
+          </div>
+          <label class="field">Opacidad</label>
+          <input type="range" id="wmOpacity" min="20" max="100" value="55">
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE -->
+    <div>
+      <div class="stage-outer">
+        <canvas id="stage" width="720" height="1280"></canvas>
+
+        <div class="timecode">
+          <span class="badge" id="tcBadge">00:00.00</span>
+          <span class="idx" id="tcIdx">línea — / —</span>
+        </div>
+
+        <div class="transport">
+          <button id="playBtn">▶</button>
+          <input type="range" id="seek" min="0" max="100" value="0" step="0.1">
+          <span class="t" id="tDisplay">00:00 / 00:00</span>
+        </div>
+
+        <div class="export-bar">
+          <button class="btn-primary" id="exportBtn" disabled>Exportar video (.webm)</button>
+          <button class="btn-primary" id="stopBtn" style="display:none; background:var(--danger); color:#fff;">■ Detener</button>
+          <div class="progress-line"><i id="progFill"></i></div>
+          <span class="export-status" id="expStatus">Cargá letra + audio para exportar</span>
+        </div>
+
+        <div class="lyrics-log" id="lyricsLog"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---------- state ----------
+let lyricLines = []; // {start, end, text}
+let audioEl = new Audio();
+let audioLoaded = false;
+let bgMode = 'color';
+let bgImageEl = null;
+let bgVideoEl = null;
+let customFontLoaded = null;
+let aspect = '9:16';
+let isPlaying = false;
+let rafId = null;
+let mediaRecorder = null;
+let recordedChunks = [];
+
+const canvas = document.getElementById('stage');
+const ctx = canvas.getContext('2d');
+
+const aspectDims = {
+  '9:16':[720,1280], '16:9':[1280,720], '1:1':[900,900], '4:5':[864,1080]
+};
+
+function setCanvasSize(){
+  const [w,h] = aspectDims[aspect];
+  canvas.width = w; canvas.height = h;
+}
+setCanvasSize();
+
+// ---------- file drop helpers ----------
+function wireDrop(dropId, inputId, cb){
+  const drop = document.getElementById(dropId);
+  const input = document.getElementById(inputId);
+  drop.addEventListener('click', ()=>input.click());
+  drop.addEventListener('dragover', e=>{e.preventDefault(); drop.style.borderColor='var(--gold)';});
+  drop.addEventListener('dragleave', ()=>drop.style.borderColor='');
+  drop.addEventListener('drop', e=>{
+    e.preventDefault(); drop.style.borderColor='';
+    if(e.dataTransfer.files[0]) cb(e.dataTransfer.files[0], drop);
+  });
+  input.addEventListener('change', ()=>{ if(input.files[0]) cb(input.files[0], drop); });
+}
+
+// ---------- lyrics parsing ----------
+function timeToSec_lrc(tag){
+  // [mm:ss.xx]
+  const m = tag.match(/(\d+):(\d+(?:\.\d+)?)/);
+  if(!m) return null;
+  return parseInt(m[1])*60 + parseFloat(m[2]);
+}
+function timeToSec_srt(tag){
+  // hh:mm:ss,mmm
+  const m = tag.match(/(\d+):(\d+):(\d+)[,.](\d+)/);
+  if(!m) return null;
+  return parseInt(m[1])*3600 + parseInt(m[2])*60 + parseInt(m[3]) + parseInt(m[4])/1000;
+}
+
+function parseLRC(text){
+  const lines = text.split(/\r?\n/);
+  const out = [];
+  for(const line of lines){
+    const tags = [...line.matchAll(/\[(\d+:\d+(?:\.\d+)?)\]/g)];
+    if(tags.length === 0) continue;
+    const content = line.replace(/\[\d+:\d+(?:\.\d+)?\]/g,'').trim();
+    if(!content) continue;
+    for(const t of tags){
+      const s = timeToSec_lrc(t[1]);
+      if(s!==null) out.push({start:s, end:null, text:content});
+    }
+  }
+  out.sort((a,b)=>a.start-b.start);
+  for(let i=0;i<out.length;i++){
+    out[i].end = (i<out.length-1) ? out[i+1].start : out[i].start + 4;
+  }
+  return out;
+}
+
+function parseSRT(text){
+  const blocks = text.split(/\r?\n\r?\n/);
+  const out = [];
+  for(const b of blocks){
+    const lines = b.split(/\r?\n/).filter(l=>l.trim().length);
+    if(lines.length < 2) continue;
+    const timeLine = lines.find(l=>l.includes('-->'));
+    if(!timeLine) continue;
+    const [a,c] = timeLine.split('-->').map(s=>s.trim());
+    const start = timeToSec_srt(a), end = timeToSec_srt(c);
+    const textLines = lines.slice(lines.indexOf(timeLine)+1);
+    const content = textLines.join(' ').trim();
+    if(start!==null && end!==null && content) out.push({start,end,text:content});
+  }
+  return out;
+}
+
+function detectAndParse(filename, text){
+  const lower = filename.toLowerCase();
+  if(lower.endsWith('.srt')) return parseSRT(text);
+  if(lower.endsWith('.lrc')) return parseLRC(text);
+  // fallback: try to detect by content
+  if(text.includes('-->')) return parseSRT(text);
+  return parseLRC(text);
+}
+
+wireDrop('dropLyrics','fileLyrics',(file, drop)=>{
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    lyricLines = detectAndParse(file.name, reader.result);
+    drop.textContent = file.name;
+    drop.classList.add('has-file');
+    document.getElementById('lyricsInfo').textContent = lyricLines.length + ' líneas detectadas.';
+    buildLog();
+    checkReady();
+    drawFrame(getCurrentTime());
+  };
+  reader.readAsText(file);
+});
+
+function buildLog(){
+  const log = document.getElementById('lyricsLog');
+  log.innerHTML = lyricLines.map((l,i)=>`<div data-i="${i}">${fmtTime(l.start)} — ${l.text}</div>`).join('');
+}
+
+// ---------- audio ----------
+wireDrop('dropAudio','fileAudio',(file, drop)=>{
+  const url = URL.createObjectURL(file);
+  audioEl.src = url;
+  audioEl.onloadedmetadata = ()=>{
+    audioLoaded = true;
+    document.getElementById('seek').max = audioEl.duration;
+    updateTimeDisplay();
+    checkReady();
+  };
+  drop.textContent = file.name;
+  drop.classList.add('has-file');
+  document.getElementById('audioInfo').textContent = file.name;
+});
+
+// ---------- background mode ----------
+document.querySelectorAll('.bgmode button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.bgmode button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    bgMode = btn.dataset.bg;
+    ['bgColorPanel','bgImagePanel','bgVideoPanel','bgGradientPanel'].forEach(id=>{
+      document.getElementById(id).style.display = 'none';
+    });
+    if(bgMode==='color') document.getElementById('bgColorPanel').style.display='block';
+    if(bgMode==='image') document.getElementById('bgImagePanel').style.display='block';
+    if(bgMode==='video') document.getElementById('bgVideoPanel').style.display='block';
+    if(bgMode==='gradient') document.getElementById('bgGradientPanel').style.display='block';
+    drawFrame(getCurrentTime());
+  });
+});
+
+wireDrop('dropImg','fileImg',(file, drop)=>{
+  const img = new Image();
+  img.onload = ()=>{ bgImageEl = img; drawFrame(getCurrentTime()); };
+  img.src = URL.createObjectURL(file);
+  drop.textContent = file.name; drop.classList.add('has-file');
+});
+
+wireDrop('dropVid','fileVid',(file, drop)=>{
+  const v = document.createElement('video');
+  v.src = URL.createObjectURL(file);
+  v.muted = true; v.loop = true; v.playsInline = true;
+  v.onloadeddata = ()=>{ bgVideoEl = v; drawFrame(getCurrentTime()); };
+  drop.textContent = file.name; drop.classList.add('has-file');
+});
+
+wireDrop('dropFont','fileFont',(file, drop)=>{
+  const reader = new FileReader();
+  reader.onload = async ()=>{
+    const ff = new FontFace('CustomUserFont', reader.result);
+    await ff.load();
+    document.fonts.add(ff);
+    customFontLoaded = 'CustomUserFont';
+    const opt = document.createElement('option');
+    opt.value = 'CustomUserFont'; opt.textContent = 'Tu tipografía (' + file.name + ')';
+    document.getElementById('fontSelect').appendChild(opt);
+    document.getElementById('fontSelect').value = 'CustomUserFont';
+    drawFrame(getCurrentTime());
+  };
+  reader.readAsArrayBuffer(file);
+  drop.textContent = file.name; drop.classList.add('has-file');
+});
+
+// ---------- aspect ----------
+document.getElementById('aspectSeg').addEventListener('click', e=>{
+  if(e.target.tagName!=='BUTTON') return;
+  document.querySelectorAll('#aspectSeg button').forEach(b=>b.classList.remove('active'));
+  e.target.classList.add('active');
+  aspect = e.target.dataset.a;
+  setCanvasSize();
+  drawFrame(getCurrentTime());
+});
+
+['fontSelect','animSelect','textColor','accentColor','fontSize','bgColor','gradA','gradB',
+ 'posVCustom','vignetteToggle','accentMarkToggle','textBgToggle','watermarkToggle','wmOpacity'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', ()=>drawFrame(getCurrentTime()));
+});
+
+// vertical position preset
+let posV = 'bottom';
+document.getElementById('posVSeg').addEventListener('click', e=>{
+  if(e.target.tagName!=='BUTTON') return;
+  document.querySelectorAll('#posVSeg button').forEach(b=>b.classList.remove('active'));
+  e.target.classList.add('active');
+  posV = e.target.dataset.pv;
+  document.getElementById('customVWrap').style.display = posV==='custom' ? 'block' : 'none';
+  drawFrame(getCurrentTime());
+});
+
+// horizontal alignment
+let posH = 'center';
+document.getElementById('posHSeg').addEventListener('click', e=>{
+  if(e.target.tagName!=='BUTTON') return;
+  document.querySelectorAll('#posHSeg button').forEach(b=>b.classList.remove('active'));
+  e.target.classList.add('active');
+  posH = e.target.dataset.ph;
+  drawFrame(getCurrentTime());
+});
+
+// watermark corner
+let wmCorner = 'br';
+document.getElementById('wmCornerSeg').addEventListener('click', e=>{
+  if(e.target.tagName!=='BUTTON') return;
+  document.querySelectorAll('#wmCornerSeg button').forEach(b=>b.classList.remove('active'));
+  e.target.classList.add('active');
+  wmCorner = e.target.dataset.c;
+  drawFrame(getCurrentTime());
+});
+
+function getTextY(h){
+  if(posV==='top') return h*0.16;
+  if(posV==='center') return h*0.5;
+  if(posV==='custom') return h*(parseInt(document.getElementById('posVCustom').value)/100);
+  return h*0.74; // bottom default
+}
+
+// ---------- time helpers ----------
+function fmtTime(s){
+  if(isNaN(s)) s=0;
+  const m = Math.floor(s/60);
+  const sec = (s%60).toFixed(2).padStart(5,'0');
+  return String(m).padStart(2,'0')+':'+sec;
+}
+function fmtTimeShort(s){
+  if(isNaN(s)) s=0;
+  const m = Math.floor(s/60), sec = Math.floor(s%60);
+  return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+}
+function getCurrentTime(){ return audioLoaded ? audioEl.currentTime : 0; }
+
+function currentLineIndex(t){
+  for(let i=0;i<lyricLines.length;i++){
+    if(t >= lyricLines[i].start && t < lyricLines[i].end) return i;
+  }
+  return -1;
+}
+
+// ---------- drawing ----------
+function drawFrame(t){
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0,0,w,h);
+
+  // background
+  if(bgMode==='color'){
+    ctx.fillStyle = document.getElementById('bgColor').value;
+    ctx.fillRect(0,0,w,h);
+  } else if(bgMode==='gradient'){
+    const g = ctx.createLinearGradient(0,0,w,h);
+    g.addColorStop(0, document.getElementById('gradA').value);
+    g.addColorStop(1, document.getElementById('gradB').value);
+    ctx.fillStyle = g; ctx.fillRect(0,0,w,h);
+  } else if(bgMode==='image' && bgImageEl){
+    drawCover(bgImageEl, w, h);
+  } else if(bgMode==='video' && bgVideoEl){
+    drawCover(bgVideoEl, w, h);
+  } else {
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,w,h);
+  }
+
+  // vignette for readability (optional)
+  if(document.getElementById('vignetteToggle').checked){
+    const cy0 = getTextY(h);
+    const vg = ctx.createRadialGradient(w/2,cy0,h*0.15, w/2,cy0,h*0.75);
+    vg.addColorStop(0,'rgba(0,0,0,0.55)');
+    vg.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle = vg; ctx.fillRect(0,0,w,h);
+  }
+
+  // lyric text
+  const idx = currentLineIndex(t);
+  document.getElementById('tcBadge').textContent = fmtTime(t);
+  document.getElementById('tcIdx').textContent = 'línea ' + (idx>=0?idx+1:'—') + ' / ' + lyricLines.length;
+  document.querySelectorAll('.lyrics-log div').forEach((d,i)=>d.classList.toggle('cur', i===idx));
+
+  if(idx>=0){
+    const line = lyricLines[idx];
+    const progress = (t - line.start) / Math.max(0.001, line.end-line.start);
+    const fontFam = document.getElementById('fontSelect').value;
+    const fsize = parseInt(document.getElementById('fontSize').value) * (w/720);
+    const textColor = document.getElementById('textColor').value;
+    const accent = document.getElementById('accentColor').value;
+    const anim = document.getElementById('animSelect').value;
+
+    ctx.textAlign = posH; // 'left' | 'center' | 'right'
+    ctx.textBaseline = 'middle';
+    ctx.font = `800 ${fsize}px "${fontFam}"`;
+
+    let alpha = 1, yOff = 0, scale = 1;
+    const localT = Math.min(1, progress*4); // entrance over first quarter
+    if(anim==='fade'){ alpha = localT; }
+    if(anim==='slide'){ alpha = localT; yOff = (1-localT)*40; }
+    if(anim==='pop'){ alpha = localT; scale = 0.85 + localT*0.15; }
+
+    const cy = getTextY(h);
+    const anchorX = posH==='left' ? w*0.08 : posH==='right' ? w*0.92 : w/2;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.translate(anchorX, cy+yOff);
+    ctx.scale(scale, scale);
+
+    // wrap text
+    const maxWidth = w*0.86;
+    const words = line.text.split(' ');
+    let lines = []; let cur='';
+    for(const word of words){
+      const test = cur? cur+' '+word : word;
+      if(ctx.measureText(test).width > maxWidth && cur){ lines.push(cur); cur=word; }
+      else cur = test;
+    }
+    if(cur) lines.push(cur);
+    const lh = fsize*1.25;
+    const totalH = lines.length*lh;
+
+    // optional box background behind text
+    if(document.getElementById('textBgToggle').checked){
+      let maxLineW = 0;
+      lines.forEach(ln=>{ maxLineW = Math.max(maxLineW, ctx.measureText(ln).width); });
+      const bx = posH==='left' ? -20 : posH==='right' ? -maxLineW-20 : -maxLineW/2-20;
+      ctx.fillStyle = 'rgba(0,0,0,0.45)';
+      ctx.fillRect(bx, -totalH/2-14, maxLineW+40, totalH+28);
+    }
+
+    lines.forEach((ln, li)=>{
+      const ly = -totalH/2 + li*lh + lh/2;
+      const lx = 0;
+      if(anim==='karaoke'){
+        ctx.fillStyle = 'rgba(255,255,255,0.35)';
+        ctx.fillText(ln, lx, ly);
+        const w2 = ctx.measureText(ln).width;
+        const clipX = posH==='left' ? lx : posH==='right' ? lx-w2 : lx-w2/2;
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(clipX, ly-lh, w2*Math.min(1,progress*1.15), lh*2);
+        ctx.clip();
+        ctx.fillStyle = accent;
+        ctx.fillText(ln, lx, ly);
+        ctx.restore();
+      } else {
+        ctx.fillStyle = textColor;
+        ctx.shadowColor = 'rgba(0,0,0,0.6)';
+        ctx.shadowBlur = 14;
+        ctx.fillText(ln, lx, ly);
+        ctx.shadowBlur = 0;
+      }
+    });
+    ctx.restore();
+
+    // accent underline / marker (optional)
+    if(document.getElementById('accentMarkToggle').checked){
+      const barX = posH==='left' ? anchorX : posH==='right' ? anchorX-36 : anchorX-18;
+      ctx.fillStyle = accent;
+      ctx.fillRect(barX, cy+totalH/2+ (anim==='slide'?yOff:0) +26, 36, 4);
+    }
+  }
+
+  // watermark
+  if(document.getElementById('watermarkToggle').checked){
+    const op = parseInt(document.getElementById('wmOpacity').value)/100;
+    const wmSize = w*0.018;
+    ctx.save();
+    ctx.globalAlpha = op;
+    ctx.font = `500 ${Math.max(11,wmSize)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = 'rgba(0,0,0,0.6)';
+    ctx.shadowBlur = 4;
+    const pad = w*0.025;
+    let wx, wy;
+    ctx.textBaseline = 'middle';
+    if(wmCorner==='tl'){ ctx.textAlign='left'; wx=pad; wy=pad*1.4; }
+    if(wmCorner==='tr'){ ctx.textAlign='right'; wx=w-pad; wy=pad*1.4; }
+    if(wmCorner==='bl'){ ctx.textAlign='left'; wx=pad; wy=h-pad*1.4; }
+    if(wmCorner==='br'){ ctx.textAlign='right'; wx=w-pad; wy=h-pad*1.4; }
+    ctx.fillText('Valens429.site', wx, wy);
+    ctx.restore();
+  }
+}
+
+function drawCover(media, w, h){
+  const mw = media.videoWidth || media.naturalWidth || media.width;
+  const mh = media.videoHeight || media.naturalHeight || media.height;
+  const scale = Math.max(w/mw, h/mh);
+  const dw = mw*scale, dh = mh*scale;
+  ctx.drawImage(media, (w-dw)/2, (h-dh)/2, dw, dh);
+}
+
+// ---------- transport ----------
+function updateTimeDisplay(){
+  document.getElementById('tDisplay').textContent =
+    fmtTimeShort(audioEl.currentTime) + ' / ' + fmtTimeShort(audioEl.duration||0);
+  document.getElementById('seek').value = audioEl.currentTime;
+}
+
+function loop(){
+  if(bgVideoEl && !bgVideoEl.paused){ /* keep drawing */ }
+  drawFrame(getCurrentTime());
+  updateTimeDisplay();
+  if(isPlaying) rafId = requestAnimationFrame(loop);
+}
+
+document.getElementById('playBtn').addEventListener('click', ()=>{
+  if(!audioLoaded) return;
+  if(isPlaying){
+    audioEl.pause();
+    if(bgVideoEl) bgVideoEl.pause();
+    isPlaying = false;
+    document.getElementById('playBtn').textContent = '▶';
+    cancelAnimationFrame(rafId);
+  } else {
+    audioEl.play();
+    if(bgVideoEl){
+      bgVideoEl.currentTime = audioEl.currentTime % (bgVideoEl.duration || audioEl.currentTime || 1);
+      bgVideoEl.play();
+    }
+    isPlaying = true;
+    document.getElementById('playBtn').textContent = '⏸';
+    loop();
+  }
+});
+
+document.getElementById('seek').addEventListener('input', e=>{
+  const t = parseFloat(e.target.value);
+  audioEl.currentTime = t;
+  if(bgVideoEl){
+    bgVideoEl.currentTime = t % (bgVideoEl.duration || t || 1);
+  }
+  drawFrame(getCurrentTime());
+  updateTimeDisplay();
+});
+
+audioEl.addEventListener('ended', ()=>{
+  isPlaying=false;
+  document.getElementById('playBtn').textContent='▶';
+  cancelAnimationFrame(rafId);
+});
+
+function checkReady(){
+  const ready = lyricLines.length>0 && audioLoaded;
+  document.getElementById('exportBtn').disabled = !ready;
+  document.getElementById('expStatus').textContent = ready ? 'Listo para exportar.' : 'Cargá letra + audio para exportar';
+}
+
+// ---------- export ----------
+function setControlsLocked(locked){
+  const ids = ['aspectSeg'];
+  document.querySelectorAll('#aspectSeg button, .bgmode button, #posVSeg button, #posHSeg button, #wmCornerSeg button')
+    .forEach(el=>el.disabled = locked);
+  document.querySelectorAll('.panel input, .panel select').forEach(el=>{
+    if(el.id==='seek') return;
+    el.disabled = locked;
+  });
+  document.querySelectorAll('.drop').forEach(el=>{
+    el.style.pointerEvents = locked ? 'none' : '';
+    el.style.opacity = locked ? '0.5' : '';
+  });
+}
+
+document.getElementById('exportBtn').addEventListener('click', async ()=>{
+  const btn = document.getElementById('exportBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const status = document.getElementById('expStatus');
+  const fill = document.getElementById('progFill');
+
+  if(isPlaying) document.getElementById('playBtn').click(); // pause first
+  audioEl.currentTime = 0;
+  if(bgVideoEl){ bgVideoEl.currentTime = 0; }
+  setControlsLocked(true);
+  stopBtn.style.display = 'inline-flex';
+
+  const stream = canvas.captureStream(30);
+  // attach audio track via a MediaElementSource -> MediaStreamDestination
+  const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  const src = audioCtx.createMediaElementSource(audioEl);
+  const dest = audioCtx.createMediaStreamDestination();
+  src.connect(dest);
+  src.connect(audioCtx.destination);
+  dest.stream.getAudioTracks().forEach(t=>stream.addTrack(t));
+
+  let mime = 'video/webm;codecs=vp9,opus';
+  if(!MediaRecorder.isTypeSupported(mime)) mime = 'video/webm;codecs=vp8,opus';
+  if(!MediaRecorder.isTypeSupported(mime)) mime = 'video/webm';
+
+  recordedChunks = [];
+  mediaRecorder = new MediaRecorder(stream, {mimeType:mime, videoBitsPerSecond:6_000_000});
+  mediaRecorder.ondataavailable = e=>{ if(e.data.size>0) recordedChunks.push(e.data); };
+  mediaRecorder.onstop = ()=>{
+    const blob = new Blob(recordedChunks, {type:'video/webm'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'lyric-video.webm';
+    a.className='dl';
+    status.innerHTML = '';
+    a.textContent = '✓ Descargar lyric-video.webm';
+    status.appendChild(a);
+    btn.disabled = false;
+    btn.classList.remove('recording');
+    btn.textContent = 'Exportar video (.webm)';
+    fill.style.width='100%';
+    stopBtn.style.display = 'none';
+    setControlsLocked(false);
+    audioCtx.close();
+  };
+
+  btn.disabled = true;
+  btn.classList.add('recording');
+  btn.textContent = 'Grabando…';
+  status.textContent = 'Renderizando…';
+
+  mediaRecorder.start();
+  audioEl.play();
+  if(bgVideoEl) bgVideoEl.play();
+  isPlaying = true;
+  loop();
+
+  const duration = audioEl.duration;
+  const timer = setInterval(()=>{
+    fill.style.width = Math.min(100, (audioEl.currentTime/duration*100)) + '%';
+    status.textContent = 'Renderizando… ' + fmtTimeShort(audioEl.currentTime) + ' / ' + fmtTimeShort(duration);
+  }, 200);
+
+  function stopHandler(){
+    clearInterval(timer);
+    if(mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+    audioEl.pause();
+    if(bgVideoEl) bgVideoEl.pause();
+    isPlaying = false;
+    audioEl.removeEventListener('ended', stopHandler);
+  }
+  audioEl.addEventListener('ended', stopHandler);
+  document.getElementById('stopBtn').onclick = stopHandler;
+});
+
+drawFrame(0);
+</script>
+</body>
+</html>
