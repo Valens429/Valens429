@@ -159,43 +159,155 @@
   }
   .punto.on { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
 
-  .lista-participantes { list-style: none; padding: 0; margin: 0; }
+  /* ---- Vista sala estilo Meet ---- */
+  #vistaSala.oculto { display: none !important; }
+  #vistaSala {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 90px);
+  }
 
-  .lista-participantes li {
+  .barra-sala {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .barra-sala .codigo-mini {
+    font-family: 'Consolas', 'SF Mono', monospace;
+    font-size: 12px;
+    color: var(--amber-dim);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 6px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    user-select: all;
+  }
+  .barra-sala .codigo-mini:hover { border-color: var(--amber-dim); color: var(--amber); }
+  .barra-sala .estado-linea { margin-top: 0; }
+
+  .grilla-tiles {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px;
+    align-content: start;
+    margin-bottom: 24px;
+  }
+
+  .tile {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: var(--panel);
+    border: 2px solid var(--line);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: 10px;
-    padding: 9px 10px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .tile.hablando {
+    border-color: var(--amber);
+    box-shadow: 0 0 0 4px rgba(255,176,0,0.13);
+  }
+  .tile.yo { border-style: dashed; }
+
+  .avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 20px;
+    color: #1a1204;
+    flex-shrink: 0;
+  }
+
+  .tile-etiqueta {
+    position: absolute;
+    left: 10px;
+    bottom: 9px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .tile-nombre {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+  }
+  .tile-mute-icono {
+    font-size: 12px;
+    opacity: 0.85;
+    flex-shrink: 0;
+  }
+
+  /* ---- Barra de controles flotante, al estilo Meet ---- */
+  .barra-controles {
+    position: sticky;
+    bottom: 18px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding-top: 10px;
+  }
+
+  .boton-control {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
     background: var(--panel-raised);
-    border-radius: 3px;
-    margin-bottom: 6px;
-    font-size: 14px;
-  }
-
-  .vu {
+    border: 1px solid var(--line);
     display: flex;
-    gap: 2px;
-    align-items: flex-end;
-    height: 14px;
-    width: 16px;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text);
+    transition: background 0.15s ease, border-color 0.15s ease;
   }
-  .vu span {
-    width: 3px;
-    background: var(--line);
-    border-radius: 1px;
-    height: 4px;
-    transition: height 0.08s ease, background 0.08s ease;
+  .boton-control:hover { border-color: var(--amber-dim); }
+  .boton-control.activo {
+    background: var(--amber);
+    color: #1a1204;
+    border-color: var(--amber);
   }
-  li.hablando .vu span { background: var(--amber); }
+  .boton-control.salir {
+    background: var(--danger);
+    border-color: var(--danger);
+    color: #1a0a08;
+    width: 68px;
+    border-radius: 26px;
+  }
+  .boton-control.salir:hover { background: #f26a4f; }
 
-  .nombre-p { flex: 1; }
-  .id-p { font-family: 'Consolas', monospace; font-size: 11px; color: var(--muted); }
-
-  .controles-inferiores {
-    display: flex;
-    gap: 8px;
+  .area-pantalla {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 16px;
   }
-  .controles-inferiores button { flex: 1; }
+  .pantalla-header {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  #videoPantalla {
+    width: 100%;
+    display: block;
+    border-radius: 8px;
+    background: #000;
+  }
 </style>
 </head>
 <body>
@@ -235,22 +347,23 @@
 
 <!-- VISTA SALA: ya conectado -->
 <div id="vistaSala" class="oculto">
-  <div class="panel" id="cajaCodigoSala">
-    <label class="etiqueta">Código del canal — compartíselo a tus amigos</label>
-    <div class="codigo-display" id="codigoSala"></div>
+  <div class="barra-sala">
+    <div class="estado-linea"><span class="punto on"></span><span id="estadoSala">Conectado</span></div>
+    <div class="codigo-mini" id="codigoSala" title="Click para copiar y compartir"></div>
   </div>
 
-  <div class="panel">
-    <label class="etiqueta">En el canal</label>
-    <ul class="lista-participantes" id="participantes"></ul>
+  <div class="area-pantalla oculto" id="areaPantalla">
+    <div class="pantalla-header" id="pantallaPresentador"></div>
+    <video id="videoPantalla" autoplay playsinline></video>
   </div>
 
-  <div class="panel controles-inferiores">
-    <button id="btnMute">🔇 Silenciar</button>
-    <button id="btnSalir" class="peligro">Salir del canal</button>
-  </div>
+  <div class="grilla-tiles" id="grillaTiles"></div>
 
-  <div class="estado-linea"><span class="punto on"></span><span id="estadoSala">Conectado</span></div>
+  <div class="barra-controles">
+    <button class="boton-control" id="btnMute" title="Silenciar micrófono">🎤</button>
+    <button class="boton-control" id="btnPantalla" title="Compartir pantalla">🖥️</button>
+    <button class="boton-control salir" id="btnSalir" title="Salir del canal">📴</button>
+  </div>
 </div>
 
 <div id="audios"></div>
@@ -264,7 +377,10 @@ let miNombre = '';
 
 let roster = [];                    // solo anfitrión: [{id, name}]
 let dataConnections = new Map();    // solo anfitrión: peerId -> DataConnection
-let llamadas = new Map();           // todos: peerId -> RTCall
+let llamadas = new Map();           // todos: peerId -> RTCall (voz)
+
+let pantallaStream = null;          // mi stream de pantalla, si estoy compartiendo
+let llamadasPantalla = new Map();   // peerId -> RTCall (salientes, cuando yo comparto)
 
 // --- Elementos ---
 const vistaInicio = document.getElementById('vistaInicio');
@@ -277,9 +393,12 @@ const inputCodigo = document.getElementById('inputCodigo');
 const estadoInicio = document.getElementById('estadoInicio');
 const puntoInicio = document.getElementById('puntoInicio');
 const codigoSala = document.getElementById('codigoSala');
-const cajaCodigoSala = document.getElementById('cajaCodigoSala');
-const participantesEl = document.getElementById('participantes');
+const grillaTiles = document.getElementById('grillaTiles');
 const btnMute = document.getElementById('btnMute');
+const btnPantalla = document.getElementById('btnPantalla');
+const areaPantalla = document.getElementById('areaPantalla');
+const videoPantalla = document.getElementById('videoPantalla');
+const pantallaPresentador = document.getElementById('pantallaPresentador');
 const btnSalir = document.getElementById('btnSalir');
 const estadoSala = document.getElementById('estadoSala');
 const miIdChico = document.getElementById('miIdChico');
@@ -336,11 +455,21 @@ btnMute.addEventListener('click', () => {
   if (!miStream) return;
   muteado = !muteado;
   miStream.getAudioTracks().forEach(t => t.enabled = !muteado);
-  btnMute.textContent = muteado ? '🔊 Reactivar' : '🔇 Silenciar';
+  btnMute.textContent = muteado ? '🔇' : '🎤';
+  btnMute.classList.toggle('activo', muteado);
+  actualizarTilePropio();
 });
 
 btnSalir.addEventListener('click', () => {
   location.reload();
+});
+
+// Avisamos que nos vamos apenas se cierra o recarga la pestaña, en vez de dejar que WebRTC lo note solo
+window.addEventListener('beforeunload', () => {
+  llamadas.forEach((llamada) => llamada.close());
+  llamadasPantalla.forEach((llamada) => llamada.close());
+  dataConnections.forEach((conn) => conn.close());
+  if (peer) peer.destroy();
 });
 
 // --- Servidores de conexión: STUN (descubrir IP pública) + TURN (respaldo si falla la conexión directa) ---
@@ -358,6 +487,12 @@ function crearPeerBase() {
   peer = new Peer({ config: configIce });
 
   peer.on('call', (llamada) => {
+    const esPantalla = llamada.metadata && llamada.metadata.tipo === 'pantalla';
+    if (esPantalla) {
+      llamada.answer(); // solo recibimos, no mandamos nada de vuelta en esta llamada
+      manejarPantallaEntrante(llamada);
+      return;
+    }
     llamada.answer(miStream);
     const nombreRemoto = (llamada.metadata && llamada.metadata.name) || 'Anónimo';
     registrarLlamada(llamada.peer, llamada, nombreRemoto);
@@ -378,11 +513,67 @@ function pasarASala(codigoMostrar) {
   vistaInicio.classList.add('oculto');
   vistaSala.classList.remove('oculto');
   miIdChico.textContent = peer.id.slice(0, 8);
-  if (codigoMostrar) {
-    codigoSala.textContent = codigoMostrar;
-  } else {
-    cajaCodigoSala.classList.add('oculto');
+  codigoSala.textContent = 'Canal: ' + (codigoMostrar || peer.id).slice(0, 8);
+  codigoSala.dataset.codigoCompleto = codigoMostrar || peer.id;
+  agregarTilePropio();
+  detectarHablaPropia();
+}
+
+codigoSala.addEventListener('click', () => {
+  const codigo = codigoSala.dataset.codigoCompleto;
+  if (codigo) navigator.clipboard.writeText(codigo);
+});
+
+// --- Color de avatar determinístico según el nombre ---
+function colorDeNombre(nombre) {
+  let hash = 0;
+  for (let i = 0; i < nombre.length; i++) hash = nombre.charCodeAt(i) + ((hash << 5) - hash);
+  const hue = Math.abs(hash) % 360;
+  return `hsl(${hue}, 55%, 55%)`;
+}
+
+function iniciales(nombre) {
+  const partes = nombre.trim().split(/\s+/);
+  return ((partes[0]?.[0] || '?') + (partes[1]?.[0] || '')).toUpperCase();
+}
+
+function agregarTilePropio() {
+  const tile = document.createElement('div');
+  tile.className = 'tile yo';
+  tile.id = 'tile-propio';
+  tile.innerHTML = `
+    <div class="avatar" style="background:${colorDeNombre(miNombre)}">${iniciales(miNombre)}</div>
+    <div class="tile-etiqueta">
+      <span class="tile-nombre">${escaparHtml(miNombre)} (vos)</span>
+      <span class="tile-mute-icono" id="iconoMutePropio"></span>
+    </div>
+  `;
+  grillaTiles.prepend(tile);
+}
+
+function actualizarTilePropio() {
+  const icono = document.getElementById('iconoMutePropio');
+  if (icono) icono.textContent = muteado ? '🔇' : '';
+}
+
+// Analiza el propio micrófono para iluminar tu tile cuando hablás
+function detectarHablaPropia() {
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const fuente = ctx.createMediaStreamSource(miStream);
+  const analizador = ctx.createAnalyser();
+  analizador.fftSize = 512;
+  fuente.connect(analizador);
+  const datos = new Uint8Array(analizador.frequencyBinCount);
+
+  function chequear() {
+    const tile = document.getElementById('tile-propio');
+    if (!tile) return requestAnimationFrame(chequear);
+    analizador.getByteFrequencyData(datos);
+    const volumen = datos.reduce((a, b) => a + b, 0) / datos.length;
+    tile.classList.toggle('hablando', volumen > 15 && !muteado);
+    requestAnimationFrame(chequear);
   }
+  chequear();
 }
 
 // --- Crear canal ---
@@ -418,6 +609,11 @@ btnUnirse.addEventListener('click', () => {
           if (p.id !== peer.id) llamarA(p.id, p.name);
         });
       }
+      if (data.type === 'peer-salio') {
+        const llamadaVieja = llamadas.get(data.id);
+        if (llamadaVieja) llamadaVieja.close();
+        quitarParticipante(data.id);
+      }
     });
 
     conn.on('error', (err) => {
@@ -441,6 +637,10 @@ function manejarNuevoJoiner(conn) {
   conn.on('close', () => {
     roster = roster.filter((p) => p.id !== conn.peer);
     dataConnections.delete(conn.peer);
+    // Avisamos al resto para que lo saquen de su lista, sin esperar a que la llamada de voz se dé cuenta sola
+    dataConnections.forEach((otraConn) => {
+      otraConn.send({ type: 'peer-salio', id: conn.peer });
+    });
   });
 }
 
@@ -450,7 +650,7 @@ function llamarA(idRemoto, nombreRemoto) {
   registrarLlamada(idRemoto, llamada, nombreRemoto);
 }
 
-// --- Registrar llamada (entrante o saliente) + UI ---
+// --- Registrar llamada de voz (entrante o saliente) + UI ---
 function registrarLlamada(idRemoto, llamada, nombreRemoto) {
   llamadas.set(idRemoto, llamada);
   agregarParticipanteUI(idRemoto, nombreRemoto);
@@ -470,6 +670,67 @@ function registrarLlamada(idRemoto, llamada, nombreRemoto) {
 
   llamada.on('close', () => quitarParticipante(idRemoto));
   llamada.on('error', () => quitarParticipante(idRemoto));
+
+  // Si ya estoy compartiendo pantalla, este participante nuevo también tiene que verla
+  if (pantallaStream && !llamadasPantalla.has(idRemoto)) {
+    iniciarLlamadaPantallaCon(idRemoto);
+  }
+}
+
+// --- Compartir pantalla ---
+btnPantalla.addEventListener('click', () => {
+  if (pantallaStream) {
+    detenerCompartirPantalla();
+  } else {
+    iniciarCompartirPantalla();
+  }
+});
+
+async function iniciarCompartirPantalla() {
+  try {
+    pantallaStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+  } catch (e) {
+    return; // el usuario canceló el selector de pantalla/ventana
+  }
+  btnPantalla.classList.add('activo');
+  btnPantalla.textContent = '🛑';
+
+  // Le mandamos el video a todos los que ya tengo en llamada de voz
+  llamadas.forEach((_, idRemoto) => iniciarLlamadaPantallaCon(idRemoto));
+
+  // Si el usuario corta desde el control nativo del navegador ("Dejar de compartir")
+  pantallaStream.getVideoTracks()[0].addEventListener('ended', detenerCompartirPantalla);
+}
+
+function iniciarLlamadaPantallaCon(idRemoto) {
+  const llamada = peer.call(idRemoto, pantallaStream, { metadata: { tipo: 'pantalla', name: miNombre } });
+  llamadasPantalla.set(idRemoto, llamada);
+}
+
+function detenerCompartirPantalla() {
+  if (!pantallaStream) return;
+  pantallaStream.getTracks().forEach((t) => t.stop());
+  pantallaStream = null;
+  llamadasPantalla.forEach((llamada) => llamada.close());
+  llamadasPantalla.clear();
+  btnPantalla.classList.remove('activo');
+  btnPantalla.textContent = '🖥️';
+}
+
+// --- Recibir la pantalla de otro participante ---
+function manejarPantallaEntrante(llamada) {
+  const nombre = (llamada.metadata && llamada.metadata.name) || 'Alguien';
+
+  llamada.on('stream', (streamRemoto) => {
+    videoPantalla.srcObject = streamRemoto;
+    pantallaPresentador.textContent = `${nombre} está compartiendo su pantalla`;
+    areaPantalla.classList.remove('oculto');
+  });
+
+  llamada.on('close', () => {
+    areaPantalla.classList.add('oculto');
+    videoPantalla.srcObject = null;
+  });
 }
 
 function quitarParticipante(idRemoto) {
@@ -484,14 +745,17 @@ function quitarParticipante(idRemoto) {
 
 function agregarParticipanteUI(idRemoto, nombreRemoto) {
   if (document.getElementById('p-' + idRemoto)) return;
-  const li = document.createElement('li');
-  li.id = 'p-' + idRemoto;
-  li.innerHTML = `
-    <div class="vu"><span></span><span></span><span></span><span></span></div>
-    <span class="nombre-p">${escaparHtml(nombreRemoto || 'Anónimo')}</span>
-    <span class="id-p">${idRemoto.slice(0, 6)}</span>
+  const nombre = nombreRemoto || 'Anónimo';
+  const tile = document.createElement('div');
+  tile.id = 'p-' + idRemoto;
+  tile.className = 'tile';
+  tile.innerHTML = `
+    <div class="avatar" style="background:${colorDeNombre(nombre)}">${iniciales(nombre)}</div>
+    <div class="tile-etiqueta">
+      <span class="tile-nombre">${escaparHtml(nombre)}</span>
+    </div>
   `;
-  participantesEl.appendChild(li);
+  grillaTiles.appendChild(tile);
 }
 
 function escaparHtml(texto) {
@@ -510,17 +774,11 @@ function detectarHabla(idRemoto, stream) {
   const datos = new Uint8Array(analizador.frequencyBinCount);
 
   function chequear() {
-    const li = document.getElementById('p-' + idRemoto);
-    if (!li) return;
+    const tile = document.getElementById('p-' + idRemoto);
+    if (!tile) return;
     analizador.getByteFrequencyData(datos);
     const volumen = datos.reduce((a, b) => a + b, 0) / datos.length;
-    const hablando = volumen > 15;
-    li.classList.toggle('hablando', hablando);
-    const barras = li.querySelectorAll('.vu span');
-    barras.forEach((b, i) => {
-      const alto = hablando ? Math.min(14, 4 + volumen / (4 + i * 2)) : 4;
-      b.style.height = alto + 'px';
-    });
+    tile.classList.toggle('hablando', volumen > 15);
     requestAnimationFrame(chequear);
   }
   chequear();
