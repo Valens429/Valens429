@@ -2,304 +2,389 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Canal — Voz P2P</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P2PC — Llamadas peer-to-peer</title>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
   :root {
-    --bg: #171310;
-    --panel: #1d1712;
-    --panel-raised: #241d16;
-    --line: #3d3120;
-    --amber: #ffb000;
-    --amber-dim: #8a6420;
-    --text: #f2e9da;
-    --muted: #8a7f6e;
-    --danger: #e2543a;
+    --bg-lobby: #f5f6f8;
+    --surface: #ffffff;
+    --line: #e3e6ea;
+    --text: #16181c;
+    --muted: #6b7280;
+    --muted-2: #9aa1ab;
+    --accent: #2f6fed;
+    --accent-hover: #2559c9;
+    --accent-soft: rgba(47,111,237,0.1);
+    --danger: #e5484d;
+    --danger-hover: #ff5c60;
+    --room-bg: #131417;
+    --tile-bg: #1c1e22;
+    --tile-line: #2a2d33;
+    --radius-lg: 18px;
+    --radius-md: 12px;
+    --shadow-card: 0 1px 2px rgba(16,24,40,0.04), 0 8px 24px rgba(16,24,40,0.07);
   }
 
   * { box-sizing: border-box; }
 
   body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    background: var(--bg);
-    background-image:
-      radial-gradient(ellipse at top, rgba(255,176,0,0.05), transparent 60%);
-    color: var(--text);
-    max-width: 560px;
-    margin: 32px auto;
-    padding: 0 18px 60px;
-  }
-
-  header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 14px;
-    margin-bottom: 24px;
-  }
-
-  header h1 {
-    font-size: 19px;
-    font-weight: 600;
     margin: 0;
-    letter-spacing: 0.3px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg-lobby);
+    color: var(--text);
+    min-height: 100vh;
+    transition: background 0.2s ease;
+  }
+  body.en-sala { background: var(--room-bg); color: #f1f2f4; }
+
+  button, input, select { font-family: inherit; }
+
+  /* ================= LOBBY ================= */
+  #vistaInicio {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+  }
+  #vistaInicio.oculto { display: none; }
+
+  .marca {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 26px;
+  }
+  .marca svg { color: var(--accent); }
+  .marca-texto {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+  }
+  .marca-sub {
+    font-size: 13px;
+    color: var(--muted-2);
+    padding-left: 8px;
+    margin-left: 8px;
+    border-left: 1px solid var(--line);
   }
 
-  header .canal-id {
-    font-family: 'Consolas', 'SF Mono', monospace;
-    font-size: 12px;
-    color: var(--amber-dim);
-  }
-
-  .panel {
-    background: var(--panel);
+  .tarjeta-lobby {
+    width: 100%;
+    max-width: 396px;
+    background: var(--surface);
     border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 18px 20px;
-    margin-bottom: 14px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: 30px 28px 26px;
   }
 
-  .panel + .panel { margin-top: -6px; }
+  .avatar-preview {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #cfd4db;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 21px;
+    margin: 0 auto 18px;
+    transition: background 0.15s ease;
+  }
 
-  .campo { margin-bottom: 14px; }
+  .campo { margin-bottom: 16px; }
   .campo:last-child { margin-bottom: 0; }
 
   .etiqueta {
-    font-size: 12px;
+    font-size: 12.5px;
+    font-weight: 600;
     color: var(--muted);
-    margin-bottom: 7px;
+    margin-bottom: 6px;
     display: block;
   }
 
   input, select {
-    font-family: inherit;
-    font-size: 14px;
+    font-size: 14.5px;
     padding: 10px 12px;
-    border-radius: 3px;
+    border-radius: 9px;
     border: 1px solid var(--line);
-    background: var(--bg);
+    background: var(--surface);
     color: var(--text);
     width: 100%;
+    appearance: none;
   }
-
-  input:focus, select:focus, button:focus-visible {
-    outline: 2px solid var(--amber);
-    outline-offset: 1px;
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 32px;
   }
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  input::placeholder { color: var(--muted-2); }
 
-  input::placeholder { color: #55493a; }
+  #inputNombre { text-align: center; font-size: 15.5px; font-weight: 500; }
+
+  .medidor-nivel {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 16px;
+    margin-top: 9px;
+  }
+  .medidor-nivel span {
+    flex: 1;
+    height: 30%;
+    background: var(--line);
+    border-radius: 2px;
+    transition: height 0.08s ease, background 0.08s ease;
+  }
+  .medidor-nivel span.activa { background: var(--accent); height: 100%; }
 
   button {
-    font-family: inherit;
-    font-size: 14px;
+    font-size: 14.5px;
     font-weight: 600;
-    padding: 10px 16px;
-    border-radius: 3px;
-    border: 1px solid var(--amber-dim);
-    background: transparent;
-    color: var(--amber);
+    padding: 11px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--text);
     cursor: pointer;
-    transition: background 0.15s ease, color 0.15s ease;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
   }
-
-  button:hover { background: rgba(255,176,0,0.1); }
-  button:active { background: rgba(255,176,0,0.18); }
+  button:hover { background: #f4f5f7; }
+  button:active { transform: scale(0.98); }
+  button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   button.primario {
-    background: var(--amber);
-    color: #1a1204;
-    border-color: var(--amber);
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
-  button.primario:hover { background: #ffc63d; }
+  button.primario:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
 
-  button.peligro { border-color: var(--danger); color: var(--danger); }
-  button.peligro:hover { background: rgba(226,84,58,0.12); }
-
-  button:disabled {
-    opacity: 0.35;
-    cursor: not-allowed;
-  }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .fila { display: flex; gap: 8px; }
   .fila input { flex: 1; }
-  .fila button { flex-shrink: 0; }
+  .fila button { flex-shrink: 0; display: flex; align-items: center; }
 
-  .codigo-display {
-    font-family: 'Consolas', 'SF Mono', monospace;
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--amber);
-    letter-spacing: 1.5px;
-    user-select: all;
-    padding: 10px 12px;
-    background: var(--bg);
-    border: 1px dashed var(--amber-dim);
-    border-radius: 3px;
+  .separador {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0 16px;
+    color: var(--muted-2);
+    font-size: 12.5px;
   }
-
-  #vistaInicio.oculto,
-  #vistaSala.oculto,
-  .oculto { display: none !important; }
+  .separador::before, .separador::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
 
   .estado-linea {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 12px;
+    justify-content: center;
+    gap: 7px;
+    font-size: 12.5px;
     color: var(--muted);
-    margin-top: 4px;
+    margin-top: 18px;
   }
+  .punto { width: 6px; height: 6px; border-radius: 50%; background: var(--muted-2); flex-shrink: 0; }
+  .punto.on { background: #17b26a; box-shadow: 0 0 0 3px rgba(23,178,106,0.18); }
 
-  .punto {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--muted);
-  }
-  .punto.on { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
-
-  /* ---- Vista sala estilo Meet ---- */
-  #vistaSala.oculto { display: none !important; }
+  /* ================= SALA ================= */
+  #vistaSala.oculto { display: none; }
   #vistaSala {
     display: flex;
     flex-direction: column;
-    min-height: calc(100vh - 90px);
+    min-height: 100vh;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 18px 22px 100px;
   }
 
   .barra-sala {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
   }
-  .barra-sala .codigo-mini {
-    font-family: 'Consolas', 'SF Mono', monospace;
-    font-size: 12px;
-    color: var(--amber-dim);
-    background: var(--panel);
-    border: 1px solid var(--line);
-    padding: 6px 10px;
+  .barra-sala-izq { display: flex; align-items: center; gap: 14px; }
+  .marca-sala { display: flex; align-items: center; gap: 7px; color: var(--muted-2); }
+  .marca-sala svg { color: var(--accent); }
+  .marca-sala span { font-size: 13px; font-weight: 700; letter-spacing: -0.1px; }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #d5d7db;
+    padding: 6px 12px;
     border-radius: 20px;
+  }
+
+  .barra-sala .estado-linea { margin-top: 0; justify-content: flex-start; color: #b7bac0; }
+
+  .codigo-mini {
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.2px;
     cursor: pointer;
     user-select: all;
+    transition: border-color 0.15s ease, color 0.15s ease;
   }
-  .barra-sala .codigo-mini:hover { border-color: var(--amber-dim); color: var(--amber); }
-  .barra-sala .estado-linea { margin-top: 0; }
+  .codigo-mini svg { flex-shrink: 0; }
+  .codigo-mini:hover { border-color: rgba(47,111,237,0.5); color: #fff; }
+  .codigo-mini.pill-cta {
+    color: var(--accent);
+    border-color: rgba(47,111,237,0.4);
+    background: rgba(47,111,237,0.12);
+    animation: pulso-cta 1.8s ease-in-out infinite;
+  }
+  @keyframes pulso-cta {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(47,111,237,0.28); }
+    50% { box-shadow: 0 0 0 6px rgba(47,111,237,0); }
+  }
 
   .grilla-tiles {
     flex: 1;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
     align-content: start;
-    margin-bottom: 24px;
   }
 
   .tile {
     position: relative;
     aspect-ratio: 4 / 3;
-    background: var(--panel);
-    border: 2px solid var(--line);
-    border-radius: 12px;
+    background: var(--tile-bg);
+    border: 1px solid var(--tile-line);
+    border-radius: var(--radius-md);
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    overflow: hidden;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
   .tile.hablando {
-    border-color: var(--amber);
-    box-shadow: 0 0 0 4px rgba(255,176,0,0.13);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(47,111,237,0.22);
   }
-  .tile.yo { border-style: dashed; }
+  .tile.yo { border-style: dashed; border-color: #3a3d44; }
+  .tile.yo.hablando { border-style: solid; border-color: var(--accent); }
 
   .avatar {
-    width: 56px;
-    height: 56px;
+    width: 58px;
+    height: 58px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     font-size: 20px;
-    color: #1a1204;
+    color: #fff;
     flex-shrink: 0;
   }
 
   .tile-etiqueta {
     position: absolute;
-    left: 10px;
-    bottom: 9px;
-    right: 10px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 22px 12px 9px;
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 13px;
-    color: var(--text);
+    font-size: 12.5px;
+    color: #f1f2f4;
+    background: linear-gradient(transparent, rgba(0,0,0,0.5));
   }
-  .tile-nombre {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    flex: 1;
-  }
-  .tile-mute-icono {
-    font-size: 12px;
-    opacity: 0.85;
-    flex-shrink: 0;
-  }
+  .tile-nombre { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .tile-mute-icono { flex-shrink: 0; opacity: 0.9; color: var(--danger); display: flex; }
+  .tile-mute-icono svg { width: 13px; height: 13px; }
 
-  /* ---- Barra de controles flotante, al estilo Meet ---- */
   .barra-controles {
-    position: sticky;
-    bottom: 18px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 22px;
     display: flex;
     justify-content: center;
-    gap: 12px;
-    padding-top: 10px;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .controles-panel {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(28,29,33,0.72);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 8px;
+    border-radius: 30px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.35);
   }
 
   .boton-control {
-    width: 52px;
-    height: 52px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    background: var(--panel-raised);
-    border: 1px solid var(--line);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.06);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
     cursor: pointer;
-    color: var(--text);
-    transition: background 0.15s ease, border-color 0.15s ease;
+    color: #f1f2f4;
+    transition: background 0.15s ease;
+    padding: 0;
   }
-  .boton-control:hover { border-color: var(--amber-dim); }
-  .boton-control.activo {
-    background: var(--amber);
-    color: #1a1204;
-    border-color: var(--amber);
-  }
+  .boton-control:hover { background: rgba(255,255,255,0.14); }
+  .boton-control.activo { background: var(--danger); border-color: var(--danger); color: #fff; }
+  .boton-control.activo:hover { background: var(--danger-hover); }
+
   .boton-control.salir {
     background: var(--danger);
     border-color: var(--danger);
-    color: #1a0a08;
-    width: 68px;
-    border-radius: 26px;
+    color: #fff;
+    width: 62px;
+    border-radius: 24px;
   }
-  .boton-control.salir:hover { background: #f26a4f; }
+  .boton-control.salir:hover { background: var(--danger-hover); }
 
   .area-pantalla {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 12px;
+    background: var(--tile-bg);
+    border: 1px solid var(--tile-line);
+    border-radius: var(--radius-md);
     padding: 10px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
   .pantalla-header {
-    font-size: 12px;
-    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: #b7bac0;
     margin-bottom: 8px;
   }
   #videoPantalla {
@@ -308,67 +393,110 @@
     border-radius: 8px;
     background: #000;
   }
+
+  .oculto { display: none !important; }
+
+  @media (max-width: 480px) {
+    .tarjeta-lobby { padding: 26px 20px 22px; }
+    #vistaSala { padding: 16px 14px 100px; }
+    .grilla-tiles { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+  }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>📻 Canal</h1>
-  <div class="canal-id" id="miIdChico"></div>
-</header>
-
 <!-- VISTA INICIO: elegir nombre y crear/unirse -->
 <div id="vistaInicio">
-  <div class="panel">
-    <div class="campo">
-      <label class="etiqueta">Tu nombre</label>
-      <input id="inputNombre" placeholder="¿Cómo te decimos?" maxlength="20">
-    </div>
-    <div class="campo">
-      <label class="etiqueta">Micrófono de entrada</label>
-      <select id="selectMic"><option>Permití el micrófono para ver opciones</option></select>
-    </div>
+  <div class="marca">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="7" cy="8" r="3.2"/><circle cx="17" cy="16" r="3.2"/><path d="M9.6 9.8 14.4 14.2"/></svg>
+    <span class="marca-texto">P2PC</span>
+    <span class="marca-sub">llamadas directas, sin servidor de por medio</span>
   </div>
 
-  <div class="panel">
+  <div class="tarjeta-lobby">
+    <div class="avatar-preview" id="avatarPreview">?</div>
+
     <div class="campo">
-      <button id="btnCrear" class="primario" style="width:100%">Crear canal nuevo</button>
+      <input id="inputNombre" placeholder="¿Cómo te llamamos?" maxlength="20">
     </div>
+
     <div class="campo">
-      <label class="etiqueta">O unite con un código</label>
+      <label class="etiqueta">Micrófono</label>
+      <select id="selectMic"><option>Permití el micrófono para ver opciones</option></select>
+      <div class="medidor-nivel" id="medidorNivel">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="campo">
+      <button id="btnCrear" class="primario" style="width:100%">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        Crear canal nuevo
+      </button>
+    </div>
+
+    <div class="separador">o unite con un código</div>
+
+    <div class="campo">
       <div class="fila">
         <input id="inputCodigo" placeholder="código del canal">
         <button id="btnUnirse">Unirme</button>
       </div>
     </div>
   </div>
+
   <div class="estado-linea"><span class="punto" id="puntoInicio"></span><span id="estadoInicio">Ingresá tu nombre para empezar</span></div>
 </div>
 
 <!-- VISTA SALA: ya conectado -->
 <div id="vistaSala" class="oculto">
   <div class="barra-sala">
-    <div class="estado-linea"><span class="punto on"></span><span id="estadoSala">Conectado</span></div>
-    <div class="codigo-mini" id="codigoSala" title="Click para copiar y compartir"></div>
+    <div class="barra-sala-izq">
+      <div class="marca-sala">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="7" cy="8" r="3.2"/><circle cx="17" cy="16" r="3.2"/><path d="M9.6 9.8 14.4 14.2"/></svg>
+        <span>P2PC</span>
+      </div>
+      <div class="estado-linea chip"><span class="punto on"></span><span id="estadoSala">Conectado</span></div>
+    </div>
+    <div class="codigo-mini chip" id="codigoSala" title="Click para copiar y compartir">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      <span id="codigoSalaTexto">Click acá para copiar el código</span>
+    </div>
   </div>
 
   <div class="area-pantalla oculto" id="areaPantalla">
-    <div class="pantalla-header" id="pantallaPresentador"></div>
+    <div class="pantalla-header">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      <span id="pantallaPresentador"></span>
+    </div>
     <video id="videoPantalla" autoplay playsinline></video>
   </div>
 
   <div class="grilla-tiles" id="grillaTiles"></div>
 
   <div class="barra-controles">
-    <button class="boton-control" id="btnMute" title="Silenciar micrófono">🎤</button>
-    <button class="boton-control" id="btnPantalla" title="Compartir pantalla">🖥️</button>
-    <button class="boton-control salir" id="btnSalir" title="Salir del canal">📴</button>
+    <div class="controles-panel">
+      <button class="boton-control" id="btnMute" title="Silenciar micrófono"></button>
+      <button class="boton-control" id="btnPantalla" title="Compartir pantalla"></button>
+      <button class="boton-control salir" id="btnSalir" title="Salir del canal">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7 2 2.7 3.6 2.7 6c0 1.6 1 3.9 2.1 5.7.4.6 1.2.8 1.8.4l2.5-1.6c.5-.3.7-.9.5-1.4l-.7-1.7c1-.3 2.1-.5 3.1-.5s2.1.2 3.1.5l-.7 1.7c-.2.5 0 1.1.5 1.4l2.5 1.6c.6.4 1.4.2 1.8-.4C20.3 9.9 21.3 7.6 21.3 6 21.3 3.6 17 2 12 2z"/></svg>
+      </button>
+    </div>
   </div>
 </div>
 
 <div id="audios"></div>
 
 <script>
+// --- Íconos SVG reutilizados como plantillas de texto ---
+const svgMicOn = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v1a7 7 0 0 0 14 0v-1"/><path d="M12 18v3"/></svg>';
+const svgMicOff = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9v3a3 3 0 0 0 4.6 2.5M15 8.4V5a3 3 0 0 0-5.9-.7"/><path d="M5 10v1a7 7 0 0 0 10.6 6M19 10v1c0 .9-.1 1.7-.4 2.5"/><path d="M12 18v3M3 3l18 18"/></svg>';
+const svgMicOffMini = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9v3a3 3 0 0 0 4.6 2.5M15 8.4V5a3 3 0 0 0-5.9-.7"/><path d="M5 10v1a7 7 0 0 0 10.6 6M19 10v1c0 .9-.1 1.7-.4 2.5"/><path d="M12 18v3M3 3l18 18"/></svg>';
+const svgScreenOn = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg>';
+const svgScreenOff = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3M2 4l20 14"/></svg>';
+const svgCopiado = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+const svgCopiar = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+
 let peer = null;
 let miStream = null;
 let muteado = false;
@@ -386,6 +514,7 @@ let llamadasPantalla = new Map();   // peerId -> RTCall (salientes, cuando yo co
 const vistaInicio = document.getElementById('vistaInicio');
 const vistaSala = document.getElementById('vistaSala');
 const inputNombre = document.getElementById('inputNombre');
+const avatarPreview = document.getElementById('avatarPreview');
 const selectMic = document.getElementById('selectMic');
 const btnCrear = document.getElementById('btnCrear');
 const btnUnirse = document.getElementById('btnUnirse');
@@ -393,6 +522,7 @@ const inputCodigo = document.getElementById('inputCodigo');
 const estadoInicio = document.getElementById('estadoInicio');
 const puntoInicio = document.getElementById('puntoInicio');
 const codigoSala = document.getElementById('codigoSala');
+const codigoSalaTexto = document.getElementById('codigoSalaTexto');
 const grillaTiles = document.getElementById('grillaTiles');
 const btnMute = document.getElementById('btnMute');
 const btnPantalla = document.getElementById('btnPantalla');
@@ -401,8 +531,29 @@ const videoPantalla = document.getElementById('videoPantalla');
 const pantallaPresentador = document.getElementById('pantallaPresentador');
 const btnSalir = document.getElementById('btnSalir');
 const estadoSala = document.getElementById('estadoSala');
-const miIdChico = document.getElementById('miIdChico');
 const audiosEl = document.getElementById('audios');
+
+btnMute.innerHTML = svgMicOn;
+btnPantalla.innerHTML = svgScreenOn;
+
+// --- Color de avatar determinístico según el nombre (se usa también en la vista previa del lobby) ---
+function colorDeNombre(nombre) {
+  let hash = 0;
+  for (let i = 0; i < nombre.length; i++) hash = nombre.charCodeAt(i) + ((hash << 5) - hash);
+  const hue = Math.abs(hash) % 360;
+  return `hsl(${hue}, 48%, 46%)`;
+}
+
+function iniciales(nombre) {
+  const partes = nombre.trim().split(/\s+/);
+  return ((partes[0]?.[0] || '?') + (partes[1]?.[0] || '')).toUpperCase();
+}
+
+inputNombre.addEventListener('input', () => {
+  const nombre = inputNombre.value.trim();
+  avatarPreview.textContent = nombre ? iniciales(nombre) : '?';
+  avatarPreview.style.background = nombre ? colorDeNombre(nombre) : '#cfd4db';
+});
 
 // --- Sonido de entrada/salida (sintetizado, sin archivos externos) ---
 let audioCtx = null;
@@ -438,13 +589,39 @@ async function listarMicros() {
     .join('');
 }
 
-selectMic.addEventListener('change', () => iniciarMicrofono(selectMic.value));
+// --- Medidor de nivel del micrófono en el lobby (estilo "probá tu audio" de Zoom) ---
+function medirNivelLobby() {
+  if (!miStream) return;
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const fuente = ctx.createMediaStreamSource(miStream);
+  const analizador = ctx.createAnalyser();
+  analizador.fftSize = 512;
+  fuente.connect(analizador);
+  const datos = new Uint8Array(analizador.frequencyBinCount);
+  const barras = document.querySelectorAll('#medidorNivel span');
+
+  function chequear() {
+    if (!vistaInicio || vistaInicio.classList.contains('oculto')) return;
+    analizador.getByteFrequencyData(datos);
+    const volumen = datos.reduce((a, b) => a + b, 0) / datos.length;
+    const activos = Math.min(barras.length, Math.round(volumen / 6));
+    barras.forEach((b, i) => b.classList.toggle('activa', i < activos));
+    requestAnimationFrame(chequear);
+  }
+  chequear();
+}
+
+selectMic.addEventListener('change', async () => {
+  await iniciarMicrofono(selectMic.value);
+  medirNivelLobby();
+});
 
 // Pedimos permiso apenas carga la página para poder listar los micrófonos
 (async () => {
   try {
     await iniciarMicrofono();
     await listarMicros();
+    medirNivelLobby();
     estadoInicio.textContent = 'Ingresá tu nombre para empezar';
   } catch (e) {
     estadoInicio.textContent = 'Necesitamos permiso de micrófono para continuar';
@@ -455,7 +632,7 @@ btnMute.addEventListener('click', () => {
   if (!miStream) return;
   muteado = !muteado;
   miStream.getAudioTracks().forEach(t => t.enabled = !muteado);
-  btnMute.textContent = muteado ? '🔇' : '🎤';
+  btnMute.innerHTML = muteado ? svgMicOff : svgMicOn;
   btnMute.classList.toggle('activo', muteado);
   actualizarTilePropio();
 });
@@ -512,30 +689,36 @@ function crearPeerBase() {
 function pasarASala(codigoMostrar) {
   vistaInicio.classList.add('oculto');
   vistaSala.classList.remove('oculto');
-  miIdChico.textContent = peer.id.slice(0, 8);
-  codigoSala.textContent = 'Canal: ' + (codigoMostrar || peer.id).slice(0, 8);
+  document.body.classList.add('en-sala');
   codigoSala.dataset.codigoCompleto = codigoMostrar || peer.id;
+  actualizarPillCodigo();
   agregarTilePropio();
   detectarHablaPropia();
 }
 
+// La píldora del código tiene dos estados: antes de que se una alguien, invita a clickear;
+// una vez que hay gente (o ya se copió), muestra el código posta para volver a compartirlo.
+function actualizarPillCodigo() {
+  if (llamadas.size === 0) {
+    codigoSala.querySelector('svg').outerHTML = svgCopiar;
+    codigoSalaTexto.textContent = 'Click acá para copiar el código';
+    codigoSala.classList.add('pill-cta');
+  } else {
+    codigoSala.querySelector('svg').outerHTML = svgCopiar;
+    codigoSalaTexto.textContent = 'Código: ' + codigoSala.dataset.codigoCompleto;
+    codigoSala.classList.remove('pill-cta');
+  }
+}
+
 codigoSala.addEventListener('click', () => {
   const codigo = codigoSala.dataset.codigoCompleto;
-  if (codigo) navigator.clipboard.writeText(codigo);
+  if (!codigo) return;
+  navigator.clipboard.writeText(codigo);
+  codigoSala.querySelector('svg').outerHTML = svgCopiado;
+  codigoSalaTexto.textContent = '¡Copiado!';
+  clearTimeout(codigoSala._timeoutCopiado);
+  codigoSala._timeoutCopiado = setTimeout(actualizarPillCodigo, 1500);
 });
-
-// --- Color de avatar determinístico según el nombre ---
-function colorDeNombre(nombre) {
-  let hash = 0;
-  for (let i = 0; i < nombre.length; i++) hash = nombre.charCodeAt(i) + ((hash << 5) - hash);
-  const hue = Math.abs(hash) % 360;
-  return `hsl(${hue}, 55%, 55%)`;
-}
-
-function iniciales(nombre) {
-  const partes = nombre.trim().split(/\s+/);
-  return ((partes[0]?.[0] || '?') + (partes[1]?.[0] || '')).toUpperCase();
-}
 
 function agregarTilePropio() {
   const tile = document.createElement('div');
@@ -553,7 +736,7 @@ function agregarTilePropio() {
 
 function actualizarTilePropio() {
   const icono = document.getElementById('iconoMutePropio');
-  if (icono) icono.textContent = muteado ? '🔇' : '';
+  if (icono) icono.innerHTML = muteado ? svgMicOffMini : '';
 }
 
 // Analiza el propio micrófono para iluminar tu tile cuando hablás
@@ -599,7 +782,7 @@ btnUnirse.addEventListener('click', () => {
     const conn = peer.connect(codigo, { metadata: { name: miNombre } });
 
     conn.on('open', () => {
-      pasarASala(null);
+      pasarASala(codigo);
       estadoSala.textContent = 'Conectado al canal';
     });
 
@@ -654,6 +837,7 @@ function llamarA(idRemoto, nombreRemoto) {
 function registrarLlamada(idRemoto, llamada, nombreRemoto) {
   llamadas.set(idRemoto, llamada);
   agregarParticipanteUI(idRemoto, nombreRemoto);
+  actualizarPillCodigo();
   sonidoEntrada();
 
   llamada.on('stream', (streamRemoto) => {
@@ -693,7 +877,7 @@ async function iniciarCompartirPantalla() {
     return; // el usuario canceló el selector de pantalla/ventana
   }
   btnPantalla.classList.add('activo');
-  btnPantalla.textContent = '🛑';
+  btnPantalla.innerHTML = svgScreenOff;
 
   // Le mandamos el video a todos los que ya tengo en llamada de voz
   llamadas.forEach((_, idRemoto) => iniciarLlamadaPantallaCon(idRemoto));
@@ -714,7 +898,7 @@ function detenerCompartirPantalla() {
   llamadasPantalla.forEach((llamada) => llamada.close());
   llamadasPantalla.clear();
   btnPantalla.classList.remove('activo');
-  btnPantalla.textContent = '🖥️';
+  btnPantalla.innerHTML = svgScreenOn;
 }
 
 // --- Recibir la pantalla de otro participante ---
@@ -740,6 +924,7 @@ function quitarParticipante(idRemoto) {
   if (li) li.remove();
   const audioEl = document.getElementById('audio-' + idRemoto);
   if (audioEl) audioEl.remove();
+  actualizarPillCodigo();
   sonidoSalida();
 }
 
