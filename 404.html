@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>404 - Not Found</title>
+  <style>
+    :root {
+      --azul-claro: #0d3a5e;
+      --azul-oscuro: #092a47;
+      --texto: #e8f3fb;
+      --texto-suave: #8fb4cf;
+      --acento: #4fa3d9;
+      --ciclo: 9s;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+
+    body {
+      min-height: 100dvh;
+      overflow: hidden;
+      color: var(--texto);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(to bottom, var(--azul-claro) 0 50%, var(--azul-oscuro) 50% 100%);
+    }
+
+    /* ---------- Escena (todo lo que aparece y desaparece) ---------- */
+    .escena {
+      position: relative;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      animation: ciclo-escena var(--ciclo) infinite;
+    }
+
+    header { padding: clamp(1rem, 4vh, 2.5rem) 1rem 0; }
+
+    h1 {
+      position: relative;
+      margin: 0;
+      font-size: clamp(5rem, 22vw, 11rem);
+      line-height: .95;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      animation: temblor 3.2s infinite steps(1);
+    }
+    /* separación de colores (glitch RGB) */
+    h1::before, h1::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    h1::before {
+      color: #ff3d6e;
+      mix-blend-mode: screen;
+      animation: corte-a 2.6s infinite steps(1);
+    }
+    h1::after {
+      color: #38e8ff;
+      mix-blend-mode: screen;
+      animation: corte-b 3.1s infinite steps(1);
+    }
+
+    p {
+      margin: .5rem 0 0;
+      font-size: clamp(1rem, 3vw, 1.4rem);
+      color: var(--texto-suave);
+    }
+
+    .boton {
+      display: inline-block;
+      margin-top: 1.25rem;
+      padding: .8rem 1.8rem;
+      border-radius: 10px;
+      background: var(--acento);
+      color: var(--azul-oscuro);
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform .15s ease, background .15s ease;
+    }
+    .boton:hover { background: #7bbbe6; transform: translateY(-2px); }
+    .boton:focus-visible { outline: 3px solid var(--texto); outline-offset: 3px; }
+
+    .foto {
+      margin-top: auto;
+      width: min(90vw, 50dvh);
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      animation: foto-glitch 4.5s infinite steps(1);
+    }
+
+    /* ---------- Estática ---------- */
+    #estatica {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+      pointer-events: none;
+      z-index: 10;
+      animation: ciclo-estatica var(--ciclo) infinite;
+    }
+
+    /* líneas de escaneo + viñeta (tipo TV vieja) */
+    .crt {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 11;
+      background:
+        repeating-linear-gradient(to bottom, rgba(0,0,0,.18) 0 1px, transparent 1px 3px),
+        radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.55) 100%);
+    }
+
+    /* barra de interferencia que baja continuamente */
+    .barra {
+      position: fixed;
+      left: 0; right: 0;
+      height: 14vh;
+      top: -20vh;
+      pointer-events: none;
+      z-index: 12;
+      background: linear-gradient(to bottom, transparent, rgba(160,215,255,.12), transparent);
+      animation: barra 6s linear infinite;
+    }
+
+    /* texto durante la pérdida de señal */
+    .sin-senal {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 13;
+      pointer-events: none;
+      font: 700 clamp(1rem, 4vw, 1.8rem)/1 ui-monospace, "Courier New", monospace;
+      letter-spacing: .25em;
+      color: #fff;
+      background: rgba(5,20,35,.75);
+      padding: .6em 1em;
+      opacity: 0;
+      animation: ciclo-texto var(--ciclo) infinite;
+    }
+
+    /* ---------- Animaciones ---------- */
+    @keyframes ciclo-escena {
+      0%, 58%  { opacity: 1; transform: none; filter: none; }
+      59%      { opacity: 1; transform: translateX(-6px) skewX(4deg); filter: contrast(1.6) saturate(0); }
+      60%      { opacity: .7; transform: translateX(8px); }
+      61%      { opacity: 1; transform: translateX(-3px) skewX(-2deg); }
+      62%      { opacity: .3; transform: translateX(4px); }
+      63%, 70% { opacity: 0; }
+      71%      { opacity: .8; transform: translateX(5px) skewX(-3deg); filter: contrast(1.5); }
+      72%      { opacity: 0; }
+      73%      { opacity: 1; transform: translateX(-4px); filter: contrast(1.5) saturate(0); }
+      74%      { opacity: .4; }
+      75%      { opacity: 1; transform: translateX(2px); }
+      76%, 100%{ opacity: 1; transform: none; filter: none; }
+    }
+
+    @keyframes ciclo-estatica {
+      0%, 56%  { opacity: .07; }
+      59%      { opacity: .35; }
+      61%      { opacity: .6; }
+      63%, 70% { opacity: 1; }
+      72%      { opacity: .9; }
+      74%      { opacity: .5; }
+      77%, 100%{ opacity: .07; }
+    }
+
+    @keyframes ciclo-texto {
+      0%, 63%  { opacity: 0; }
+      64%      { opacity: 1; }
+      66%      { opacity: 0; }
+      67%      { opacity: 1; }
+      70%      { opacity: 1; }
+      71%, 100%{ opacity: 0; }
+    }
+
+    @keyframes barra {
+      from { top: -20vh; }
+      to   { top: 110vh; }
+    }
+
+    @keyframes temblor {
+      0%, 90%, 100% { transform: none; }
+      91% { transform: translate(-3px, 1px); }
+      93% { transform: translate(4px, -2px); }
+      95% { transform: translate(-2px, 0); }
+    }
+
+    @keyframes corte-a {
+      0%, 85%, 100% { transform: translate(-3px, 0); clip-path: inset(0 0 60% 0); }
+      88% { transform: translate(-9px, 0); clip-path: inset(30% 0 20% 0); }
+      92% { transform: translate(-5px, 0); clip-path: inset(70% 0 0 0); }
+      96% { transform: translate(-12px, 0); clip-path: inset(10% 0 55% 0); }
+    }
+
+    @keyframes corte-b {
+      0%, 80%, 100% { transform: translate(3px, 0); clip-path: inset(55% 0 0 0); }
+      84% { transform: translate(10px, 0); clip-path: inset(15% 0 50% 0); }
+      90% { transform: translate(6px, 0); clip-path: inset(0 0 75% 0); }
+      95% { transform: translate(12px, 0); clip-path: inset(40% 0 30% 0); }
+    }
+
+    @keyframes foto-glitch {
+      0%, 88%, 100% { transform: none; filter: none; }
+      89% { transform: translateX(-6px); filter: hue-rotate(40deg) contrast(1.4); }
+      91% { transform: translateX(7px); filter: saturate(0) contrast(1.6); }
+      93% { transform: translateX(-3px); filter: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .escena, h1, h1::before, h1::after, .foto, #estatica, .barra, .sin-senal { animation: none; }
+      h1::before, h1::after { display: none; }
+      #estatica { opacity: .06; }
+    }
+  </style>
+</head>
+<body>
+  <main class="escena">
+    <header>
+      <h1 data-text="404">404</h1>
+      <p>Not Found - No encontrado</p>
+      <a class="boton" href="/">Volver al inicio</a>
+    </header>
+
+    <img class="foto" src="/images/icons/404.png" alt="">
+  </main>
+
+  <canvas id="estatica" aria-hidden="true"></canvas>
+  <div class="crt" aria-hidden="true"></div>
+  <div class="barra" aria-hidden="true"></div>
+  <div class="sin-senal" aria-hidden="true">SIN SEÑAL</div>
+
+  <script>
+    // Estática de TV: ruido azulado dibujado en baja resolución y escalado
+    (function () {
+      var canvas = document.getElementById('estatica');
+      var ctx = canvas.getContext('2d');
+      var W = 220, H = 130;
+      canvas.width = W;
+      canvas.height = H;
+      var img = ctx.createImageData(W, H);
+      var d = img.data;
+      var ultimo = 0;
+
+      function dibujar(t) {
+        if (t - ultimo > 55) { // ~18 cuadros por segundo
+          ultimo = t;
+          for (var i = 0; i < d.length; i += 4) {
+            var v = Math.random() * 255;
+            d[i]     = v * 0.55;
+            d[i + 1] = v * 0.8;
+            d[i + 2] = v;
+            d[i + 3] = 255;
+          }
+          ctx.putImageData(img, 0, 0);
+        }
+        requestAnimationFrame(dibujar);
+      }
+      requestAnimationFrame(dibujar);
+    })();
+  </script>
+</body>
+</html>
