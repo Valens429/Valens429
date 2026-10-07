@@ -1439,8 +1439,8 @@ body.app-minimized .author-credit { display: inline-block; }
 
   // ---- CONFIG: completá esto para activar automatizaciones ----
   var CONFIG = {
-    YT_API_KEY: '',      // tu API key de YouTube Data API v3 (Google Cloud Console)
-    YT_CHANNEL_ID: '',   // el Channel ID real (no el @handle)
+    YT_API_KEY: 'AIzaSyAwoM2nTGcaU1McpSIGtIuSP4HEnBWJgr4',      // tu API key de YouTube Data API v3 (Google Cloud Console)
+    YT_CHANNEL_ID: 'UCBLOU0ikHrzXuFHmbpw0qqg',   // el Channel ID real (no el @handle)
   };
 
   // ---- ROUTER (hash: #contenido/nyxrar/youtube) ----
@@ -1600,24 +1600,38 @@ body.app-minimized .author-credit { display: inline-block; }
 
   // ---- YouTube: últimos videos vía YouTube Data API v3 (si hay API key) ----
   var ytLoaded = false;
-  function loadYouTubeVideos() {
-    if (ytLoaded) return;
-    var list = document.getElementById('yt-video-list');
-    if (!list || !CONFIG.YT_API_KEY || !CONFIG.YT_CHANNEL_ID) return;
-    var url = 'https://www.googleapis.com/youtube/v3/search?key=' + CONFIG.YT_API_KEY +
-      '&channelId=' + CONFIG.YT_CHANNEL_ID + '&part=snippet&order=date&maxResults=6&type=video';
-    fetch(url).then(function (r) { return r.json(); }).then(function (data) {
-      if (!data.items || !data.items.length) return;
-      ytLoaded = true;
-      list.innerHTML = data.items.map(function (it) {
-        var id = it.id.videoId;
-        var title = it.snippet.title;
-        var date = new Date(it.snippet.publishedAt).toLocaleDateString(t[CUR_LANG]['locale']);
-        return '<a href="https://youtube.com/watch?v=' + id + '" target="_blank" class="simple-item">' +
-          '<span class="simple-item-title">' + title + '</span><span class="simple-item-tag">' + date + '</span></a>';
-      }).join('');
-    }).catch(function () { /* deja el placeholder si falla */ });
+function loadYouTubeVideos() {
+  if (ytLoaded) return;
+  var list = document.getElementById('yt-video-list');
+  if (!list || !CONFIG.YT_API_KEY || !CONFIG.YT_CHANNEL_ID) return;
+
+  // La playlist de "subidas" tiene el mismo ID del canal pero con UU en vez de UC
+  var uploads = 'UU' + CONFIG.YT_CHANNEL_ID.slice(2);
+  var url = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet' +
+    '&maxResults=6&playlistId=' + uploads + '&key=' + CONFIG.YT_API_KEY;
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
   }
+
+  fetch(url).then(function (r) { return r.json(); }).then(function (data) {
+    if (!data.items || !data.items.length) {
+      console.warn('YouTube API:', data.error || 'sin resultados');
+      return;
+    }
+    ytLoaded = true;
+    list.innerHTML = data.items.map(function (it) {
+      var id = it.snippet.resourceId.videoId;
+      var date = new Date(it.snippet.publishedAt).toLocaleDateString(t[CUR_LANG]['locale']);
+      return '<a href="https://youtube.com/watch?v=' + id + '" target="_blank" class="simple-item">' +
+        '<span class="simple-item-title">' + esc(it.snippet.title) + '</span>' +
+        '<span class="simple-item-tag">' + date + '</span></a>';
+    }).join('');
+  }).catch(function (e) { console.warn('YouTube fetch falló', e); });
+}
+  
 
   applyLang(savedLang);
   applyRoute();
