@@ -1426,6 +1426,7 @@ body.app-minimized .author-credit { display: inline-block; }
       ROUTE_LABELS = ROUTE_LABELS_ALL[lang];
       applyRoute();
     }
+    if (typeof renderYT === 'function') renderYT();
     try { localStorage.setItem('valens429-lang', lang); } catch (e) {}
   }
   var langBtn = document.getElementById('langBtn');
@@ -1599,38 +1600,73 @@ body.app-minimized .author-credit { display: inline-block; }
   }
 
   // ---- YouTube: últimos videos vía YouTube Data API v3 (si hay API key) ----
-  var ytLoaded = false;
-function loadYouTubeVideos() {
-  if (ytLoaded) return;
-  var list = document.getElementById('yt-video-list');
-  if (!list || !CONFIG.YT_API_KEY || !CONFIG.YT_CHANNEL_ID) return;
+    var ytLoaded = false;
+  var ytItems = [];
+  var YT_SHORT_MAX = 60; // segundos: hasta acá se considera Short
 
-  // La playlist de "subidas" tiene el mismo ID del canal pero con UU en vez de UC
-  var uploads = 'UU' + CONFIG.YT_CHANNEL_ID.slice(2);
-  var url = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet' +
-    '&maxResults=6&playlistId=' + uploads + '&key=' + CONFIG.YT_API_KEY;
+  var YT_LABELS = {
+    es: { video: '🎬 Video', short: '📱 Short', live: '🔴 Directo' },
+    en: { video: '🎬 Video', short: '📱 Short', live: '🔴 Live' }
+  };
 
-  function esc(s) {
+  function ytEsc(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
 
-  fetch(url).then(function (r) { return r.json(); }).then(function (data) {
-    if (!data.items || !data.items.length) {
-      console.warn('YouTube API:', data.error || 'sin resultados');
-      return;
-    }
-    ytLoaded = true;
-    list.innerHTML = data.items.map(function (it) {
-      var id = it.snippet.resourceId.videoId;
-      var date = new Date(it.snippet.publishedAt).toLocaleDateString(t[CUR_LANG]['locale']);
-      return '<a href="https://youtube.com/watch?v=' + id + '" target="_blank" class="simple-item">' +
-        '<span class="simple-item-title">' + esc(it.snippet.title) + '</span>' +
-        '<span class="simple-item-tag">' + date + '</span></a>';
+  function ytSeconds(iso) {
+    var m = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/.exec(iso || '') || [];
+    return (+m[1] || 0) * 3600 + (+m[2] || 0) * 60 + (+m[3] || 0);
+  }
+
+  function renderYT() {
+    var list = document.getElementById('yt-video-list');
+    if (!list || !ytItems.length) return;
+    var loc = t[CUR_LANG]['locale'];
+    list.innerHTML = ytItems.map(function (v) {
+      var date = new Date(v.date).toLocaleDateString(loc, { day: 'numeric', month: 'short', year: 'numeric' });
+      return '<a href="https://youtube.com/watch?v=' + v.id + '" target="_blank" class="simple-item">' +
+        '<span class="simple-item-title">' + ytEsc(v.title) + '</span>' +
+        '<span class="simple-item-tag">' + YT_LABELS[CUR_LANG][v.type] + ' · ' + date + '</span></a>';
     }).join('');
-  }).catch(function (e) { console.warn('YouTube fetch falló', e); });
-}
+  }
+
+  function loadYouTubeVideos() {
+    if (ytLoaded) return;
+    var list = document.getElementById('yt-video-list');
+    if (!list || !CONFIG.YT_API_KEY || !CONFIG.YT_CHANNEL_ID) return;
+
+    var uploads = 'UU' + CONFIG.YT_CHANNEL_ID.slice(2);
+    var api = 'https://www.googleapis.com/youtube/v3/';
+    var plUrl = api + 'playlistItems?part=snippet&maxResults=6&playlistId=' + uploads + '&key=' + CONFIG.YT_API_KEY;
+
+    fetch(plUrl).then(function (r) { return r.json(); }).then(function (data) {
+      if (!data.items || !data.items.length) {
+        console.warn('YouTube API:', data.error || 'sin resultados');
+        return;
+      }
+      var ids = data.items.map(function (it) { return it.snippet.resourceId.videoId; });
+      var vUrl = api + 'videos?part=contentDetails,liveStreamingDetails&id=' + ids.join(',') +
+        '&key=' + CONFIG.YT_API_KEY;
+
+      return fetch(vUrl).then(function (r) { return r.json(); }).then(function (vd) {
+        var info = {};
+        (vd.items || []).forEach(function (v) { info[v.id] = v; });
+
+        ytItems = data.items.map(function (it) {
+          var id = it.snippet.resourceId.videoId;
+          var v = info[id] || {};
+          var type = 'video';
+          if (v.liveStreamingDetails) type = 'live';
+          else if (v.contentDetails && ytSeconds(v.contentDetails.duration) <= YT_SHORT_MAX) type = 'short';
+          return { id: id, title: it.snippet.title, date: it.snippet.publishedAt, type: type };
+        });
+        ytLoaded = true;
+        renderYT();
+      });
+    }).catch(function (e) { console.warn('YouTube fetch falló', e); });
+  }
   
 
   applyLang(savedLang);
