@@ -3,7 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <title>Lyric Studio — Generador de video-letras</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1B1620">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lyric Studio">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;800&family=Archivo+Black&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <style>
@@ -30,6 +38,7 @@
   }
   .wrap{max-width:1320px;margin:0 auto;padding:28px 24px 60px;}
   header{display:flex;align-items:baseline;gap:14px;margin-bottom:6px;flex-wrap:wrap;}
+  header .logo-img{width:34px;height:34px;border-radius:8px;align-self:center;flex-shrink:0;}
   header h1{
     font-family:var(--display); font-weight:700; font-size:28px; margin:0;
     letter-spacing:-0.02em;
@@ -140,6 +149,7 @@
 <body>
 <div class="wrap">
   <header>
+    <img class="logo-img" src="icon-192.png" alt="Lyric Studio" width="34" height="34">
     <h1>Lyric Studio</h1>
     <span class="tag">.LRC / .SRT → VIDEO</span>
   </header>
