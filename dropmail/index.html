@@ -2,7 +2,15 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#080810">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="dropmail">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="manifest" href="manifest.json">
   <title>dropmail · valens429.site</title>
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
   <style>
@@ -41,6 +49,7 @@
       background: rgba(8,8,16,0.9); backdrop-filter: blur(20px); flex-shrink: 0;
     }
     .logo-wrap { display: flex; align-items: center; gap: 14px; }
+    .logo-img { width: 34px; height: 34px; border-radius: 8px; display: block; flex-shrink: 0; }
     .logo { font-family: var(--display); font-weight: 800; font-size: 22px; letter-spacing: -0.5px; background: linear-gradient(135deg, var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .logo-badge { font-size: 10px; color: var(--muted); border: 1px solid var(--border2); padding: 3px 10px; letter-spacing: 2px; text-decoration: none; transition: color 0.2s, border-color 0.2s; }
     .logo-badge:hover { color: var(--cyan); border-color: var(--cyan); }
@@ -141,6 +150,7 @@
 <div class="app">
   <header>
     <div class="logo-wrap">
+      <img class="logo-img" src="icon-192.png" alt="dropmail" width="34" height="34">
       <div class="logo">dropmail</div>
       <a class="logo-badge" href="https://valens429.site" target="_blank" rel="noopener">by valens429.site</a>
     </div>
