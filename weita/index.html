@@ -2,7 +2,15 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0E2129">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Weita">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="manifest" href="manifest.json">
 <title>¿Qué extensión es? — Identificador de archivos</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap');
@@ -39,6 +47,7 @@
   }
 
   .wrap{max-width:640px;margin:0 auto;}
+  .logo-img{width:48px;height:48px;border-radius:11px;display:block;margin-bottom:20px;}
 
   .eyebrow{
     font-family:var(--mono);
@@ -279,6 +288,7 @@
 <body>
 <div class="wrap">
 
+  <img class="logo-img" src="icon-192.png" alt="Weita" width="48" height="48">
   <div class="eyebrow" id="eyebrow">Identificación por firma binaria</div>
   <h1>¿Qué extensión<br><span>es</span> este archivo?</h1>
   <p class="lede">Subí un archivo sin extensión (o con una que no le corresponde). Leemos sus primeros bytes, los comparamos contra firmas de formato conocidas, y te lo devolvemos con el nombre correcto.</p>
