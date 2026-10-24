@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Valen429.site Descargas</title>
+<link rel="icon" type="image/svg+xml" href="vc.svg">
+<title>Valen429: Descargas</title>
 <style>
   html, body { height: 100%; margin: 0; }
   body {
@@ -46,6 +47,16 @@
     letter-spacing: -0.02em;
     color: #fff;
   }
+  .brand {
+    position: fixed;
+    top: 1.2rem;
+    left: 1.5rem;
+    z-index: 2;
+    display: block;
+    width: 48px;
+    height: 48px;
+  }
+  .brand img { display: block; width: 100%; height: 100%; }
   #msg { color: #ff6b6b; }
   #msg.ok { color: #fff; }
   a.btn:hover, a.btn:focus-visible { background: #fff; color: #000; outline: none; }
@@ -53,11 +64,12 @@
 </head>
 <body>
 <canvas id="stars"></canvas>
-<div class="logo">Valens429.site: Descargas</div>
+<a class="brand" href="/" aria-label="Inicio"><img src="vc.svg" alt="VC"></a>
+<div class="logo">Valens429: Descargas</div>
 <main>
-  <h1>Vived.zip</h1>
-  <p>⚠️ Vived.zip es un troyano, Usalo bajo tu propio riesgo ⚠️</p>
-  <a class="btn" id="dl" href="Vived.zip-" download>Descargar Vived.zip</a>
+  <h1>Vived</h1>
+  <p>⚠️ Vived es un troyano, Usalo bajo tu propio riesgo ⚠️</p>
+  <a class="btn" id="dl" href="Vived.rar" download>Descargar Vived.rar</a>
   <p id="msg" role="alert" hidden></p>
 </main>
 
@@ -101,12 +113,12 @@
     e.preventDefault();
     msg.hidden = true;
     try {
-      const res = await fetch('Vived.zip-', { cache: 'no-store' });
+      const res = await fetch('Vived.rar', { cache: 'no-store' });
       if (!res.ok) throw new Error('not found');
       const url = URL.createObjectURL(await res.blob());
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'Vived.zip-';
+      a.download = 'Vived.rar';
       a.click();
       URL.revokeObjectURL(url);
       msg.className = 'ok';
@@ -114,7 +126,7 @@
       msg.hidden = false;
     } catch (err) {
       msg.className = '';
-      msg.textContent = 'No puedes descargar el archivo ahora por seguridad, espera al momento indicado';
+      msg.textContent = 'No puedes descargar el archivo ahora por seguridad, Espera al momento indicado';
       msg.hidden = false;
     }
   });
