@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Valen429.site Descargas</title>
+<style>
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: #000;
+    color: #fff;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    overflow: hidden;
+  }
+  canvas { position: fixed; inset: 0; z-index: 0; }
+  main {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+  h1 { font-size: clamp(2.5rem, 9vw, 6rem); margin: 0; letter-spacing: -0.02em; }
+  p { font-size: clamp(1rem, 2.5vw, 1.4rem); margin: 0; color: #b8b8c8; }
+  a.btn {
+    margin-top: 1.5rem;
+    padding: .8rem 1.6rem;
+    border: 1px solid #fff;
+    border-radius: 999px;
+    color: #fff;
+    text-decoration: none;
+    transition: background .2s, color .2s;
+  }
+  .logo {
+    position: fixed;
+    top: 1.2rem;
+    right: 1.5rem;
+    z-index: 2;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  #msg { color: #ff6b6b; }
+  #msg.ok { color: #fff; }
+  a.btn:hover, a.btn:focus-visible { background: #fff; color: #000; outline: none; }
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<div class="logo">Valens429.site: Descargas</div>
+<main>
+  <h1>Vived.zip</h1>
+  <p>⚠️ Vived.zip es un troyano, Usalo bajo tu propio riesgo ⚠️</p>
+  <a class="btn" id="dl" href="test.txt" download>Descargar Vived.zip</a>
+  <p id="msg" role="alert" hidden></p>
+</main>
+
+<script>
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let stars = [];
+
+  function resize() {
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+    stars = Array.from({ length: 150 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.5 + 0.3,
+      v: Math.random() * 0.4 + 0.1
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#fff';
+    for (const s of stars) {
+      ctx.globalAlpha = 0.4 + s.r / 3;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+      if (!reduce) {
+        s.y += s.v;
+        if (s.y > canvas.height) { s.y = 0; s.x = Math.random() * canvas.width; }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+
+  const dl = document.getElementById('dl');
+  const msg = document.getElementById('msg');
+  const PASSWORD = 'Vivedmalware'; 
+  dl.addEventListener('click', async (e) => {
+    e.preventDefault();
+    msg.hidden = true;
+    try {
+      const res = await fetch('Vived.zip', { cache: 'no-store' });
+      if (!res.ok) throw new Error('not found');
+      const url = URL.createObjectURL(await res.blob());
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'test.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+      msg.className = 'ok';
+      msg.textContent = 'Contraseña: ' + PASSWORD;
+      msg.hidden = false;
+    } catch (err) {
+      msg.className = '';
+      msg.textContent = 'No puedes descargar el archivo ahora por seguridad, espera al momento indicado';
+      msg.hidden = false;
+    }
+  });
+
+  addEventListener('resize', resize);
+  resize();
+  draw();
+</script>
+</body>
+</html>
