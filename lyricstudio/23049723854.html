@@ -3796,7 +3796,7 @@ $('autoL').onclick=()=>{
 };
 
 // ================= CUENTAS (Supabase: Google + correo) =================
-const SB_CFG={ url:'https://mvmbglzyfqvqqpkxvgfo.supabase.co', key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im12bWJnbHp5ZnF2cXFwa3h2Z2ZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMzMDgyODksImV4cCI6MjEwODg4NDI4OX0.vc9rh37bqrRW2p-PfzBu2shfhTrzP1f9gslF1Sp_urI' };   // ← pegá la URL del proyecto y la clave "anon public" (Supabase → Project Settings → API). Nunca la "service_role".
+const SB_CFG={ url:'https://fvnehoylbifarvwywims.supabase.co', key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2bmVob3lsYmlmYXJ2d3l3aW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0Nzg3NzcsImV4cCI6MjEwOTA1NDc3N30.u1_e7EZ3sgPBU9eLlo63UPXbNxAm-pjPjo3j4t29488' };   // ← pegá la URL del proyecto y la clave "anon public" (Supabase → Project Settings → API). Nunca la "service_role".
 const Acct={ sb:null, user:null, plan:'guest' };            // plan: guest (sin sesión) | free | pro
 const isPro=()=>Acct.plan==='pro';
 const acctOn=()=>!!(SB_CFG.url&&SB_CFG.key&&window.supabase&&location.protocol!=='file:');
