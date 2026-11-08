@@ -1,0 +1,21 @@
+Api AIC - API AI Chat
+=====================
+
+Archivos
+- index.html            La app completa (un solo archivo, sin servidor).
+- logo-api-aic.svg      Logo completo, fondo transparente (vectorial).
+- logo-api-aic.png      Logo completo en PNG transparente.
+- icono-api-aic.svg     Solo el simbolo de mensaje (vectorial, icono de la pestana).
+- favicon.ico           Icono de pestana para navegadores antiguos (16, 32 y 48 px).
+- favicon-192.png       Icono en PNG transparente (192 px).
+- icon-512.png          Icono en PNG transparente (512 px).
+- apple-touch-icon.png  Icono para pantalla de inicio en iPhone/iPad.
+
+Como subirlo
+1. Sube TODOS los archivos a la misma carpeta de tu hosting
+   (por ejemplo chat.tuweb.com o tuweb.com/chat/).
+2. Abre la direccion de esa carpeta: index.html carga solo.
+3. Usa HTTPS. Cada visitante pega su propia API key (se guarda en su navegador).
+
+Personalizar: al inicio del script de index.html esta el bloque
+"Personaliza aqui" (nombre, proveedores, sugerencias).

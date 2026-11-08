@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 328 120" width="328" height="120" role="img" aria-labelledby="t d">
+  <title id="t">Api AIC</title>
+  <desc id="d">Logo de Api AIC (API AI Chat): burbuja de chat con destello de inteligencia artificial.</desc>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#86f5e6"/>
+      <stop offset="1" stop-color="#2f8fe0"/>
+    </linearGradient>
+    <linearGradient id="gw" gradientUnits="userSpaceOnUse" x1="150" y1="30" x2="320" y2="90">
+      <stop offset="0" stop-color="#86f5e6"/>
+      <stop offset="1" stop-color="#2f8fe0"/>
+    </linearGradient>
+  </defs>
+  <!-- Icono: burbuja de chat con destellos recortados (transparentes) -->
+  <path fill="url(#g)" fill-rule="evenodd"
+    d="M32 6H88A26 26 0 0 1 114 32V68A26 26 0 0 1 88 94H50L22 114L26 92A26 26 0 0 1 6 68V32A26 26 0 0 1 32 6Z M60 20Q64 46 90 50Q64 54 60 80Q56 54 30 50Q56 46 60 20Z M90 17Q91.5 26.5 101 28Q91.5 29.5 90 39Q88.5 29.5 79 28Q88.5 26.5 90 17Z"/>
+  <!-- Texto: AIC -->
+  <g fill="none" stroke="url(#gw)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M150 90L178 30L206 90M163 74H193"/>
+    <path d="M232 54V90"/>
+    <path d="M316 41A30 30 0 1 0 316 79"/>
+  </g>
+  <!-- Destello como punto de la "i" -->
+  <path fill="url(#gw)" d="M232 18Q234 30 246 32Q234 34 232 46Q230 34 218 32Q230 30 232 18Z"/>
+</svg>

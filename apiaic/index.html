@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Api AIC · API AI Chat</title>
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%20role%3D%22img%22%20aria-label%3D%22Api%20AIC%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%2386f5e6%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%232f8fe0%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cpath%20fill%3D%22url%28%23g%29%22%20fill-rule%3D%22evenodd%22%20d%3D%22M17%204H47A15%2015%200%200%201%2062%2019V31A15%2015%200%200%201%2047%2046H27L11%2060L14%2045.5A15%2015%200%200%201%202%2031V19A15%2015%200%200%201%2017%204Z%20M32%2010Q34.5%2022.5%2049%2025Q34.5%2027.5%2032%2040Q29.5%2027.5%2015%2025Q29.5%2022.5%2032%2010Z%22%2F%3E%3C%2Fsvg%3E">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0a1114">
+<style>
+:root{color-scheme:dark;--bg:#0a1114;--panel:#121c21;--ink:#e6eff1;--mute:#8ba0a7;--line:#22333a;--accent:#4fd1c5;--aink:#05211f;--bot:#18262c;--code:#060c0e;--cink:#d8e8ec;--err:#ff8a80}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font:15px/1.6 "Segoe UI",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);display:grid;grid-template-columns:272px 1fr;grid-template-rows:minmax(0,1fr);height:100vh;height:100dvh;overflow:hidden}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:7px 12px}
+button:hover{border-color:var(--accent)}
+button:disabled{opacity:.5;cursor:default}
+button.primary{background:var(--accent);color:var(--aink);border-color:var(--accent);font-weight:600}
+button.ghost{background:transparent;border-color:transparent;color:var(--mute)}
+button.ghost:hover{color:var(--ink)}
+input,textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+h3.x,.body h3{margin:.7em 0 .3em;font:600 19px Georgia,serif}
+.tw{overflow-x:auto;margin:.6em 0}
+table{border-collapse:collapse;font-size:14px;min-width:50%}
+th,td{border:1px solid var(--line);padding:6px 11px;vertical-align:top}
+th{background:var(--bot);font-weight:600}
+blockquote{margin:.6em 0;padding:2px 14px;border-left:3px solid var(--accent);color:var(--mute)}
+hr{border:0;border-top:1px solid var(--line);margin:1em 0}
+.body ul,.body ol{padding-left:22px}
+.tag{font-size:11px;color:var(--accent);margin-left:8px;border:1px solid var(--accent);border-radius:99px;padding:0 6px}
+button.on{color:var(--accent);border-color:var(--accent)}
+a.btn{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:7px 12px;text-decoration:none;color:var(--ink);flex:none}
+.verdict{display:inline-block;padding:3px 12px;border-radius:999px;font-size:13px;font-weight:600;margin-bottom:6px}
+.verdict.ok{background:#14532d;color:#bbf7d0}.verdict.lim{background:#713f12;color:#fde68a}.verdict.no{background:#7f1d1d;color:#fecaca}
+#hbody ol{padding-left:20px;margin:6px 0 10px}#hbody li{margin-bottom:7px}
+#hbody code{background:var(--bot);padding:1px 5px;border-radius:5px;font-size:.92em}
+.chip i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px}
+i.ok{background:#4ade80}i.lim{background:#fbbf24}i.no{background:#f87171}
+small,.mute{color:var(--mute);font-size:13px}
+/* barra lateral */
+#side{height:100%;overflow:hidden;background:#0c171b;color:#dce9ec;display:flex;flex-direction:column;gap:12px;padding:16px;min-height:0}
+#side button{background:#14252b;border-color:#1f363e;color:#dce9ec}
+#side button.primary{background:#4fd1c5;color:#05211f;border-color:#4fd1c5}
+.brandlogo{display:flex;justify-content:center;padding:6px 0 10px}.brandlogo .logo{width:200px;max-width:100%;height:auto;display:block}
+.brand{font:600 20px/1 Georgia,"Times New Roman",serif;display:flex;align-items:center;gap:8px;padding:2px 2px 6px}
+.brand::before{content:"";width:12px;height:12px;border-radius:50%;background:#4fd1c5;box-shadow:7px 0 0 -2px #dce9ec}
+#list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px;min-height:0}
+.ci{display:flex;align-items:center;gap:4px;border-radius:9px;padding:7px 8px;cursor:pointer;color:#a9bec4}
+.ci span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ci:hover{background:#14252b}.ci.on{background:#1b333b;color:#fff}
+.ci button{padding:0 6px;background:transparent!important;border:0!important;color:#7f959c!important;opacity:0}
+.ci:hover button,.ci.on button{opacity:1}
+.foot{display:flex;flex-direction:column;gap:8px}
+/* principal */
+main{display:flex;flex-direction:column;min-width:0;min-height:0;height:100%}
+.top{display:flex;gap:8px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+.top #menu{display:none}
+.grow{flex:1;min-width:0}
+#provbtn{white-space:nowrap}
+.dd{position:relative}
+.ddlist{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:10;max-height:280px;overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.ddlist[hidden]{display:none}
+.ddopt{padding:8px 11px;cursor:pointer;font-size:14px;overflow-wrap:anywhere}
+.ddopt:hover,.ddopt.sel{background:var(--bot)}.ddopt.sel{font-weight:600}
+.ddempty{padding:10px 12px;color:var(--mute);font-size:13px}
+#log{flex:1;overflow-y:auto;padding:24px max(16px,calc((100% - 780px)/2));display:flex;flex-direction:column;gap:18px}
+.msg{max-width:100%;overflow-wrap:anywhere}
+.msg.user{align-self:flex-end;max-width:85%}
+.msg.user .body{background:var(--accent);color:var(--aink);padding:9px 14px;border-radius:16px 16px 4px 16px;white-space:pre-wrap}
+.msg.assistant .body{padding:0 2px}
+.msg.error{border:1px solid var(--err);color:var(--err);border-radius:12px;padding:10px 14px;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.body p,.body ul,.body ol{margin:0 0 .7em}.body>:last-child{margin-bottom:0}
+.body h4{margin:.6em 0 .3em;font:600 16px Georgia,serif}
+.body a{color:var(--accent)}
+.body img{max-width:100%;max-height:420px;border-radius:10px;display:block;margin-top:8px}
+.msg.user .body img{max-height:150px;margin:0 0 8px}
+.body pre{position:relative;background:var(--code);color:var(--cink);padding:12px 14px;border-radius:10px;overflow-x:auto;margin:.6em 0;font-size:13px}
+.body code{font-family:Consolas,Menlo,monospace;font-size:.92em}
+.body :not(pre)>code{background:var(--bot);padding:1px 5px;border-radius:5px}
+.cp{position:absolute;top:6px;right:6px;padding:2px 8px;font-size:12px;background:#1b2f37;color:#cfe3e8;border-color:#2b4651}
+.acts{display:flex;gap:4px;margin-top:4px;opacity:0;transition:opacity .15s}
+.msg:hover .acts,.msg:last-child .acts{opacity:1}
+.msg.user .acts{justify-content:flex-end}
+.acts button{padding:1px 8px;font-size:12px;border:0;background:transparent;color:var(--mute)}
+.acts button:hover{color:var(--ink)}
+.empty{margin:auto;text-align:center;max-width:520px;display:flex;flex-direction:column;gap:14px;align-items:center}
+.empty h2{font:600 30px/1.15 Georgia,serif;margin:0}
+.sugg{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.sugg button{border-radius:999px;font-size:14px}
+.card{border:1px dashed var(--accent);border-radius:14px;padding:14px 16px;text-align:left;background:var(--panel);display:flex;gap:14px;align-items:center}
+.card p{margin:2px 0 0}
+#status{font-size:12px;color:var(--mute);padding:0 max(16px,calc((100% - 780px)/2));min-height:20px}
+form{display:flex;flex-wrap:wrap;gap:8px;padding:6px max(16px,calc((100% - 780px)/2)) 18px;align-items:flex-end}
+.box{flex:1;min-width:0;display:flex;gap:8px;align-items:flex-end;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:8px}
+.box:focus-within{border-color:var(--accent)}
+.box textarea{border:0;background:transparent;resize:none;max-height:180px;padding:7px 6px}
+.box textarea:focus-visible{outline:0}
+#thumbs{flex:0 0 100%;display:flex;gap:8px;flex-wrap:wrap}#thumbs:empty{display:none}
+.th{position:relative}.th img{height:60px;width:60px;object-fit:cover;border-radius:8px;border:1px solid var(--line);display:block}
+.th button{position:absolute;top:-6px;right:-6px;width:20px;height:20px;padding:0;border-radius:50%;font-size:12px;line-height:1}
+/* ajustes */
+dialog{border:1px solid var(--line);border-radius:18px;padding:0;background:var(--panel);color:var(--ink);width:min(560px,94vw);max-height:92vh}
+dialog::backdrop{background:rgba(5,12,15,.6)}
+.inner{padding:22px;display:flex;flex-direction:column;gap:16px}
+.inner h3{margin:0;font:600 22px Georgia,serif}
+.f label{display:block;font-size:13px;color:var(--mute);margin-bottom:5px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border-radius:999px;padding:4px 12px;font-size:14px}
+.chip.on{background:var(--accent);color:var(--aink);border-color:var(--accent)}
+.row{display:flex;gap:6px}.row button{flex:none}
+.chk{display:flex;gap:10px;align-items:flex-start;cursor:pointer}.chk input{width:auto;margin-top:5px}
+@media(max-width:800px){
+ body{grid-template-columns:1fr}
+ #side{position:fixed;inset:0 18% 0 0;z-index:20;transform:translateX(-100%);transition:transform .2s;max-width:320px}
+ #side.open{transform:none;box-shadow:0 0 0 100vmax rgba(0,0,0,.5)}
+ .top #menu{display:block}#export{display:none}
+ .msg.user{max-width:94%}.empty h2{font-size:25px}.card{flex-direction:column;align-items:flex-start}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<aside id="side">
+  <div class="brandlogo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 328 120" role="img" aria-label="Api AIC · API AI Chat" class="logo">
+  <defs>
+    <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#86f5e6"/>
+      <stop offset="1" stop-color="#2f8fe0"/>
+    </linearGradient>
+    <linearGradient id="lg2" gradientUnits="userSpaceOnUse" x1="150" y1="30" x2="320" y2="90">
+      <stop offset="0" stop-color="#86f5e6"/>
+      <stop offset="1" stop-color="#2f8fe0"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#lg1)" fill-rule="evenodd"
+    d="M32 6H88A26 26 0 0 1 114 32V68A26 26 0 0 1 88 94H50L22 114L26 92A26 26 0 0 1 6 68V32A26 26 0 0 1 32 6Z M60 20Q64 46 90 50Q64 54 60 80Q56 54 30 50Q56 46 60 20Z M90 17Q91.5 26.5 101 28Q91.5 29.5 90 39Q88.5 29.5 79 28Q88.5 26.5 90 17Z"/>
+  <g fill="none" stroke="url(#lg2)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M150 90L178 30L206 90M163 74H193"/>
+    <path d="M232 54V90"/>
+    <path d="M316 41A30 30 0 1 0 316 79"/>
+  </g>
+  <path fill="url(#lg2)" d="M232 18Q234 30 246 32Q234 34 232 46Q230 34 218 32Q230 30 232 18Z"/>
+</svg></div>
+  <button class="primary" id="newc">+ Nuevo chat</button>
+  <nav id="list" aria-label="Conversaciones"></nav>
+  <div class="foot"><button id="openhelp">Cómo usar gratis</button><button id="openset">Ajustes</button></div>
+</aside>
+<main>
+  <div class="top">
+    <button class="ghost" id="menu" aria-label="Abrir menú">Menú</button>
+    <button id="provbtn" title="Cambiar proveedor o API key"></button>
+    <div class="dd grow"><input id="model" placeholder="Modelo: busca o escribe el ID" spellcheck="false" autocomplete="off" aria-label="Modelo"><div class="ddlist" id="mlist" hidden></div></div>
+    <button class="ghost" id="freeonly" hidden title="Mostrar solo modelos gratuitos">Solo gratis</button>
+    <button class="ghost" id="export">Exportar</button>
+  </div>
+  <div id="log"></div>
+  <div id="status" role="status"></div>
+  <form id="f">
+    <div id="thumbs"></div>
+    <div class="box">
+      <button type="button" class="ghost" id="attach" aria-label="Adjuntar imagen" title="Adjuntar imagen (o pega con Ctrl+V)">Imagen</button>
+      <input type="file" id="file" accept="image/*" multiple hidden>
+      <textarea id="in" rows="1" placeholder="Escribe tu mensaje…" aria-label="Mensaje"></textarea>
+    </div>
+    <button class="primary" id="send" style="height:48px;border-radius:14px;padding:0 20px">Enviar</button>
+  </form>
+</main>
+
+<dialog id="dlg"><div class="inner">
+  <h3>Ajustes</h3>
+  <div class="f"><label>Proveedor</label><div class="chips" id="chips"></div><button type="button" class="ghost" id="sethelp" style="padding:6px 0;margin-top:4px">¿Cómo usarlo gratis con este proveedor?</button></div>
+  <div class="f"><label for="url">URL base (compatible con OpenAI)</label><input id="url" spellcheck="false"></div>
+  <div class="f"><label for="key">API key</label>
+    <div class="row"><input id="key" type="password" autocomplete="off" spellcheck="false" placeholder="Pega tu key aquí"><button type="button" id="eye">Ver</button></div>
+    <small>Se guarda solo en este navegador y se envía únicamente al proveedor. <a id="keylink" target="_blank" rel="noopener" style="color:var(--accent)"></a></small></div>
+  <div class="row" style="align-items:center"><button type="button" id="test">Probar conexión y cargar modelos</button><small id="tstat"></small></div>
+  <div class="f"><label>Personalidad del asistente</label><div class="chips" id="presets"></div>
+    <textarea id="sys" rows="3" style="margin-top:8px" placeholder="Instrucción del sistema (opcional)"></textarea></div>
+  <div class="f"><label for="temp">Creatividad: <span id="tv">0.7</span> <span class="mute">(0 = preciso, 2 = muy creativo)</span></label><input id="temp" type="range" min="0" max="2" step="0.1" value="0.7"></div>
+  <label class="chk"><input type="checkbox" id="gen"><span>Generar imágenes<br><small>Solo para modelos que crean imágenes (por ejemplo Gemini Image). Desactiva el streaming.</small></span></label>
+  <div class="row" style="justify-content:flex-end"><button type="button" class="primary" id="close">Listo</button></div>
+</div></dialog>
+
+<dialog id="help"><div class="inner">
+  <h3>Cómo usarlo gratis</h3>
+  <p class="mute" style="margin:0">Elige un proveedor para ver si tiene opción gratuita y cómo conseguirla. Los planes cambian con frecuencia: confirma siempre en la página del proveedor.</p>
+  <div class="chips" id="hchips"></div>
+  <div id="hbody"></div>
+  <div class="row" style="justify-content:flex-end"><button type="button" id="hclose">Cerrar</button></div>
+</div></dialog>
+
+<script>
+/* ===== Personaliza aquí ===== */
+const CONFIG={name:"Api AIC",subtitle:"API AI Chat",defaultProvider:"openrouter"};
+const PROVIDERS={
+  openrouter:{n:"OpenRouter",u:"https://openrouter.ai/api/v1",k:"https://openrouter.ai/keys"},
+  orcarouter:{n:"OrcaRouter",u:"https://api.orcarouter.ai/v1",k:"https://www.orcarouter.ai"},
+  gemini:{n:"Google Gemini",u:"https://generativelanguage.googleapis.com/v1beta/openai",k:"https://aistudio.google.com/apikey"},
+  openai:{n:"OpenAI",u:"https://api.openai.com/v1",k:"https://platform.openai.com/api-keys"},
+  groq:{n:"Groq",u:"https://api.groq.com/openai/v1",k:"https://console.groq.com/keys"},
+  together:{n:"Together AI",u:"https://api.together.xyz/v1",k:"https://api.together.ai/settings/api-keys"},
+  deepseek:{n:"DeepSeek",u:"https://api.deepseek.com/v1",k:"https://platform.deepseek.com/api_keys"},
+  mistral:{n:"Mistral",u:"https://api.mistral.ai/v1",k:"https://console.mistral.ai/api-keys"},
+  custom:{n:"Personalizado",u:"",k:""}
+};
+const PRESETS={
+  "General":"",
+  "Programador":"Eres un programador senior. Responde con código claro y explicaciones breves.",
+  "Traductor":"Traduce el texto del usuario entre español e inglés, o al idioma que pida. Devuelve solo la traducción.",
+  "Profesor":"Explica como un profesor paciente: paso a paso, con ejemplos simples.",
+  "Escritor":"Eres un editor y escritor creativo. Mejora el estilo y propone alternativas."
+};
+const FREE={
+ groq:{s:"lim",l:"Gratis con límites",st:["Entra a <b>console.groq.com</b> y crea una cuenta con tu email o Google. No pide tarjeta.","Abre <b>API Keys</b> y pulsa <b>Create API Key</b>. Ponle un nombre y cópiala: solo se muestra una vez.","Aquí, en <b>Ajustes</b>, elige Groq y pega la key.","Pulsa <b>Probar conexión</b> y elige un modelo, por ejemplo <code>openai/gpt-oss-120b</code>."],
+  note:"El plan gratis tiene límites por modelo. Por ejemplo, según su documentación, gpt-oss-120b permite 30 mensajes por minuto, 1.000 por día y 200.000 tokens por día. Si te pasas verás un error 429: espera un rato. Tus límites exactos están en la sección Limits de tu cuenta."},
+ gemini:{s:"lim",l:"Gratis con límites",st:["Entra a <b>aistudio.google.com</b> con tu cuenta de Google.","Pulsa <b>Get API key</b>, crea una key y cópiala.","En <b>Ajustes</b> elige Google Gemini y pega la key.","Pulsa <b>Probar conexión</b> y elige un modelo <code>gemini-…-flash</code>: prueba primero uno Flash."],
+  note:"No pide tarjeta. Los límites del plan gratis solo se ven dentro de AI Studio y pueden cambiar. En el plan gratuito Google puede usar tus conversaciones para mejorar sus productos (fuera del EEE, Suiza y Reino Unido), así que no envíes datos sensibles. Si ves un error de red, puede ser una restricción del navegador: prueba con otro proveedor."},
+ openrouter:{s:"lim",l:"Gratis con límites",st:["Crea una cuenta en <b>openrouter.ai</b> (con Google o GitHub). No hace falta tarjeta.","Ve a <b>openrouter.ai/keys</b>, crea una key y cópiala.","En <b>Ajustes</b> elige OpenRouter y pega la key.","Arriba, pulsa <b>Solo gratis</b> y elige un modelo. Los gratuitos terminan en <code>:free</code>."],
+  note:"Los modelos :free permiten 20 mensajes por minuto y 50 por día en total. Si compras $10 de crédito una sola vez, el tope diario sube a 1.000. Los modelos sin :free se cobran por uso."},
+ mistral:{s:"lim",l:"Gratis con límites",st:["Entra a <b>console.mistral.ai</b> y crea una cuenta. Te pedirá verificar tu teléfono.","Quédate en el plan gratuito (es el que viene por defecto). No pide tarjeta.","En <b>API Keys</b> crea una key y cópiala.","En <b>Ajustes</b> elige Mistral, pega la key y elige un modelo."],
+  note:"Los límites son bajos y los ves en la página Limits de la consola. En el plan gratis, Mistral puede usar tus datos para entrenar sus modelos; hay un interruptor para desactivarlo en el panel Admin."},
+ orcarouter:{s:"lim",l:"Crédito de prueba gratis",st:["Entra a <b>orcarouter.ai</b> y regístrate con GitHub. No pide tarjeta.","Crea una API key en tu panel (empieza con <code>sk-orca-</code>) y cópiala.","En <b>Ajustes</b> elige OrcaRouter y pega la key.","Pulsa <b>Probar conexión</b>, elige un modelo y chatea."],
+  note:"Según su web, las cuentas nuevas reciben unos $5 en tokens de prueba. Al acabarse pagas el precio del proveedor, sin recargo de OrcaRouter. Es un crédito de prueba, no un plan gratis permanente."},
+ custom:{s:"ok",l:"Gratis y privado (en tu propio PC)",st:["Instala <b>Ollama</b> (ollama.com) y descarga un modelo, por ejemplo <code>ollama pull llama3.2</code>.","Permite que el navegador se conecte: define la variable de entorno <code>OLLAMA_ORIGINS=*</code> y reinicia Ollama.","En <b>Ajustes</b> elige <b>Personalizado</b> y pon la URL <code>http://localhost:11434/v1</code>.","En la key escribe cualquier texto (por ejemplo <code>ollama</code>) y en el modelo, <code>llama3.2</code>."],
+  note:"Funciona sin internet y tus datos no salen de tu equipo, pero solo en el PC donde corre Ollama y necesita buena RAM o GPU. Si tu web está en HTTPS, algunos navegadores bloquean las llamadas a localhost."},
+ openai:{s:"no",l:"Sin plan gratuito para la API",st:[],note:"Según su documentación, la API de OpenAI no ofrece uso gratuito para generar texto: funciona con saldo prepago. El ChatGPT gratis de la web es otra cosa y no incluye API. Para probar gratis, usa Groq, Gemini u OpenRouter con modelos :free."},
+ deepseek:{s:"no",l:"Sin plan gratuito publicado",st:[],note:"DeepSeek no publica un plan gratuito: la API es de prepago (algunas cuentas nuevas pueden recibir crédito de prueba, pero no está garantizado). Para probar gratis, usa Groq, Gemini u OpenRouter."},
+ together:{s:"no",l:"Sin plan gratuito",st:[],note:"Según su página de facturación, Together AI no ofrece pruebas gratis y pide una compra mínima de créditos. Para probar gratis, usa Groq, Gemini u OpenRouter."}
+};
+const HORDER=["groq","gemini","openrouter","mistral","orcarouter","custom","openai","deepseek","together"];
+const SUGG=["Explícame algo complejo de forma simple","Ayúdame a redactar un email profesional","Revisa y mejora este código","Dame ideas para un proyecto"];
+/* ============================ */
+
+const $=id=>document.getElementById(id);
+const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+let prov,models=[],freeSet=new Set(),freeOnly=false,convs=[],cur=null,ctrl=null,pending=[];
+try{convs=JSON.parse(store.get("convs","[]"))}catch(e){}
+const save=()=>store.set("convs",JSON.stringify(convs.filter(c=>c.msgs.length).map(c=>({id:c.id,title:c.title,msgs:c.msgs.map(m=>({role:m.role,text:m.text}))}))));
+const setStatus=(t,err)=>{$("status").textContent=t;$("status").style.color=err?"var(--err)":""};
+const base=()=>$("url").value.trim().replace(/\/+$/,"");
+const key=()=>$("key").value.trim();
+const headers=()=>{const h={"Content-Type":"application/json"};if(key())h.Authorization="Bearer "+key();if(prov==="openrouter")h["X-Title"]=CONFIG.name;return h};
+
+/* ---------- Markdown ---------- */
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const inl=x=>x.replace(/!\[([^\]\n]*)\]\((https:\/\/[^\s)]+|data:image\/[a-z+]+;base64,[A-Za-z0-9+\/=]+)\)/g,'<img alt="$1" src="$2">')
+  .replace(/\[([^\]\n]+)\]\((https:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>')
+  .replace(/`([^`\n]+)`/g,"<code>$1</code>").replace(/\*\*([^*\n]+)\*\*/g,"<strong>$1</strong>").replace(/~~([^~\n]+)~~/g,"<del>$1</del>").replace(/(^|[^*\w])\*([^*\n]+)\*(?![*\w])/g,"$1<em>$2</em>");
+const isRow=l=>/^\s*\|.*\|\s*$/.test(l),
+  cells=l=>l.trim().replace(/^\||\|$/g,"").split("|").map(c=>c.trim()),
+  isSep=l=>l.includes("-")&&/^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(l),
+  LI=/^\s*([-*+]|\d+[.)])\s+/,isList=l=>LI.test(l),isOrd=l=>/^\s*\d/.test(l),
+  isHr=l=>/^\s*([-*_])(\s*\1){2,}\s*$/.test(l),isQ=l=>/^&gt;/.test(l),
+  startsBlock=l=>isRow(l)||isList(l)||isHr(l)||isQ(l)||/^#{1,6}\s/.test(l);
+function mdText(t){
+  const L=esc(t).split("\n"),o=[];let i=0;
+  while(i<L.length){
+    const l=L[i];if(!l.trim()){i++;continue}
+    if(isRow(l)&&i+1<L.length&&isSep(L[i+1])){
+      const h=cells(l),al=cells(L[i+1]).map(c=>/^:-*:$/.test(c)?"center":/-:$/.test(c)?"right":"left");i+=2;
+      const rows=[];while(i<L.length&&isRow(L[i]))rows.push(cells(L[i++]));
+      const td=(tag,c,k)=>"<"+tag+' style="text-align:'+(al[k]||"left")+'">'+inl(c)+"</"+tag+">";
+      o.push('<div class="tw"><table><thead><tr>'+h.map((c,k)=>td("th",c,k)).join("")+"</tr></thead><tbody>"+rows.map(r=>"<tr>"+r.map((c,k)=>td("td",c,k)).join("")+"</tr>").join("")+"</tbody></table></div>");continue}
+    const m=l.match(/^(#{1,6})\s+(.+)$/);
+    if(m){const t=m[1].length<=2?"h3":"h4";o.push("<"+t+">"+inl(m[2])+"</"+t+">");i++;continue}
+    if(isHr(l)){o.push("<hr>");i++;continue}
+    if(isQ(l)){const q=[];while(i<L.length&&isQ(L[i]))q.push(L[i++].replace(/^&gt;\s?/,""));o.push("<blockquote>"+inl(q.join("<br>"))+"</blockquote>");continue}
+    if(isList(l)){const ord=isOrd(l),it=[];while(i<L.length&&isList(L[i])&&isOrd(L[i])===ord)it.push(inl(L[i++].replace(LI,"")));
+      const tg=ord?"ol":"ul";o.push("<"+tg+">"+it.map(x=>"<li>"+x+"</li>").join("")+"</"+tg+">");continue}
+    const p=[];while(i<L.length&&L[i].trim()&&(!p.length||!startsBlock(L[i])))p.push(L[i++]);
+    o.push("<p>"+inl(p.join("\n")).replace(/\n/g,"<br>")+"</p>");
+  }
+  return o.join("");
+}
+const md=t=>t.split(/```/).map((p,i)=>{
+  if(i%2){const n=p.indexOf("\n");return '<pre><button type="button" class="cp">Copiar</button><code>'+esc(n>=0?p.slice(n+1):p)+"</code></pre>"}
+  return mdText(p)}).join("");
+function copy(t,btn){navigator.clipboard.writeText(t).then(()=>{const o=btn.textContent;btn.textContent="Copiado";setTimeout(()=>btn.textContent=o,1200)}).catch(()=>setStatus("No se pudo copiar.",true))}
+
+/* ---------- Proveedor y ajustes ---------- */
+function loadProv(id){
+  prov=PROVIDERS[id]?id:CONFIG.defaultProvider;store.set("prov",prov);
+  $("url").value=store.get("url:"+prov,PROVIDERS[prov].u);
+  $("key").value=store.get("key:"+prov,"");
+  $("model").value=store.get("model:"+prov,"");
+  models=[];freeSet=new Set();freeOnly=false;$("freeonly").hidden=true;$("freeonly").classList.remove("on");renderModels();$("tstat").textContent="";
+  document.querySelectorAll("#chips .chip").forEach(c=>c.classList.toggle("on",c.dataset.id===prov));
+  const k=PROVIDERS[prov].k;$("keylink").hidden=!k;$("keylink").href=k;$("keylink").textContent="Conseguir una key";
+  refreshTop();if(key())loadModels(true);if(!cur||!cur.msgs.length)renderLog();
+}
+const refreshTop=()=>{$("provbtn").textContent=PROVIDERS[prov].n+(key()?"":" · conectar")};
+for(const [id,p] of Object.entries(PROVIDERS)){const b=document.createElement("button");b.type="button";b.className="chip";b.dataset.id=id;b.textContent=p.n;b.onclick=()=>loadProv(id);$("chips").append(b)}
+for(const [n,t] of Object.entries(PRESETS)){const b=document.createElement("button");b.type="button";b.className="chip";b.textContent=n;b.onclick=()=>{$("sys").value=t;store.set("sys",t)};$("presets").append(b)}
+$("url").oninput=()=>store.set("url:"+prov,$("url").value.trim());
+$("key").oninput=()=>{store.set("key:"+prov,key());refreshTop()};
+$("sys").value=store.get("sys","");$("sys").oninput=()=>store.set("sys",$("sys").value);
+$("temp").value=store.get("temp","0.7");$("tv").textContent=$("temp").value;$("temp").oninput=()=>{$("tv").textContent=$("temp").value;store.set("temp",$("temp").value)};
+$("gen").checked=store.get("gen","")==="1";$("gen").onchange=()=>store.set("gen",$("gen").checked?"1":"");
+$("eye").onclick=()=>{$("key").type=$("key").type==="password"?"text":"password"};
+const openSet=()=>{$("side").classList.remove("open");$("dlg").showModal()};
+$("openset").onclick=$("provbtn").onclick=openSet;
+$("close").onclick=()=>{$("dlg").close();if(key())loadModels(true);renderLog()};
+$("dlg").onclick=e=>{if(e.target===$("dlg"))$("dlg").close()};
+
+/* ---------- Tutorial: usarlo gratis ---------- */
+for(const id of HORDER){const b=document.createElement("button");b.type="button";b.className="chip";b.dataset.id=id;b.innerHTML='<i class="'+FREE[id].s+'"></i>'+PROVIDERS[id].n;b.onclick=()=>renderHelp(id);$("hchips").append(b)}
+function renderHelp(id){
+  const f=FREE[id],p=PROVIDERS[id];
+  document.querySelectorAll("#hchips .chip").forEach(c=>c.classList.toggle("on",c.dataset.id===id));
+  const b=$("hbody");
+  b.innerHTML='<div class="verdict '+f.s+'">'+f.l+"</div>"+(f.st.length?"<ol>"+f.st.map(x=>"<li>"+x+"</li>").join("")+"</ol>":"")+'<p class="mute">'+f.note+"</p>";
+  const r=document.createElement("div");r.className="row";
+  if(p.k&&f.s!=="no"){const a=document.createElement("a");a.href=p.k;a.target="_blank";a.rel="noopener";a.className="btn";a.textContent="Abrir página de la key";r.append(a)}
+  if(f.s!=="no"){const u=document.createElement("button");u.type="button";u.className="primary";u.textContent="Usar "+p.n;u.onclick=()=>{$("help").close();loadProv(id);openSet()};r.append(u)}
+  b.append(r);
+}
+function openHelp(id){$("side").classList.remove("open");renderHelp(id||"groq");$("help").showModal()}
+$("openhelp").onclick=()=>openHelp(FREE[prov]&&FREE[prov].s!=="no"?prov:"groq");
+$("sethelp").onclick=()=>{$("dlg").close();openHelp(prov)};
+$("hclose").onclick=()=>$("help").close();
+$("help").onclick=e=>{if(e.target===$("help"))$("help").close()};
+
+/* ---------- Modelos ---------- */
+async function loadModels(silent){
+  if(!base())return;
+  if(!silent)$("tstat").textContent="Conectando…";
+  try{
+    const r=await fetch(base()+"/models",{headers:headers()});
+    if(!r.ok)throw new Error(r.status===401?"key inválida (401)":"HTTP "+r.status);
+    const j=await r.json();
+    freeSet=new Set();
+    models=(j.data||j.models||j).map(m=>{const raw=typeof m==="string"?m:(m.id||m.name);if(!raw)return null;const id=raw.replace(/^models\//,"");
+      if(typeof m==="object"&&(/:free$/.test(id)||(m.pricing&&m.pricing.prompt!==undefined&&+m.pricing.prompt===0&&+m.pricing.completion===0)))freeSet.add(id);return id}).filter(Boolean).sort();
+    $("freeonly").hidden=!freeSet.size;renderModels();if(!silent)$("tstat").textContent="✓ Conectado · "+models.length+" modelos";
+  }catch(e){if(!silent)$("tstat").textContent="✗ "+e.message}
+}
+$("test").onclick=()=>loadModels(false);
+$("freeonly").onclick=()=>{freeOnly=!freeOnly;$("freeonly").classList.toggle("on",freeOnly);$("model").focus()};
+function renderModels(){
+  const q=$("model").value.trim().toLowerCase(),box=$("mlist");box.innerHTML="";
+  if(!models.length){box.innerHTML='<div class="ddempty">Escribe el ID del modelo, o conecta tu key en Ajustes para ver la lista.</div>';return}
+  const l=models.filter(m=>(!freeOnly||freeSet.has(m))&&m.toLowerCase().includes(q)).slice(0,100);
+  if(!l.length){box.innerHTML='<div class="ddempty">Sin coincidencias: se usará lo que escribiste.</div>';return}
+  l.forEach(m=>{const d=document.createElement("div");d.className="ddopt"+(m===$("model").value?" sel":"");d.textContent=m;if(freeSet.has(m)){const t=document.createElement("span");t.className="tag";t.textContent="gratis";d.append(t)}
+    d.onmousedown=e=>{e.preventDefault();$("model").value=m;store.set("model:"+prov,m);box.hidden=true;$("model").blur()};box.append(d)});
+}
+$("model").onfocus=()=>{$("model").select();renderModels();$("mlist").hidden=false};
+$("model").oninput=()=>{store.set("model:"+prov,$("model").value.trim());renderModels();$("mlist").hidden=false};
+$("model").onblur=()=>{$("mlist").hidden=true};
+
+/* ---------- Conversaciones ---------- */
+function newConv(){
+  if(cur&&!cur.msgs.length){renderLog();return cur}
+  cur={id:Date.now().toString(36),title:"Nuevo chat",msgs:[]};convs.unshift(cur);renderList();renderLog();return cur;
+}
+function openConv(id){cur=convs.find(c=>c.id===id)||cur;$("side").classList.remove("open");renderList();renderLog()}
+function renderList(){
+  const l=$("list");l.innerHTML="";
+  convs.forEach(c=>{const d=document.createElement("div");d.className="ci"+(c===cur?" on":"");
+    const s=document.createElement("span");s.textContent=c.title;
+    const x=document.createElement("button");x.type="button";x.textContent="×";x.setAttribute("aria-label","Borrar conversación");
+    x.onclick=e=>{e.stopPropagation();if(ctrl&&c===cur)ctrl.abort();convs=convs.filter(z=>z!==c);if(c===cur){cur=convs[0]||null;if(!cur)newConv()}save();renderList();renderLog()};
+    d.onclick=()=>openConv(c.id);d.append(s,x);l.append(d)});
+}
+$("newc").onclick=()=>{$("side").classList.remove("open");newConv();$("in").focus()};
+$("menu").onclick=()=>$("side").classList.toggle("open");
+$("export").onclick=()=>{
+  if(!cur||!cur.msgs.length)return setStatus("No hay nada que exportar.",true);
+  const t="# "+cur.title+"\n\n"+cur.msgs.map(m=>"**"+(m.role==="user"?"Tú":"IA")+":**\n\n"+m.text).join("\n\n---\n\n");
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:"text/markdown"}));a.download=(cur.title.replace(/[^\w\- áéíóúñ]/gi,"").trim()||"chat")+".md";a.click();URL.revokeObjectURL(a.href);
+};
+
+/* ---------- Render del chat ---------- */
+function paint(d,m){
+  const b=d.querySelector(".body");
+  if(m.role==="user")b.textContent=m.text;else b.innerHTML=md(m.text||(m.imgs&&m.imgs.length?"":"…"));
+  if(m.imgs&&m.imgs.length){const w=document.createElement("div");
+    m.imgs.forEach(u=>{const im=new Image();im.src=u;im.alt=m.role==="user"?"Imagen enviada":"Imagen generada";
+      if(m.role==="user")w.append(im);else{const a=document.createElement("a");a.href=u;a.download="imagen.png";a.target="_blank";a.rel="noopener";a.append(im);w.append(a)}});
+    m.role==="user"?b.prepend(w):b.append(w)}
+}
+function mkMsg(m,last){
+  const d=document.createElement("div");d.className="msg "+m.role;
+  d.innerHTML='<div class="body"></div><div class="acts"></div>';paint(d,m);
+  const a=d.querySelector(".acts"),c=document.createElement("button");c.type="button";c.textContent="Copiar";c.onclick=()=>copy(m.text,c);a.append(c);
+  if(last&&m.role==="assistant"){const r=document.createElement("button");r.type="button";r.textContent="Regenerar";r.onclick=()=>{cur.msgs.pop();renderLog();run()};a.append(r)}
+  return d;
+}
+function renderLog(){
+  const L=$("log");L.innerHTML="";
+  if(!cur||!cur.msgs.length){
+    const e=document.createElement("div");e.className="empty";
+    e.innerHTML='<h2>¿En qué te ayudo hoy?</h2><p class="mute">Elige un modelo arriba y escribe tu mensaje. También puedes adjuntar o pegar imágenes.</p>';
+    if(!key()){const c=document.createElement("div");c.className="card";c.innerHTML='<div><b>Primero conecta tu API key</b><p class="mute">Elige un proveedor y pega tu key. Se guarda solo en tu navegador.</p></div>';
+      const b=document.createElement("button");b.className="primary";b.textContent="Conectar";b.onclick=openSet;const g=document.createElement("button");g.className="ghost";g.textContent="Ver opciones gratis";g.onclick=()=>openHelp();c.append(b,g);e.append(c)}
+    const s=document.createElement("div");s.className="sugg";
+    SUGG.forEach(t=>{const b=document.createElement("button");b.type="button";b.textContent=t;b.onclick=()=>{$("in").value=t;$("in").focus();autosize()};s.append(b)});
+    e.append(s);L.append(e);return;
+  }
+  cur.msgs.forEach((m,i)=>L.append(mkMsg(m,i===cur.msgs.length-1&&!ctrl)));L.scrollTop=1e9;
+}
+$("log").onclick=e=>{const b=e.target.closest(".cp");if(b)copy(b.nextElementSibling.textContent,b)};
+
+/* ---------- Imágenes adjuntas ---------- */
+function toDataURL(f){return new Promise((res,rej)=>{const fr=new FileReader();fr.onerror=()=>rej(new Error("No se pudo leer el archivo"));
+  fr.onload=()=>{const im=new Image();im.onerror=()=>rej(new Error("Imagen no válida"));
+    im.onload=()=>{const k=Math.min(1,1568/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);
+      const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",.88))};im.src=fr.result};fr.readAsDataURL(f)})}
+async function addFiles(fs){for(const f of fs){if(!f.type.startsWith("image/"))continue;try{pending.push(await toDataURL(f))}catch(e){setStatus(e.message,true)}}thumbs()}
+function thumbs(){const t=$("thumbs");t.innerHTML="";pending.forEach((u,i)=>{const d=document.createElement("div");d.className="th";const im=new Image();im.src=u;im.alt="Adjunto "+(i+1);
+  const x=document.createElement("button");x.type="button";x.textContent="×";x.setAttribute("aria-label","Quitar imagen");x.onclick=()=>{pending.splice(i,1);thumbs()};d.append(im,x);t.append(d)})}
+$("attach").onclick=()=>$("file").click();
+$("file").onchange=()=>{addFiles([...$("file").files]);$("file").value=""};
+$("in").onpaste=e=>{const fs=[...e.clipboardData.files].filter(f=>f.type.startsWith("image/"));if(fs.length){e.preventDefault();addFiles(fs)}};
+const autosize=()=>{const t=$("in");t.style.height="auto";t.style.height=Math.min(t.scrollHeight,180)+"px"};
+$("in").oninput=autosize;
+
+/* ---------- Envío ---------- */
+function ready(){
+  if(!key()){setStatus("Conecta tu API key para empezar.",true);openSet();return false}
+  if(!$("model").value.trim()){setStatus("Elige o escribe un modelo arriba.",true);$("model").focus();return false}
+  if(!base()){setStatus("Falta la URL base en Ajustes.",true);openSet();return false}
+  return true;
+}
+const toApi=m=>m.role==="user"&&m.imgs&&m.imgs.length?{role:"user",content:[{type:"text",text:m.text}].concat(m.imgs.map(u=>({type:"image_url",image_url:{url:u}})))}:{role:m.role,content:m.text||"[imagen generada]"};
+function send(){
+  const text=$("in").value.trim();
+  if((!text&&!pending.length)||ctrl||!ready())return;
+  if(!cur)newConv();
+  cur.msgs.push({role:"user",text:text||"¿Qué ves en esta imagen?",imgs:pending.slice()});
+  if(cur.title==="Nuevo chat"){cur.title=(text||"Imagen").slice(0,40);renderList()}
+  pending=[];thumbs();$("in").value="";autosize();renderLog();run();
+}
+async function run(){
+  const c=cur,m={role:"assistant",text:"",imgs:[]};
+  c.msgs.push(m);const el=mkMsg(m,false);$("log").append(el);$("log").scrollTop=1e9;
+  const gen=$("gen").checked,sys=$("sys").value.trim();
+  const msgs=(sys?[{role:"system",content:sys}]:[]).concat(c.msgs.slice(0,-1).map(toApi));
+  const collect=a=>(a||[]).forEach(x=>{const u=x&&(x.image_url&&x.image_url.url||x.url);if(typeof u==="string"&&/^(data:image\/|https:\/\/)/.test(u)&&!m.imgs.includes(u))m.imgs.push(u)});
+  const draw=()=>{paint(el,m);if(c===cur)$("log").scrollTop=1e9};
+  ctrl=new AbortController();$("send").textContent="Detener";setStatus("Generando…");
+  try{
+    const body={model:$("model").value.trim(),messages:msgs,temperature:+$("temp").value,stream:!gen};
+    if(gen)body.modalities=["image","text"];
+    const r=await fetch(base()+"/chat/completions",{method:"POST",headers:headers(),signal:ctrl.signal,body:JSON.stringify(body)});
+    if(!r.ok)throw new Error(r.status===401?"API key inválida (401). Revísala en Ajustes.":"HTTP "+r.status+": "+(await r.text()).slice(0,300));
+    if(gen){
+      const j=await r.json();if(j.error)throw new Error(j.error.message||JSON.stringify(j.error));
+      const g=(j.choices&&j.choices[0]&&j.choices[0].message)||{};
+      m.text=typeof g.content==="string"?g.content:(Array.isArray(g.content)?g.content.map(p=>p.text||"").join(""):"");
+      collect(g.images);if(Array.isArray(g.content))collect(g.content.filter(p=>p.type==="image_url"));draw();
+    }else{
+      const rd=r.body.getReader(),dec=new TextDecoder();let buf="";
+      for(;;){const {done,value}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});
+        const ls=buf.split("\n");buf=ls.pop();
+        for(const l of ls){const s=l.trim();if(!s.startsWith("data:"))continue;const d=s.slice(5).trim();if(d==="[DONE]")continue;
+          try{const j=JSON.parse(d);if(j.error)throw new Error(j.error.message||JSON.stringify(j.error));
+            const dl=(j.choices&&j.choices[0]&&j.choices[0].delta)||{};m.text+=dl.content||"";collect(dl.images);draw()
+          }catch(e){if(e.message&&!(e instanceof SyntaxError))throw e}}}
+    }
+    if(!m.text&&!m.imgs.length){c.msgs.pop();el.remove();setStatus("El modelo no devolvió contenido. Si esperabas una imagen, activa “Generar imágenes” en Ajustes.",true)}else setStatus("");
+  }catch(e){
+    if(e.name==="AbortError"){if(!m.text&&!m.imgs.length){c.msgs.pop();el.remove()}setStatus("Detenido.")}
+    else{c.msgs.pop();el.remove();setStatus("");
+      if(c===cur){const x=document.createElement("div");x.className="msg error";const s=document.createElement("span");s.textContent="Error: "+e.message;
+        const b=document.createElement("button");b.type="button";b.textContent="Reintentar";b.onclick=()=>{x.remove();run()};x.append(s,b);$("log").append(x);$("log").scrollTop=1e9}}
+  }finally{
+    ctrl=null;$("send").textContent="Enviar";save();
+    if(c===cur&&!$("log").querySelector(".msg.error"))renderLog();
+  }
+}
+$("f").onsubmit=e=>{e.preventDefault();ctrl?ctrl.abort():send()};
+$("in").onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();if(!ctrl)send()}};
+
+/* ---------- Inicio ---------- */
+document.title=CONFIG.name+" · "+CONFIG.subtitle;
+cur=convs[0]||null;
+if(!cur||cur.msgs.length)newConv();else{renderList();renderLog()}
+renderList();loadProv(store.get("prov",CONFIG.defaultProvider));
+</script>
+</body>
+</html>
