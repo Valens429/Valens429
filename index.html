@@ -676,6 +676,26 @@ h2.section-title {
 .engine-row.open .engine-body { max-height: 220px; }
 .engine-body p { padding: 0 16px 16px; color: var(--muted); font-size: 0.85rem; line-height: 1.7; }
 
+/* Engines: grupos desplegables (Código / Engines) */
+.eng-group { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 14px; margin-top: 14px; overflow: hidden; }
+.eng-group-head {
+  width: 100%; display: flex; align-items: center; gap: 14px; padding: 16px 18px;
+  background: none; border: none; color: var(--text); cursor: pointer; text-align: left;
+  font-family: 'Baloo 2', sans-serif; transition: background 0.18s;
+}
+.eng-group-head:hover { background: var(--item-hover); }
+.eng-group-icon { font-size: 1.5rem; }
+.eng-group-text { flex: 1; display: flex; flex-direction: column; line-height: 1.2; }
+.eng-group-title { font-weight: 800; font-size: 1.2rem; }
+.eng-group-sub { font-weight: 400; font-size: 0.8rem; color: var(--muted); }
+.eng-group.open > .eng-group-head .engine-caret { transform: rotate(180deg); }
+.eng-group-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.3s ease; }
+.eng-group.open > .eng-group-body { grid-template-rows: 1fr; }
+.eng-group-inner { overflow: hidden; min-height: 0; padding: 0 14px; visibility: hidden; transition: visibility 0s 0.3s; }
+.eng-group.open > .eng-group-body > .eng-group-inner { visibility: visible; transition-delay: 0s; }
+.eng-group-inner > .engine-list { margin: 0 0 14px; }
+@media (prefers-reduced-motion: reduce) { .eng-group-body, .eng-group-inner { transition: none; } }
+
 /* Juegos — cards listas para completar en HTML */
 .game-card {
   background: var(--item-bg);
@@ -1102,14 +1122,56 @@ body.app-minimized .author-credit { display: inline-block; }
         <div class="route" data-route="desarrollador/engines">
           <h1 class="page-title">Engines</h1>
           <p class="lead" data-i="l-eng">Con qué motores y lenguajes trabajo, según el proyecto.</p>
+          <div class="eng-group" data-group="code">
+            <button class="eng-group-head" onclick="toggleGroup('code')" aria-expanded="false">
+              <span class="eng-group-icon">💻</span>
+              <span class="eng-group-text"><span class="eng-group-title" data-i="grp-code">Código</span><span class="eng-group-sub" data-i="grp-code-d">Lenguajes con los que trabajo</span></span>
+              <span class="engine-caret">▾</span>
+            </button>
+            <div class="eng-group-body"><div class="eng-group-inner">
           <div class="engine-list">
-            <div class="engine-row" data-engine="python">
-              <button class="engine-head" onclick="toggleEngine('python')">
-                <span class="engine-icon">🐍</span>
-                <span class="engine-name">Python &amp; RenPy</span>
+            <div class="engine-row" data-engine="code-js">
+              <button class="engine-head" onclick="toggleEngine('code-js')">
+                <span class="engine-icon">🟨</span>
+                <span class="engine-name">JavaScript</span>
                 <span class="engine-caret">▾</span>
               </button>
-              <div class="engine-body"><p data-i="eng-py">Python es el lenguaje base: scripts, automatizaciones, herramientas. RenPy lo extiende para crear visual novels con sistema de diálogos, ramas narrativas y manejo de sprites.</p></div>
+              <div class="engine-body"><p data-i="eng-js">El lenguaje de la web. Lo uso para dar vida a las páginas: interacciones, animaciones y herramientas que corren directo en el navegador.</p></div>
+            </div>
+            <div class="engine-row" data-engine="code-html">
+              <button class="engine-head" onclick="toggleEngine('code-html')">
+                <span class="engine-icon">🌐</span>
+                <span class="engine-name">HTML</span>
+                <span class="engine-caret">▾</span>
+              </button>
+              <div class="engine-body"><p data-i="eng-html">La estructura de toda página web. Junto con CSS y JavaScript da forma a sitios como este.</p></div>
+            </div>
+            <div class="engine-row" data-engine="code-py">
+              <button class="engine-head" onclick="toggleEngine('code-py')">
+                <span class="engine-icon">🐍</span>
+                <span class="engine-name">Python</span>
+                <span class="engine-caret">▾</span>
+              </button>
+              <div class="engine-body"><p data-i="eng-code-py">Mi lenguaje base: scripts, automatizaciones y herramientas. También es la base de RenPy, que uso para las visual novels.</p></div>
+            </div>
+          </div>
+            </div></div>
+          </div>
+          <div class="eng-group" data-group="engines">
+            <button class="eng-group-head" onclick="toggleGroup('engines')" aria-expanded="false">
+              <span class="eng-group-icon">⚙️</span>
+              <span class="eng-group-text"><span class="eng-group-title" data-i="grp-eng">Engines</span><span class="eng-group-sub" data-i="grp-eng-d">Motores de juego</span></span>
+              <span class="engine-caret">▾</span>
+            </button>
+            <div class="eng-group-body"><div class="eng-group-inner">
+          <div class="engine-list">
+            <div class="engine-row" data-engine="renpy">
+              <button class="engine-head" onclick="toggleEngine('renpy')">
+                <span class="engine-icon">📖</span>
+                <span class="engine-name">RenPy</span>
+                <span class="engine-caret">▾</span>
+              </button>
+              <div class="engine-body"><p data-i="eng-py">Motor para crear visual novels: sistema de diálogos, ramas narrativas y manejo de sprites. Funciona sobre Python.</p></div>
             </div>
             <div class="engine-row" data-engine="clickteam">
               <button class="engine-head" onclick="toggleEngine('clickteam')">
@@ -1135,6 +1197,16 @@ body.app-minimized .author-credit { display: inline-block; }
               </button>
               <div class="engine-body"><p data-i="eng-un">El motor más completo del catálogo. C#, 2D y 3D, ecosistema enorme de assets. Exporta a más de 25 plataformas.</p></div>
             </div>
+            <div class="engine-row" data-engine="godot">
+              <button class="engine-head" onclick="toggleEngine('godot')">
+                <span class="engine-icon">🤖</span>
+                <span class="engine-name">Godot</span>
+                <span class="engine-caret">▾</span>
+              </button>
+              <div class="engine-body"><p data-i="eng-go">Motor open source y gratuito con su propio lenguaje, GDScript, parecido a Python. Excelente para 2D, con soporte 3D. Es liviano y exporta a PC, móvil y web.</p></div>
+            </div>
+          </div>
+            </div></div>
           </div>
         </div>
 
@@ -1377,8 +1449,16 @@ body.app-minimized .author-credit { display: inline-block; }
       'dd-trad': '🌐 Traducciones',
       'eng-ct': 'Desarrollo basado en eventos, sin escribir código tradicional. Muy usado para juegos 2D indie clásicos. Exporta a Windows, HTML5 y móvil.',
       'eng-gm': 'El motor detrás de Undertale, Hotline Miami y Spelunky. GML es específico del engine pero muy eficiente para 2D — pixel art, roguelikes, metroidvanias.',
-      'eng-py': 'Python es el lenguaje base: scripts, automatizaciones, herramientas. RenPy lo extiende para crear visual novels con sistema de diálogos, ramas narrativas y manejo de sprites.',
+      'eng-py': 'Motor para crear visual novels: sistema de diálogos, ramas narrativas y manejo de sprites. Funciona sobre Python.',
       'eng-un': 'El motor más completo del catálogo. C#, 2D y 3D, ecosistema enorme de assets. Exporta a más de 25 plataformas.',
+      'eng-go': 'Motor open source y gratuito con su propio lenguaje, GDScript, parecido a Python. Excelente para 2D, con soporte 3D. Es liviano y exporta a PC, móvil y web.',
+      'eng-js': 'El lenguaje de la web. Lo uso para dar vida a las páginas: interacciones, animaciones y herramientas que corren directo en el navegador.',
+      'eng-html': 'La estructura de toda página web. Junto con CSS y JavaScript da forma a sitios como este.',
+      'eng-code-py': 'Mi lenguaje base: scripts, automatizaciones y herramientas. También es la base de RenPy, que uso para las visual novels.',
+      'grp-code': 'Código',
+      'grp-code-d': 'Lenguajes con los que trabajo',
+      'grp-eng': 'Engines',
+      'grp-eng-d': 'Motores de juego',
       'footer-copy': '// hecho con cariño',
       'g1-d': 'Version modificada de Raldis Crackhouse',
       'g2-d': 'Parodia de Papers Please',
@@ -1504,8 +1584,16 @@ body.app-minimized .author-credit { display: inline-block; }
       'dd-trad': '🌐 Translations',
       'eng-ct': 'Event-based development, no traditional coding. Widely used for classic 2D indie games. Exports to Windows, HTML5 and mobile.',
       'eng-gm': 'The engine behind Undertale, Hotline Miami and Spelunky. GML is engine-specific but very efficient for 2D — pixel art, roguelikes, metroidvanias.',
-      'eng-py': 'Python is my base language: scripts, automation, tools. RenPy extends it to build visual novels with a dialogue system, branching stories and sprite handling.',
+      'eng-py': 'Engine for building visual novels: dialogue system, branching stories and sprite handling. It runs on top of Python.',
       'eng-un': 'The most complete engine of the bunch. C#, 2D and 3D, a huge asset ecosystem. Exports to over 25 platforms.',
+      'eng-go': 'Free, open-source engine with its own Python-like language, GDScript. Excellent for 2D, with 3D support. Lightweight, and exports to desktop, mobile and web.',
+      'eng-js': 'The language of the web. I use it to bring pages to life: interactions, animations and tools that run right in the browser.',
+      'eng-html': 'The structure of every web page. Together with CSS and JavaScript it shapes sites like this one.',
+      'eng-code-py': 'My go-to language: scripts, automation and tools. It is also the foundation of RenPy, which I use for visual novels.',
+      'grp-code': 'Code',
+      'grp-code-d': 'Languages I work with',
+      'grp-eng': 'Engines',
+      'grp-eng-d': 'Game engines',
       'footer-copy': '// made with love',
       'g1-d': 'Modified version of Raldi\'s Crackhouse',
       'g2-d': 'A Papers Please parody',
@@ -1744,8 +1832,16 @@ body.app-minimized .author-credit { display: inline-block; }
     var row = document.querySelector('.engine-row[data-engine="' + id + '"]');
     if (!row) return;
     var wasOpen = row.classList.contains('open');
-    document.querySelectorAll('.engine-row.open').forEach(function (r) { r.classList.remove('open'); });
+    // solo se cierran las filas de la misma lista (Código o Engines)
+    row.parentElement.querySelectorAll('.engine-row.open').forEach(function (r) { r.classList.remove('open'); });
     if (!wasOpen) row.classList.add('open');
+  }
+  function toggleGroup(id) {
+    var g = document.querySelector('.eng-group[data-group="' + id + '"]');
+    if (!g) return;
+    var open = g.classList.toggle('open');
+    var b = g.querySelector('.eng-group-head');
+    if (b) b.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
 
   // ---- Artwork: lista directa (editá acá — agregá/sacá archivos y escribí el subtítulo de cada uno) ----
