@@ -755,6 +755,16 @@ h2.section-title {
 .trad-card-title { font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 0.88rem; }
 .trad-card-desc { color: var(--muted); font-size: 0.72rem; line-height: 1.5; flex: 1; }
 .trad-card .btn-outline { font-size: 0.7rem; padding: 7px 12px; align-self: flex-start; }
+.age-gate-wrap { position:relative; width:100%; max-width:219px; display:flex; }
+.age-gate-wrap .trad-card { max-width:none; }
+.age-gate { position:absolute; inset:0; z-index:5; background:#b3121b; border:2px solid #ff4d55; border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:14px; text-align:center; color:#fff; }
+.age-gate-q { font-family:'Baloo 2',sans-serif; font-weight:800; font-size:1.05rem; }
+.age-gate-btns { display:flex; gap:8px; }
+.age-gate-btns button { cursor:pointer; border:2px solid #fff; background:#fff; color:#b3121b; font-weight:800; border-radius:8px; padding:6px 16px; font-family:inherit; }
+.age-gate-btns button.no { background:transparent; color:#fff; }
+.age-gate-msg { font-size:0.75rem; min-height:1em; }
+.age-gate.hidden { display:none; }
+
 
 /* Soluciones */
 .solutions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 10px; }
@@ -1225,25 +1235,25 @@ body.app-minimized .author-credit { display: inline-block; }
           <!-- Cada .game-card es un slot listo: cambiá el emoji/comentario de .game-card-img por un <img src="images/juegos/tu-imagen.png">, y editá título, descripción y el href del botón. -->
           <div class="games-grid">
             <div class="game-card">
-              <div class="game-card-img"><!-- <img src="images/juegos/juego1.png" alt="Nombre del juego"> --> 🎮</div>
+              <div class="game-card-img"><img src="images/juegos/juego1.png" alt="Seii´s Crackhouse" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🎮'}))"></div>
               <div class="game-card-title">Seii´s Crackhouse</div>
               <div class="game-card-desc" data-i="g1-d">Version modificada de Raldis Crackhouse</div>
               <a href="https://gamejolt.com/games/SEIICRACKHOUSE/973565" class="btn-outline" data-i="btn-vermas">Ver más →</a>
             </div>
             <div class="game-card">
-              <div class="game-card-img">🎮</div>
+              <div class="game-card-img"><img src="images/juegos/juego2.png" alt="Papers Please España" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🎮'}))"></div>
               <div class="game-card-title">Papers Please España</div>
               <div class="game-card-desc" data-i="g2-d">Parodia de Papers Please</div>
               <a href="https://gamejolt.com/games/PAPERSPLEASECESP/997156" class="btn-outline" data-i="btn-vermas">Ver más →</a>
             </div>
             <div class="game-card">
-              <div class="game-card-img">🎮</div>
+              <div class="game-card-img"><img src="images/juegos/juego3.png" alt="Session Zero" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🎮'}))"></div>
               <div class="game-card-title">Session Zero</div>
               <div class="game-card-desc" data-i="g3-d">Terror psicologico tipo entrevista</div>
               <a href="https://gamejolt.com/games/SessionZero/1031786" class="btn-outline" data-i="btn-vermas">Ver más →</a>
             </div>
             <div class="game-card">
-              <div class="game-card-img">🎮</div>
+              <div class="game-card-img"><img src="images/juegos/juego4.png" alt="Purrfect Apawcalypse Enhanced" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🎮'}))"></div>
               <div class="game-card-title">Purrfect Apawcalypse Enhanced</div>
               <div class="game-card-desc" data-i="g4-d">Mod el cual mejora la jugabilidad</div>
               <a href="https://gamejolt.com/games/PAE/1066847" class="btn-outline" data-i="btn-vermas">Ver más →</a>
@@ -1262,16 +1272,32 @@ body.app-minimized .author-credit { display: inline-block; }
           <!-- Cada .trad-card tiene un espacio de portada 219x298. Reemplazá el emoji/comentario de .trad-card-img por <img src="images/traducciones/portada.png">, y editá título, descripción y el href. -->
           <div class="trad-grid">
             <div class="trad-card">
-              <div class="trad-card-img"><!-- <img src="images/traducciones/portada1.png" alt="Nombre"> --> 🌐</div>
+              <div class="trad-card-img"><img src="images/traducciones/portada1.png" alt="Undertale: Souls Link" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🌐'}))"></div>
               <div class="trad-card-title">Undertale: Souls Link</div>
               <div class="trad-card-desc" data-i="tr1-d">Comic traducido al español</div>
               <a href="https://teamirage.valens429.site/#udtsl" class="btn-outline" data-i="btn-ver">Ver →</a>
             </div>
             <div class="trad-card">
-              <div class="trad-card-img"><!-- <img src="images/traducciones/portada2.png" alt="Nombre"> --> 🌐</div>
+              <div class="trad-card-img"><img src="images/traducciones/portada2.png" alt="Purrfect Apawcalypse: Purrgatory Furever" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🌐'}))"></div>
               <div class="trad-card-title">Purrfect Apawcalypse: Purrgatory Furever</div>
               <div class="trad-card-desc" data-i="tr2-d">Juego traducido al español</div>
               <a href="https://teamirage.valens429.site/#purrfect2" class="btn-outline" data-i="btn-ver">Ver →</a>
+            </div>
+            <div class="age-gate-wrap">
+              <div class="trad-card">
+                <div class="trad-card-img"><img src="images/traducciones/portada3.png" alt="Natsu no Sagashimono" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🌐'}))"></div>
+                <div class="trad-card-title">Natsu no Sagashimono</div>
+                <div class="trad-card-desc" data-i="tr3-d">Traducción al español rioplatense</div>
+                <a href="https://teamirage.valens429.site/#traducciones" class="btn-outline" data-i="btn-ver">Ver →</a>
+              </div>
+              <div class="age-gate" id="age-gate-natsu">
+                <div class="age-gate-q" data-i="age-q">¿Eres mayor de edad?</div>
+                <div class="age-gate-btns">
+                  <button type="button" class="yes" onclick="document.getElementById('age-gate-natsu').classList.add('hidden')" data-i="age-yes">Sí</button>
+                  <button type="button" class="no" onclick="this.closest('.age-gate').querySelector('.age-gate-msg').textContent=(document.documentElement.lang==='en'?'You must be 18+ to view this.':'Debes ser mayor de edad para verlo.')" data-i="age-no">No</button>
+                </div>
+                <div class="age-gate-msg"></div>
+              </div>
             </div>
           </div>
           <a href="https://teamirage.valens429.site/#traducciones" id="team-mirage-trad-link" target="_blank" class="btn-outline" style="margin-top:14px;" data-i="btn-tm">🌫️ Ver en Team Mirage →</a>
@@ -1532,6 +1558,10 @@ body.app-minimized .author-credit { display: inline-block; }
       'tool2-tag': 'EDICIÓN RÁPIDA / CLIPS',
       'tr1-d': 'Comic traducido al español',
       'tr2-d': 'Juego traducido al español',
+      'tr3-d': 'Traducción al español rioplatense',
+      'age-q': '¿Eres mayor de edad?',
+      'age-yes': 'Sí',
+      'age-no': 'No',
     },
     en: {
       'bc-home': 'Home',
@@ -1667,6 +1697,10 @@ body.app-minimized .author-credit { display: inline-block; }
       'tool2-tag': 'QUICK EDITS / CLIPS',
       'tr1-d': 'Comic translated into Spanish',
       'tr2-d': 'Game translated into Spanish',
+      'tr3-d': 'Translated to Rioplatense Spanish',
+      'age-q': 'Are you 18 or older?',
+      'age-yes': 'Yes',
+      'age-no': 'No',
     }
   };
   function waveMotto(text) {
